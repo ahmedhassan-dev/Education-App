@@ -1,3 +1,4 @@
+import 'package:education_app/views/widgets/problem_timer.dart';
 import 'package:flutter/material.dart';
 
 class ProblemPage extends StatefulWidget {
@@ -10,10 +11,6 @@ class ProblemPage extends StatefulWidget {
 class _ProblemPageState extends State<ProblemPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.amber,
-      ),
-    );
+    return Scaffold(body: SafeArea(child: ProblemTimer()));
   }
 }

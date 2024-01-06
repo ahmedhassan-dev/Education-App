@@ -16,58 +16,61 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context);
 
-    return SafeArea(
-      child: StreamBuilder<List<CoursesModel>>(
-          stream: database.courseListStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              final courseList = snapshot.data;
+    return Scaffold(
+      body: SafeArea(
+        child: StreamBuilder<List<CoursesModel>>(
+            stream: database.courseListStream(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                final courseList = snapshot.data;
 
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16.0),
-                      Text(
-                        'Courses',
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16.0),
+                        Text(
+                          'Courses',
+                          style:
+                              Theme.of(context).textTheme.headline4!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        if (courseList == null || courseList.isEmpty)
+                          Center(
+                            child: Text(
+                              'No Data Available!',
+                              style: Theme.of(context).textTheme.subtitle1,
                             ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      if (courseList == null || courseList.isEmpty)
-                        Center(
-                          child: Text(
-                            'No Data Available!',
-                            style: Theme.of(context).textTheme.subtitle1,
                           ),
-                        ),
-                      if (courseList != null && courseList.isNotEmpty)
-                        ListView.builder(
-                          itemCount: courseList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int i) {
-                            final courseType = courseList[i];
-                            return CoursesList(
-                              courseList: courseType,
-                            );
-                          },
-                        ),
-                      const SizedBox(height: 24.0),
-                    ],
+                        if (courseList != null && courseList.isNotEmpty)
+                          ListView.builder(
+                            itemCount: courseList.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int i) {
+                              final courseType = courseList[i];
+                              return CoursesList(
+                                courseList: courseType,
+                              );
+                            },
+                          ),
+                        const SizedBox(height: 24.0),
+                      ],
+                    ),
                   ),
-                ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
+            }),
+      ),
     );
   }
 }

@@ -38,26 +38,26 @@ class MyApp extends StatelessWidget {
         title: 'Education App',
         // TODO: Refactor this theme away from the main file
         theme: ThemeData(
-            scaffoldBackgroundColor: const Color(0xFFE5E5E5),
+            scaffoldBackgroundColor: Color.fromRGBO(62, 62, 66, 1),
             primaryColor: Colors.red,
             inputDecorationTheme: InputDecorationTheme(
               labelStyle: Theme.of(context).textTheme.subtitle1,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
                 borderSide: const BorderSide(
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
                 borderSide: const BorderSide(
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
                 borderSide: const BorderSide(
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
               ),
               errorBorder: OutlineInputBorder(
