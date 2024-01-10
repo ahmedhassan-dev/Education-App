@@ -12,14 +12,16 @@ class ProblemTimer extends StatefulWidget {
 
 class _ProblemTimerState extends State<ProblemTimer> {
   Timer? timerFunction;
-  Duration duration = Duration(minutes: 0);
+  Duration duration = const Duration(minutes: 0);
 
   startTimer() {
-    timerFunction = Timer.periodic(Duration(seconds: 1), (time) {
-      setState(() {
-        int newSeconds = duration.inSeconds + 1;
-        duration = Duration(seconds: newSeconds);
-      });
+    timerFunction = Timer.periodic(const Duration(seconds: 1), (time) {
+      if (mounted) {
+        setState(() {
+          int newSeconds = duration.inSeconds + 1;
+          duration = Duration(seconds: newSeconds);
+        });
+      }
     });
   }
 
@@ -38,8 +40,8 @@ class _ProblemTimerState extends State<ProblemTimer> {
           height: 20,
         ),
         CircularPercentIndicator(
-          progressColor: Color.fromARGB(255, 255, 85, 113),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          progressColor: Colors.red,
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           lineWidth: 7,
           // TODO: Will give error if pass 3600
           percent: timerFunction!.tick / 3600,
