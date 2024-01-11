@@ -1,8 +1,9 @@
+import 'package:education_app/models/problems.dart';
+import 'package:education_app/services/firestore_services.dart';
 import 'package:education_app/views/widgets/need_help_list.dart';
 import 'package:education_app/views/widgets/problem_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProblemPage extends StatefulWidget {
   const ProblemPage({super.key});
@@ -12,31 +13,28 @@ class ProblemPage extends StatefulWidget {
 }
 
 class _ProblemPageState extends State<ProblemPage> {
+  FirestoreServices service = FirestoreServices.instance;
+  Future<List<Problems>>? problemList;
+  List<Problems>? retrievedProblemList;
   bool isLoading = true;
   bool needHelp = false;
   final _solutionController = TextEditingController();
-  List<QueryDocumentSnapshot> data = [];
-
-  getData() async {
-    setState(() {
-      isLoading = false;
-    });
-    CollectionReference problems =
-        FirebaseFirestore.instance.collection("problems");
-    QuerySnapshot curProblem =
-        await problems.where("topics", arrayContains: "C++").get();
-    curProblem.docs.forEach((element) {
-      data.add(element);
-    });
-    setState(() {
-      isLoading = true;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    getData();
+    _initRetrieval();
+  }
+
+  Future<void> _initRetrieval() async {
+    setState(() {
+      isLoading = false;
+    });
+    problemList = service.retrieveProblems();
+    retrievedProblemList = await service.retrieveProblems();
+    setState(() {
+      isLoading = true;
+    });
   }
 
   @override
@@ -62,7 +60,7 @@ class _ProblemPageState extends State<ProblemPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${data[0]['id']}. ${data[0]['title']}",
+                                "${retrievedProblemList![1].problemId}. ${retrievedProblemList![1].title}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -105,7 +103,7 @@ class _ProblemPageState extends State<ProblemPage> {
                       child: Column(
                         children: [
                           Text(
-                            "${data[0]['problem']}",
+                            retrievedProblemList![1].problem,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!

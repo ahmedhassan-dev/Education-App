@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Problems {
   final String id;
+  final String problemId;
   final String title;
   final String problem;
   final int scoreNum;
@@ -8,6 +11,7 @@ class Problems {
   final List<String> videos;
   Problems({
     required this.id,
+    required this.problemId,
     required this.title,
     required this.problem,
     required this.scoreNum,
@@ -17,6 +21,7 @@ class Problems {
   });
   Map<String, dynamic> toMap() {
     return {
+      'problemId': problemId,
       'id': id,
       'title': title,
       'problem': problem,
@@ -30,6 +35,7 @@ class Problems {
   factory Problems.fromMap(Map<String, dynamic> map, String documentId) {
     return Problems(
       id: documentId,
+      problemId: map['problemId'] as String,
       title: map['title'] as String,
       problem: map['problem'] as String,
       scoreNum: map['scoreNum'] as int,
@@ -38,4 +44,18 @@ class Problems {
       videos: map['videos'] as List<String>,
     );
   }
+
+  Problems.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
+      : id = doc.id,
+        problemId = doc.data()!["problemId"],
+        title = doc.data()!["title"],
+        problem = doc.data()!["problem"],
+        scoreNum = doc.data()!["scoreNum"],
+        time = doc.data()!["time"],
+        topics = doc.data()?["topics"] == null
+            ? null
+            : doc.data()?["topics"].cast<String>(),
+        videos = doc.data()?["videos"] == null
+            ? null
+            : doc.data()?["videos"].cast<String>();
 }
