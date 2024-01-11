@@ -16,7 +16,7 @@ class CoursesList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: GestureDetector(
           onTap: () => Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.problemPage),
+              .pushNamed(AppRoutes.problemPage, arguments: courseList),
           child: SizedBox(
             height: 160,
             child: Image.network(

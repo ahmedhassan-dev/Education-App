@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/models/problems.dart';
+import 'package:education_app/utilities/api_path.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreServices {
@@ -24,10 +25,10 @@ class FirestoreServices {
     await reference.delete();
   }
 
-  Future<List<Problems>> retrieveProblems() async {
+  Future<List<Problems>> retrieveProblems({required String subject}) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection("problems")
-        .where("topics", arrayContains: "C++")
+        .collection(ApiPath.problems())
+        .where("topics", arrayContains: subject)
         .get();
     return snapshot.docs
         .map((docSnapshot) => Problems.fromDocumentSnapshot(docSnapshot))

@@ -1,3 +1,4 @@
+import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/models/problems.dart';
 import 'package:education_app/services/firestore_services.dart';
 import 'package:education_app/views/widgets/need_help_list.dart';
@@ -6,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
 
 class ProblemPage extends StatefulWidget {
-  const ProblemPage({super.key});
+  final CoursesModel courseList;
+  const ProblemPage({super.key, required this.courseList});
 
   @override
   State<ProblemPage> createState() => _ProblemPageState();
@@ -30,8 +32,8 @@ class _ProblemPageState extends State<ProblemPage> {
     setState(() {
       isLoading = false;
     });
-    problemList = service.retrieveProblems();
-    retrievedProblemList = await service.retrieveProblems();
+    retrievedProblemList =
+        await service.retrieveProblems(subject: widget.courseList.subject);
     setState(() {
       isLoading = true;
     });
@@ -60,7 +62,7 @@ class _ProblemPageState extends State<ProblemPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${retrievedProblemList![1].problemId}. ${retrievedProblemList![1].title}",
+                                "${retrievedProblemList![0].problemId}. ${retrievedProblemList![0].title}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -78,7 +80,7 @@ class _ProblemPageState extends State<ProblemPage> {
                                     width: 30,
                                   ),
                                   Text(
-                                    "C++",
+                                    widget.courseList.subject,
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
@@ -103,7 +105,7 @@ class _ProblemPageState extends State<ProblemPage> {
                       child: Column(
                         children: [
                           Text(
-                            retrievedProblemList![1].problem,
+                            retrievedProblemList![0].problem,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!
