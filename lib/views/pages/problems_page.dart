@@ -1,3 +1,4 @@
+import 'package:education_app/views/widgets/need_help_list.dart';
 import 'package:education_app/views/widgets/problem_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
@@ -12,8 +13,10 @@ class ProblemPage extends StatefulWidget {
 
 class _ProblemPageState extends State<ProblemPage> {
   bool isLoading = true;
+  bool needHelp = false;
   final _solutionController = TextEditingController();
   List<QueryDocumentSnapshot> data = [];
+
   getData() async {
     setState(() {
       isLoading = false;
@@ -47,86 +50,111 @@ class _ProblemPageState extends State<ProblemPage> {
     return isLoading
         ? Scaffold(
             body: SafeArea(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${data[0]['id']}. ${data[0]['title']}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${data[0]['id']}. ${data[0]['title']}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 30,
                                   ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 30,
-                                ),
-                                Text(
-                                  "C++",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            )
-                          ],
-                        ),
-                        const ProblemTimer()
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          "${data[0]['problem']}",
-                          style:
-                              Theme.of(context).textTheme.titleLarge!.copyWith(
-                                    color: Colors.white,
+                                  Text(
+                                    "C++",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
                                   ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: _solutionController,
-                          decoration: const InputDecoration(
-                            labelText: 'Solution',
-                            fillColor: Colors.white,
-                            filled: true,
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              )
+                            ],
                           ),
-                          validator: (value) => value!.isNotEmpty
-                              ? null
-                              : 'Please enter your solution',
-                        ),
-                        const SizedBox(height: 16.0),
-                        MainButton(text: "Submit", onTap: () {})
-                      ],
+                          const ProblemTimer()
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            "${data[0]['problem']}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(
+                                  color: Colors.white,
+                                ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            controller: _solutionController,
+                            decoration: const InputDecoration(
+                              labelText: 'Solution',
+                              fillColor: Colors.white,
+                              filled: true,
+                            ),
+                            validator: (value) => value!.isNotEmpty
+                                ? null
+                                : 'Please enter your solution',
+                          ),
+                          const SizedBox(height: 16.0),
+                          MainButton(text: "Submit", onTap: () {}),
+                          needHelp
+                              ? const NeedHelpList()
+                              : TextButton(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.blue,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      needHelp = true;
+                                    });
+                                  },
+                                  child: const Text(
+                                    'Need Help?',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.blue,
+                                      decorationThickness: 2,
+                                    ),
+                                  ),
+                                )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
