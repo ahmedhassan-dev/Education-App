@@ -20,6 +20,7 @@ class _ProblemPageState extends State<ProblemPage> {
   List<Problems>? retrievedProblemList;
   bool isLoading = true;
   bool needHelp = false;
+  int problemIndex = 0;
   final _solutionController = TextEditingController();
 
   @override
@@ -48,116 +49,133 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+        ? retrievedProblemList!.length == problemIndex
+            ? Center(
+                child: Text(
+                  "❤️Stay Tuned❤️",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              )
+            : Scaffold(
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "${retrievedProblemList![0].problemId}. ${retrievedProblemList![0].title}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
                                   Text(
-                                    widget.courseList.subject,
+                                    "${retrievedProblemList![problemIndex].problemId}. ${retrievedProblemList![problemIndex].title}",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleMedium!
+                                        .titleLarge!
                                         .copyWith(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 30,
+                                      ),
+                                      Text(
+                                        widget.courseList.subject,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  )
                                 ],
                               ),
-                              const SizedBox(
-                                height: 30,
-                              )
+                              const ProblemTimer()
                             ],
                           ),
-                          const ProblemTimer()
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            retrievedProblemList![0].problem,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                  color: Colors.white,
-                                ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            controller: _solutionController,
-                            decoration: const InputDecoration(
-                              labelText: 'Solution',
-                              fillColor: Colors.white,
-                              filled: true,
-                            ),
-                            validator: (value) => value!.isNotEmpty
-                                ? null
-                                : 'Please enter your solution',
-                          ),
-                          const SizedBox(height: 16.0),
-                          MainButton(text: "Submit", onTap: () {}),
-                          needHelp
-                              ? const NeedHelpList()
-                              : TextButton(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.blue,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      needHelp = true;
-                                    });
-                                  },
-                                  child: const Text(
-                                    'Need Help?',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.blue,
-                                      decorationThickness: 2,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                retrievedProblemList![problemIndex].problem,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                      color: Colors.white,
                                     ),
-                                  ),
-                                )
-                        ],
-                      ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                controller: _solutionController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Solution',
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                                validator: (value) => value!.isNotEmpty
+                                    ? null
+                                    : 'Please enter your solution',
+                              ),
+                              const SizedBox(height: 16.0),
+                              MainButton(
+                                  text: "Submit",
+                                  onTap: () {
+                                    setState(() {
+                                      problemIndex += 1;
+                                    });
+                                  }),
+                              needHelp
+                                  ? NeedHelpList(
+                                      solutions:
+                                          retrievedProblemList![1].videos)
+                                  : TextButton(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          needHelp = true;
+                                        });
+                                      },
+                                      child: const Text(
+                                        'Need Help?',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Colors.blue,
+                                          decorationThickness: 2,
+                                        ),
+                                      ),
+                                    )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          )
+              )
         : const Center(
             child: CircularProgressIndicator(
             color: Colors.white,
