@@ -29,6 +29,7 @@ class FirestoreServices {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
         .collection(ApiPath.problems())
         .where("topics", arrayContains: subject)
+        .orderBy('problemId')
         .get();
     return snapshot.docs
         .map((docSnapshot) => Problems.fromDocumentSnapshot(docSnapshot))

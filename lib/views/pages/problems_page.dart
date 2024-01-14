@@ -143,12 +143,14 @@ class _ProblemPageState extends State<ProblemPage> {
                                   onTap: () {
                                     setState(() {
                                       problemIndex += 1;
+                                      needHelp = false;
                                     });
                                   }),
                               needHelp
                                   ? NeedHelpList(
                                       solutions:
-                                          retrievedProblemList![1].videos)
+                                          retrievedProblemList![problemIndex]
+                                              .videos)
                                   : TextButton(
                                       style: TextButton.styleFrom(
                                         foregroundColor: Colors.blue,

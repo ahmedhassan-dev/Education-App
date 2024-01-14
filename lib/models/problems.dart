@@ -52,10 +52,10 @@ class Problems {
         problem = doc.data()!["problem"],
         scoreNum = doc.data()!["scoreNum"],
         time = doc.data()!["time"],
-        topics = doc.data()?["topics"] == null
+        topics = doc.data()!["topics"] == null
             ? null
             : doc.data()?["topics"].cast<String>(),
-        videos = doc.data()?["videos"] == null
+        videos = doc.data()!["videos"] == null
             ? null
             : doc.data()?["videos"].cast<String>();
 }
