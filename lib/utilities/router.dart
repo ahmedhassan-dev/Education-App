@@ -1,5 +1,4 @@
 import 'package:education_app/controllers/database_controller.dart';
-import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:education_app/views/pages/auth_page.dart';
 import 'package:education_app/views/pages/courses_page.dart';
@@ -21,10 +20,15 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
     case AppRoutes.problemPage:
-      final courseList = settings.arguments as CoursesModel;
+      final args = settings.arguments as Map<String, dynamic>;
+      final courseList = args['courseList'];
+      final database = args['database'];
 
       return CupertinoPageRoute(
-        builder: (_) => ProblemPage(courseList: courseList),
+        builder: (_) => Provider<Database>.value(
+          value: database,
+          child: ProblemPage(courseList: courseList),
+        ),
         settings: settings,
       );
     case AppRoutes.landingPageRoute:

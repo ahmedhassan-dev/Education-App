@@ -1,10 +1,14 @@
+import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/models/problems.dart';
+import 'package:education_app/models/solved_problems.dart';
 import 'package:education_app/services/firestore_services.dart';
+import 'package:education_app/views/widgets/main_dialog.dart';
 import 'package:education_app/views/widgets/need_help_list.dart';
 import 'package:education_app/views/widgets/problem_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
+import 'package:provider/provider.dart';
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -21,7 +25,11 @@ class _ProblemPageState extends State<ProblemPage> {
   bool isLoading = true;
   bool needHelp = false;
   int problemIndex = 0;
+  Duration solvingTime = const Duration(minutes: 0);
+  DateTime startCounting = DateTime.now();
+  final _formKey = GlobalKey<FormState>();
   final _solutionController = TextEditingController();
+  SolvedProblems? solvedProblems;
 
   @override
   void initState() {
@@ -36,6 +44,7 @@ class _ProblemPageState extends State<ProblemPage> {
     retrievedProblemList =
         await service.retrieveProblems(subject: widget.courseList.subject);
     setState(() {
+      startCounting = DateTime.now();
       isLoading = true;
     });
   }
@@ -46,8 +55,65 @@ class _ProblemPageState extends State<ProblemPage> {
     super.dispose();
   }
 
+  Future<void> submitSolution(Database database) async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        if (_solutionController.text.trim() !=
+                retrievedProblemList![problemIndex].solution &&
+            retrievedProblemList![problemIndex].needReview == true) {
+          MainDialog(
+                  context: context,
+                  title: 'We will review your answer soon❤️!',
+                  content: 'Keep Going')
+              .showAlertDialog();
+        } else {
+          MainDialog(
+                  context: context,
+                  title: 'Nice Answer😊!',
+                  content: 'Keep Going')
+              .showAlertDialog();
+        }
+        final solutionData = SolvedProblems(
+          id: solvedProblems != null
+              ? solvedProblems!.id
+              : retrievedProblemList![problemIndex].problemId,
+          problemId: retrievedProblemList![problemIndex].problemId,
+          answer: _solutionController.text.trim(),
+          // solvingTime: DateTime._maxMillisecondsSinceEpoch - ,
+          solvingTime: DateTime.now().difference(startCounting).inSeconds,
+          nextRepeat: DateTime.now(),
+          topics: retrievedProblemList![problemIndex].topics,
+          failureCount: [DateTime.parse("2000-01-01")],
+          needHelp: [DateTime.parse("2000-01-01")],
+          solvingDate: [DateTime.now()],
+        );
+        await database.submitSolution(solutionData);
+        const Center(
+            child: CircularProgressIndicator(
+          color: Colors.black,
+        ));
+        await Future.delayed(const Duration(seconds: 1), () {});
+        if (!mounted) return;
+        Navigator.pop(context);
+        setState(() {
+          problemIndex += 1;
+          needHelp = false;
+          _solutionController.text = "";
+          startCounting = DateTime.now();
+        });
+      }
+    } catch (e) {
+      MainDialog(
+              context: context,
+              title: 'Error Submiting Solution',
+              content: e.toString())
+          .showAlertDialog();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context);
     return isLoading
         ? retrievedProblemList!.length == problemIndex
             ? Center(
@@ -106,7 +172,11 @@ class _ProblemPageState extends State<ProblemPage> {
                                   )
                                 ],
                               ),
-                              const ProblemTimer()
+                              ProblemTimer(
+                                problemIndex: problemIndex,
+                                expectedTime:
+                                    retrievedProblemList![problemIndex].time,
+                              )
                             ],
                           ),
                         ),
@@ -126,25 +196,35 @@ class _ProblemPageState extends State<ProblemPage> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              TextFormField(
-                                controller: _solutionController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Solution',
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
-                                validator: (value) => value!.isNotEmpty
-                                    ? null
-                                    : 'Please enter your solution',
+                              Form(
+                                key: _formKey,
+                                child: TextFormField(
+                                    controller: _solutionController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Solution',
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                    ),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter your solution';
+                                      } else if (value !=
+                                              retrievedProblemList![
+                                                      problemIndex]
+                                                  .solution &&
+                                          retrievedProblemList![problemIndex]
+                                                  .needReview ==
+                                              false) {
+                                        return 'Wrong Answer!';
+                                      }
+                                      return null;
+                                    }),
                               ),
                               const SizedBox(height: 16.0),
                               MainButton(
                                   text: "Submit",
                                   onTap: () {
-                                    setState(() {
-                                      problemIndex += 1;
-                                      needHelp = false;
-                                    });
+                                    submitSolution(database);
                                   }),
                               needHelp
                                   ? NeedHelpList(
