@@ -40,6 +40,7 @@ dependencies:
   google_sign_in: ^6.2.1
   percent_indicator: ^4.2.3
   youtube_player_flutter: ^8.1.2
+  flutter_native_splash: ^2.3.9
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,6 +71,10 @@ flutter:
   assets:
     - assets/
   #   - images/a_dot_ham.jpeg
+flutter_native_splash:
+  color: "#42a5f5"
+  image: assets/splash.png
+  android_gravity: fill
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -27,6 +27,7 @@ class _ProblemPageState extends State<ProblemPage> {
   int problemIndex = 0;
   Duration solvingTime = const Duration(minutes: 0);
   DateTime startCounting = DateTime.now();
+  List<DateTime> failureTime = [DateTime.parse("2000-01-01")];
   final _formKey = GlobalKey<FormState>();
   final _solutionController = TextEditingController();
   SolvedProblems? solvedProblems;
@@ -77,13 +78,11 @@ class _ProblemPageState extends State<ProblemPage> {
           id: solvedProblems != null
               ? solvedProblems!.id
               : retrievedProblemList![problemIndex].problemId,
-          problemId: retrievedProblemList![problemIndex].problemId,
           answer: _solutionController.text.trim(),
-          // solvingTime: DateTime._maxMillisecondsSinceEpoch - ,
           solvingTime: DateTime.now().difference(startCounting).inSeconds,
           nextRepeat: DateTime.now(),
           topics: retrievedProblemList![problemIndex].topics,
-          failureCount: [DateTime.parse("2000-01-01")],
+          failureTime: failureTime,
           needHelp: [DateTime.parse("2000-01-01")],
           solvingDate: [DateTime.now()],
         );
@@ -100,6 +99,7 @@ class _ProblemPageState extends State<ProblemPage> {
           needHelp = false;
           _solutionController.text = "";
           startCounting = DateTime.now();
+          failureTime = [DateTime.parse("2000-01-01")];
         });
       }
     } catch (e) {
@@ -215,6 +215,10 @@ class _ProblemPageState extends State<ProblemPage> {
                                           retrievedProblemList![problemIndex]
                                                   .needReview ==
                                               false) {
+                                        failureTime[0] ==
+                                                DateTime.parse("2000-01-01")
+                                            ? failureTime[0] = DateTime.now()
+                                            : failureTime.add(DateTime.now());
                                         return 'Wrong Answer!';
                                       }
                                       return null;
