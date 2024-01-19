@@ -31,6 +31,9 @@ class _ProblemPageState extends State<ProblemPage> {
   Duration solvingTime = const Duration(minutes: 0);
   DateTime startCounting = DateTime.now();
   List<String> failureTime = [];
+  List<String> solvingDate = [];
+  List<String> needHelpTime = [];
+  late String nextRepeat;
   final _formKey = GlobalKey<FormState>();
   final _solutionController = TextEditingController();
   SolvedProblems? solvedProblems;
@@ -70,6 +73,7 @@ class _ProblemPageState extends State<ProblemPage> {
       solvedProblemsList.add(element.id);
     }
     solvedBeforeFun();
+    addOldSolution2New();
   }
 
   solvedBeforeFun() {
@@ -82,6 +86,23 @@ class _ProblemPageState extends State<ProblemPage> {
   addOldSolution2New() {
     if (solvedBefore) {
       failureTime.addAll(retrievedSolutionList![problemIndex].failureTime);
+      solvingDate.addAll(retrievedSolutionList![problemIndex].solvingDate);
+      needHelpTime.addAll(retrievedSolutionList![problemIndex].needHelp);
+    }
+  }
+
+  nextRepeatFun() {
+    if (needHelp) {
+      nextRepeat = DateTime.now().add(const Duration(days: 1)).toString();
+    } else if (DateTime.now().difference(startCounting).inSeconds >
+        retrievedProblemList![problemIndex].time * 60) {
+      nextRepeat = DateTime.now().add(const Duration(days: 2)).toString();
+    } else if (failureTime.isNotEmpty) {
+      if (DateTime.parse(failureTime.last).day == DateTime.now().day) {
+        nextRepeat = DateTime.now().add(const Duration(days: 3)).toString();
+      }
+    } else {
+      nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
     }
   }
 
@@ -97,6 +118,8 @@ class _ProblemPageState extends State<ProblemPage> {
     _solutionController.text = "";
     startCounting = DateTime.now();
     failureTime = [];
+    solvingDate = [];
+    needHelpTime = [];
   }
 
   Future<void> submitSolution(Database database) async {
@@ -117,17 +140,19 @@ class _ProblemPageState extends State<ProblemPage> {
                   content: 'Keep Going')
               .showAlertDialog();
         }
+        solvingDate.add(DateTime.now().toString());
+        nextRepeatFun();
         final solutionData = SolvedProblems(
           id: solvedProblems != null
               ? solvedProblems!.id
               : retrievedProblemList![problemIndex].problemId,
           answer: _solutionController.text.trim(),
           solvingTime: DateTime.now().difference(startCounting).inSeconds,
-          nextRepeat: DateTime.now().toString(),
+          nextRepeat: nextRepeat,
           topics: retrievedProblemList![problemIndex].topics,
           failureTime: failureTime,
-          needHelp: [DateTime.parse("2000-01-01").toString()],
-          solvingDate: [DateTime.now().toString()],
+          needHelp: needHelpTime,
+          solvingDate: solvingDate,
         );
         await database.submitSolution(solutionData);
         const Center(
@@ -279,6 +304,8 @@ class _ProblemPageState extends State<ProblemPage> {
                                         foregroundColor: Colors.blue,
                                       ),
                                       onPressed: () {
+                                        needHelpTime
+                                            .add(DateTime.now().toString());
                                         setState(() {
                                           needHelp = true;
                                         });
