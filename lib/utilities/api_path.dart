@@ -4,4 +4,5 @@ class ApiPath {
   static String problems() => 'problems/';
   static String solvedProblems(String uid, String solutionId) =>
       'users/$uid/solvedProblems/$solutionId';
+  // static String solutions(String uid) => 'users/$uid/solvedProblems/';
 }

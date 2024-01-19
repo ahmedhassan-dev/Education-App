@@ -45,7 +45,6 @@ class AuthController with ChangeNotifier {
   Future<void> googleLogIn() async {
     try {
       final googleUser = await googleSignIn.signIn();
-      if (googleSignIn == null) return;
       _user = googleUser;
       final googleAuth = await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(

@@ -3,9 +3,11 @@ import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/models/problems.dart';
 import 'package:education_app/models/solved_problems.dart';
 import 'package:education_app/services/firestore_services.dart';
+import 'package:education_app/utilities/api_path.dart';
 import 'package:education_app/views/widgets/main_dialog.dart';
 import 'package:education_app/views/widgets/need_help_list.dart';
 import 'package:education_app/views/widgets/problem_timer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
 import 'package:provider/provider.dart';
@@ -20,17 +22,19 @@ class ProblemPage extends StatefulWidget {
 
 class _ProblemPageState extends State<ProblemPage> {
   FirestoreServices service = FirestoreServices.instance;
-  Future<List<Problems>>? problemList;
   List<Problems>? retrievedProblemList;
+  List<SolvedProblems>? retrievedSolutionList;
+  List<String> solvedProblemsList = [];
   bool isLoading = true;
   bool needHelp = false;
   int problemIndex = 0;
   Duration solvingTime = const Duration(minutes: 0);
   DateTime startCounting = DateTime.now();
-  List<DateTime> failureTime = [DateTime.parse("2000-01-01")];
+  List<String> failureTime = [];
   final _formKey = GlobalKey<FormState>();
   final _solutionController = TextEditingController();
   SolvedProblems? solvedProblems;
+  bool solvedBefore = false;
 
   @override
   void initState() {
@@ -42,18 +46,57 @@ class _ProblemPageState extends State<ProblemPage> {
     setState(() {
       isLoading = false;
     });
-    retrievedProblemList =
-        await service.retrieveProblems(subject: widget.courseList.subject);
+    retrievedProblemList = await service.retrieveProblems(
+      subject: widget.courseList.subject,
+      path: ApiPath.problems(),
+      sortedBy: 'problemId',
+    );
+
+    _initRetrievalSolutions();
     setState(() {
       startCounting = DateTime.now();
       isLoading = true;
     });
   }
 
+  Future<void> _initRetrievalSolutions() async {
+    retrievedSolutionList = await service.retrieveSolvedProblems(
+        subject: widget.courseList.subject,
+        sortedBy: 'id',
+        mainCollectionPath: 'users',
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        collectionPath: 'solvedProblems');
+    for (var element in retrievedSolutionList!) {
+      solvedProblemsList.add(element.id);
+    }
+    solvedBeforeFun();
+  }
+
+  solvedBeforeFun() {
+    problemIndex < retrievedProblemList!.length
+        ? solvedBefore = solvedProblemsList
+            .contains(retrievedProblemList![problemIndex].problemId)
+        : solvedBefore = false;
+  }
+
+  addOldSolution2New() {
+    if (solvedBefore) {
+      failureTime.addAll(retrievedSolutionList![problemIndex].failureTime);
+    }
+  }
+
   @override
   void dispose() {
     _solutionController.dispose();
     super.dispose();
+  }
+
+  resetVariables() {
+    problemIndex += 1;
+    needHelp = false;
+    _solutionController.text = "";
+    startCounting = DateTime.now();
+    failureTime = [];
   }
 
   Future<void> submitSolution(Database database) async {
@@ -80,11 +123,11 @@ class _ProblemPageState extends State<ProblemPage> {
               : retrievedProblemList![problemIndex].problemId,
           answer: _solutionController.text.trim(),
           solvingTime: DateTime.now().difference(startCounting).inSeconds,
-          nextRepeat: DateTime.now(),
+          nextRepeat: DateTime.now().toString(),
           topics: retrievedProblemList![problemIndex].topics,
           failureTime: failureTime,
-          needHelp: [DateTime.parse("2000-01-01")],
-          solvingDate: [DateTime.now()],
+          needHelp: [DateTime.parse("2000-01-01").toString()],
+          solvingDate: [DateTime.now().toString()],
         );
         await database.submitSolution(solutionData);
         const Center(
@@ -95,11 +138,9 @@ class _ProblemPageState extends State<ProblemPage> {
         if (!mounted) return;
         Navigator.pop(context);
         setState(() {
-          problemIndex += 1;
-          needHelp = false;
-          _solutionController.text = "";
-          startCounting = DateTime.now();
-          failureTime = [DateTime.parse("2000-01-01")];
+          resetVariables();
+          solvedBeforeFun();
+          addOldSolution2New();
         });
       }
     } catch (e) {
@@ -215,10 +256,8 @@ class _ProblemPageState extends State<ProblemPage> {
                                           retrievedProblemList![problemIndex]
                                                   .needReview ==
                                               false) {
-                                        failureTime[0] ==
-                                                DateTime.parse("2000-01-01")
-                                            ? failureTime[0] = DateTime.now()
-                                            : failureTime.add(DateTime.now());
+                                        failureTime
+                                            .add(DateTime.now().toString());
                                         return 'Wrong Answer!';
                                       }
                                       return null;

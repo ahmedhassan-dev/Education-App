@@ -4,11 +4,11 @@ class SolvedProblems {
   final String id;
   final String answer;
   final int solvingTime;
-  final DateTime nextRepeat;
+  final String nextRepeat;
   final List<String> topics;
-  final List<DateTime> failureTime;
-  final List<DateTime> needHelp;
-  final List<DateTime> solvingDate;
+  final List<String> failureTime;
+  final List<String> needHelp;
+  final List<String> solvingDate;
   SolvedProblems({
     required this.id,
     this.answer = "Enter your answer",
@@ -39,7 +39,7 @@ class SolvedProblems {
         solvingTime = doc.data()!["solvingTime"],
         nextRepeat = doc.data()!["nextRepeat"],
         topics = doc.data()?["topics"].cast<String>(),
-        failureTime = doc.data()?["failureTime"].cast<DateTime>(),
-        needHelp = doc.data()?["needHelp"].cast<DateTime>(),
-        solvingDate = doc.data()?["solvingDate"].cast<DateTime>();
+        failureTime = doc.data()?["failureTime"].cast<String>(),
+        needHelp = doc.data()?["needHelp"].cast<String>(),
+        solvingDate = doc.data()?["solvingDate"].cast<String>();
 }

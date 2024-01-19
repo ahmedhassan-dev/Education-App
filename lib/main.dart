@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         title: 'Education App',
         // TODO: Refactor this theme away from the main file
         theme: ThemeData(
-            scaffoldBackgroundColor: Color.fromRGBO(62, 62, 66, 1),
+            scaffoldBackgroundColor: const Color.fromRGBO(62, 62, 66, 1),
             primaryColor: Colors.red,
             inputDecorationTheme: InputDecorationTheme(
               labelStyle: Theme.of(context).textTheme.subtitle1,
