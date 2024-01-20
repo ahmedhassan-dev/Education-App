@@ -1,11 +1,13 @@
 class UserData {
   final String uid;
-  final String email;
+  final String? userName;
+  final String? email;
   final int userScore;
-  final Map<String, DateTime> lastProblem;
+  final Map<String, String> lastProblem;
 
   UserData({
     required this.uid,
+    required this.userName,
     required this.email,
     this.userScore = 0,
     required this.lastProblem,
@@ -15,6 +17,7 @@ class UserData {
     final result = <String, dynamic>{};
 
     result.addAll({'uid': uid});
+    result.addAll({'userName': userName});
     result.addAll({'email': email});
     result.addAll({'userScore': userScore});
     result.addAll({'lastProblem': lastProblem});
@@ -25,6 +28,7 @@ class UserData {
   factory UserData.fromMap(Map<String, dynamic> map, String documentId) {
     return UserData(
       uid: documentId,
+      userName: map['userName'] ?? '',
       email: map['email'] ?? '',
       userScore: map['userScore'] ?? '',
       lastProblem: map['lastProblem'] ?? '',

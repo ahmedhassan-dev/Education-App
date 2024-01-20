@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/models/problems.dart';
 import 'package:education_app/models/solved_problems.dart';
 import 'package:education_app/services/firestore_services.dart';
 import 'package:education_app/utilities/api_path.dart';
+import 'package:education_app/utilities/assets.dart';
 import 'package:education_app/views/widgets/main_dialog.dart';
 import 'package:education_app/views/widgets/need_help_list.dart';
 import 'package:education_app/views/widgets/problem_timer.dart';
@@ -22,6 +24,8 @@ class ProblemPage extends StatefulWidget {
 
 class _ProblemPageState extends State<ProblemPage> {
   FirestoreServices service = FirestoreServices.instance;
+  Map userData = {};
+  int score = 0;
   List<Problems>? retrievedProblemList;
   List<SolvedProblems>? retrievedSolutionList;
   List<String> solvedProblemsList = [];
@@ -42,7 +46,28 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   void initState() {
     super.initState();
+    retrieveData();
     _initRetrieval();
+  }
+
+  retrieveData() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    userData = snapshot.data()!;
+    score = userData["userScore"];
+  }
+
+  updatingScore() async {
+    if (!solvedBefore) {
+      score += retrievedProblemList![problemIndex].scoreNum;
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({"userScore": score});
+    }
   }
 
   Future<void> _initRetrieval() async {
@@ -140,6 +165,7 @@ class _ProblemPageState extends State<ProblemPage> {
                   content: 'Keep Going')
               .showAlertDialog();
         }
+        updatingScore();
         solvingDate.add(DateTime.now().toString());
         nextRepeatFun();
         final solutionData = SolvedProblems(
@@ -191,6 +217,49 @@ class _ProblemPageState extends State<ProblemPage> {
                 ),
               )
             : Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    widget.courseList.subject,
+                    style: Theme.of(context).textTheme.headline6!.copyWith(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  actions: [
+                    Text(
+                      score.toString(),
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Image.asset(
+                      AppAssets.starIcon,
+                      height: 35,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                  ],
+                ),
+                drawer: Drawer(
+                  // Add a ListView to the drawer. This ensures the user can scroll
+                  // through the options in the drawer if there isn't enough vertical
+                  // space to fit everything.
+                  child: ListView(
+                    // Important: Remove any padding from the ListView.
+                    padding: EdgeInsets.zero,
+                    children: const [
+                      DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(42, 42, 42, 1),
+                        ),
+                        child: Text('User'),
+                      ),
+                    ],
+                  ),
+                ),
                 body: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(

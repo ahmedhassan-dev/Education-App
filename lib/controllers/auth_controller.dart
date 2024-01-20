@@ -33,8 +33,9 @@ class AuthController with ChangeNotifier {
         final user = await auth.signUpWithEmailAndPassword(email, password);
         await database.setUserData(UserData(
           uid: user?.uid ?? documentIdFromLocalData(),
+          userName: "user",
           email: email,
-          lastProblem: {"0": DateTime.now()},
+          lastProblem: {"0": DateTime.now().toString()},
         ));
       }
     } catch (e) {
@@ -51,7 +52,21 @@ class AuthController with ChangeNotifier {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          await database.setUserData(UserData(
+            uid: user.uid,
+            userName: user.displayName,
+            email: user.email,
+            lastProblem: {"0": DateTime.now().toString()},
+          ));
+        }
+      }
       notifyListeners();
     } catch (e) {
       rethrow;
