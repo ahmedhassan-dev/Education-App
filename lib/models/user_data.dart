@@ -3,15 +3,16 @@ class UserData {
   final String? userName;
   final String? email;
   final int userScore;
-  final Map<String, String> lastProblem;
+  final Map<String, int> lastProblemIdx;
+  final Map<String, String> lastProblemTime;
 
-  UserData({
-    required this.uid,
-    required this.userName,
-    required this.email,
-    this.userScore = 0,
-    required this.lastProblem,
-  });
+  UserData(
+      {required this.uid,
+      required this.userName,
+      required this.email,
+      this.userScore = 0,
+      this.lastProblemIdx = const {},
+      this.lastProblemTime = const {}});
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -20,7 +21,8 @@ class UserData {
     result.addAll({'userName': userName});
     result.addAll({'email': email});
     result.addAll({'userScore': userScore});
-    result.addAll({'lastProblem': lastProblem});
+    result.addAll({'lastProblemIdx': lastProblemIdx});
+    result.addAll({'lastProblemTime': lastProblemTime});
 
     return result;
   }
@@ -31,7 +33,8 @@ class UserData {
       userName: map['userName'] ?? '',
       email: map['email'] ?? '',
       userScore: map['userScore'] ?? '',
-      lastProblem: map['lastProblem'] ?? '',
+      lastProblemIdx: map['lastProblemIdx'] ?? '',
+      lastProblemTime: map['lastProblemTime'] ?? '',
     );
   }
 }

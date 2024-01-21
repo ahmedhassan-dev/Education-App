@@ -35,7 +35,6 @@ class AuthController with ChangeNotifier {
           uid: user?.uid ?? documentIdFromLocalData(),
           userName: "user",
           email: email,
-          lastProblem: {"0": DateTime.now().toString()},
         ));
       }
     } catch (e) {
@@ -63,7 +62,6 @@ class AuthController with ChangeNotifier {
             uid: user.uid,
             userName: user.displayName,
             email: user.email,
-            lastProblem: {"0": DateTime.now().toString()},
           ));
         }
       }

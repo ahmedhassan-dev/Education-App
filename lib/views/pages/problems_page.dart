@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/models/courses_model.dart';
@@ -13,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -23,9 +25,14 @@ class ProblemPage extends StatefulWidget {
 }
 
 class _ProblemPageState extends State<ProblemPage> {
+  DateTime now = DateTime.now();
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
   FirestoreServices service = FirestoreServices.instance;
   Map userData = {};
   int score = 0;
+  Map<String, String> lastProblem = {};
+  Map<String, dynamic> lastProblemIdx = {};
+  Map<String, dynamic> lastProblemTime = {};
   List<Problems>? retrievedProblemList;
   List<SolvedProblems>? retrievedSolutionList;
   List<String> solvedProblemsList = [];
@@ -42,6 +49,7 @@ class _ProblemPageState extends State<ProblemPage> {
   final _solutionController = TextEditingController();
   SolvedProblems? solvedProblems;
   bool solvedBefore = false;
+  Queue<int> prbolemIndexQueue = Queue<int>();
 
   @override
   void initState() {
@@ -58,15 +66,33 @@ class _ProblemPageState extends State<ProblemPage> {
         .get();
     userData = snapshot.data()!;
     score = userData["userScore"];
+    lastProblemIdx =
+        userData["lastProblemIdx"]; //Adding the firebase map to the local map
+    lastProblemTime =
+        userData["lastProblemTime"]; //Adding the firebase map to the local map
+    if (userData["lastProblemIdx"][widget.courseList.subject] == null) {
+      lastProblemIdx[widget.courseList.subject] =
+          0; // Adding new subject to the map
+      lastProblemTime[widget.courseList.subject] =
+          "0"; // Adding new subject to the map
+    } else {
+      problemIndex = userData["lastProblemIdx"][widget.courseList.subject];
+    }
   }
 
-  updatingScore() async {
+  updatingUserData() async {
     if (!solvedBefore) {
       score += retrievedProblemList![problemIndex].scoreNum;
+      lastProblemIdx[widget.courseList.subject] = problemIndex + 1;
+      lastProblemTime[widget.courseList.subject] = DateTime.now().toString();
       await FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({"userScore": score});
+          .update({
+        "userScore": score,
+        "lastProblemIdx": lastProblemIdx,
+        "lastProblemTime": lastProblemTime
+      });
     }
   }
 
@@ -80,7 +106,7 @@ class _ProblemPageState extends State<ProblemPage> {
       sortedBy: 'problemId',
     );
 
-    _initRetrievalSolutions();
+    await _initRetrievalSolutions();
     setState(() {
       startCounting = DateTime.now();
       isLoading = true;
@@ -97,8 +123,44 @@ class _ProblemPageState extends State<ProblemPage> {
     for (var element in retrievedSolutionList!) {
       solvedProblemsList.add(element.id);
     }
+    nextRepeatProblemsIndex();
     solvedBeforeFun();
     addOldSolution2New();
+  }
+
+  nextRepeatProblemsIndex() {
+    DateTime timeNow = DateTime.now();
+    // TODO: need to sort elements nextRepeat and use binary search
+    for (var element in retrievedSolutionList!) {
+      if ((DateTime.parse(element.nextRepeat).difference(timeNow).inDays < 0 ||
+              DateTime.parse(element.nextRepeat).day == timeNow.day) &&
+          timeNow
+                  .difference(DateTime.parse(element.solvingDate.last))
+                  .inHours >=
+              12) {
+        prbolemIndexQueue.add(retrievedSolutionList!.indexOf(element));
+      }
+    }
+    showRepeatedProblems();
+  }
+
+  bool waitForSolving = false;
+  // After submission or after solving new problem today
+  showRepeatedProblems() {
+    if (waitForSolving) {
+      prbolemIndexQueue.removeFirst();
+      waitForSolving = false;
+    }
+    if (prbolemIndexQueue.isNotEmpty &&
+        formatter.format(
+                DateTime.parse(lastProblemTime[widget.courseList.subject])) ==
+            formatter.format(now)) {
+      problemIndex = prbolemIndexQueue.first;
+      waitForSolving = true;
+    }
+    if (prbolemIndexQueue.isEmpty) {
+      problemIndex = userData["lastProblemIdx"][widget.courseList.subject];
+    }
   }
 
   solvedBeforeFun() {
@@ -165,7 +227,7 @@ class _ProblemPageState extends State<ProblemPage> {
                   content: 'Keep Going')
               .showAlertDialog();
         }
-        updatingScore();
+        updatingUserData();
         solvingDate.add(DateTime.now().toString());
         nextRepeatFun();
         final solutionData = SolvedProblems(
@@ -190,6 +252,7 @@ class _ProblemPageState extends State<ProblemPage> {
         Navigator.pop(context);
         setState(() {
           resetVariables();
+          showRepeatedProblems();
           solvedBeforeFun();
           addOldSolution2New();
         });
