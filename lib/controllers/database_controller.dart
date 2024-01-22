@@ -8,6 +8,7 @@ abstract class Database {
   Stream<List<CoursesModel>> courseListStream();
 
   Future<void> setUserData(UserData userData);
+  setToken(String uid, String userToken);
   Future<void> submitSolution(SolvedProblems address);
 }
 
@@ -27,6 +28,13 @@ class FirestoreDatabase implements Database {
   Future<void> setUserData(UserData userData) async => await _service.setData(
         path: ApiPath.user(userData.uid),
         data: userData.toMap(),
+      );
+
+  @override
+  Future<void> setToken(String uid, String userToken) async =>
+      await _service.setData(
+        path: ApiPath.userToken(uid),
+        data: {"token": userToken},
       );
 
   @override

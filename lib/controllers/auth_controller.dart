@@ -3,6 +3,7 @@ import 'package:education_app/models/user_data.dart';
 import 'package:education_app/services/auth.dart';
 import 'package:education_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/utilities/enums.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,6 +13,7 @@ class AuthController with ChangeNotifier {
   String email;
   String password;
   AuthFormType authFormType;
+  String? mytoken;
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
@@ -25,12 +27,23 @@ class AuthController with ChangeNotifier {
     this.authFormType = AuthFormType.login,
   });
 
+  getAndSendToken(String? uid) async {
+    mytoken = await FirebaseMessaging.instance.getToken();
+    if (mytoken != null && uid != null) {
+      await database.setToken(uid, mytoken!);
+    }
+    print("__________________________________");
+    print(mytoken);
+  }
+
   Future<void> submit() async {
     try {
       if (authFormType == AuthFormType.login) {
-        await auth.loginWithEmailAndPassword(email, password);
+        final user = await auth.loginWithEmailAndPassword(email, password);
+        getAndSendToken(user?.uid);
       } else {
         final user = await auth.signUpWithEmailAndPassword(email, password);
+        getAndSendToken(user?.uid);
         await database.setUserData(UserData(
           uid: user?.uid ?? documentIdFromLocalData(),
           userName: "user",
@@ -57,6 +70,7 @@ class AuthController with ChangeNotifier {
       User? user = userCredential.user;
 
       if (user != null) {
+        getAndSendToken(user.uid);
         if (userCredential.additionalUserInfo!.isNewUser) {
           await database.setUserData(UserData(
             uid: user.uid,
