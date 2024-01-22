@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/models/courses_model.dart';
@@ -44,12 +45,14 @@ class _ProblemPageState extends State<ProblemPage> {
   List<String> failureTime = [];
   List<String> solvingDate = [];
   List<String> needHelpTime = [];
-  late String nextRepeat;
+  String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
   final _formKey = GlobalKey<FormState>();
   final _solutionController = TextEditingController();
   SolvedProblems? solvedProblems;
   bool solvedBefore = false;
   Queue<int> prbolemIndexQueue = Queue<int>();
+
+  final player = AudioPlayer();
 
   @override
   void initState() {
@@ -152,13 +155,13 @@ class _ProblemPageState extends State<ProblemPage> {
       waitForSolving = false;
     }
     if (prbolemIndexQueue.isNotEmpty &&
-        formatter.format(
-                DateTime.parse(lastProblemTime[widget.courseList.subject])) ==
-            formatter.format(now)) {
+        (formatter.format(DateTime.parse(
+                    lastProblemTime[widget.courseList.subject])) ==
+                formatter.format(now) ||
+            retrievedProblemList!.length == problemIndex)) {
       problemIndex = prbolemIndexQueue.first;
       waitForSolving = true;
-    }
-    if (prbolemIndexQueue.isEmpty) {
+    } else if (prbolemIndexQueue.isEmpty) {
       problemIndex = userData["lastProblemIdx"][widget.courseList.subject];
     }
   }
@@ -196,6 +199,7 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   void dispose() {
     _solutionController.dispose();
+    player.dispose();
     super.dispose();
   }
 
@@ -227,6 +231,9 @@ class _ProblemPageState extends State<ProblemPage> {
                   content: 'Keep Going')
               .showAlertDialog();
         }
+
+        await player.play(AssetSource(AppAssets.increasingScoreSound));
+
         updatingUserData();
         solvingDate.add(DateTime.now().toString());
         nextRepeatFun();
