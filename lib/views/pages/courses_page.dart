@@ -1,3 +1,4 @@
+import 'package:education_app/controllers/auth_controller.dart';
 import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/models/courses_model.dart';
 import 'package:education_app/views/widgets/courses_list.dart';
@@ -12,11 +13,51 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
+  Future<void> _logout(AuthController model, context) async {
+    try {
+      await model.logout();
+      Navigator.pop(context);
+    } catch (e) {
+      debugPrint('logout error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Courses',
+          style: Theme.of(context).textTheme.headline4!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+        ),
+        actions: [
+          Consumer<AuthController>(builder: (_, model, __) {
+            return ElevatedButton(
+              onPressed: () {
+                _logout(model, context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                ),
+              ),
+              child: const Text(
+                'Log Out',
+              ),
+            );
+          }),
+          const SizedBox(
+            width: 10,
+          )
+        ],
+        toolbarHeight: 60,
+      ),
       body: SafeArea(
         child: StreamBuilder<List<CoursesModel>>(
             stream: database.courseListStream(),
@@ -31,16 +72,6 @@ class _CoursesPageState extends State<CoursesPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 16.0),
-                        Text(
-                          'Courses',
-                          style:
-                              Theme.of(context).textTheme.headline4!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                        ),
-                        const SizedBox(height: 16.0),
                         if (courseList == null || courseList.isEmpty)
                           Center(
                             child: Text(
