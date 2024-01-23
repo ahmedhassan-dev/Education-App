@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -228,17 +229,25 @@ class _ProblemPageState extends State<ProblemPage> {
         if (_solutionController.text.trim() !=
                 retrievedProblemList![problemIndex].solution &&
             retrievedProblemList![problemIndex].needReview == true) {
-          MainDialog(
-                  context: context,
-                  title: 'We will review your answer soon❤️!',
-                  content: 'Keep Going')
-              .showAlertDialog();
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.infoReverse,
+            animType: AnimType.scale,
+            title: 'Keep Going😉',
+            desc: 'We will review your answer soon❤️!',
+            dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+            // btnCancelOnPress: () {},
+            // btnOkOnPress: () {},
+          ).show();
         } else {
-          MainDialog(
-                  context: context,
-                  title: 'Nice Answer😊!',
-                  content: 'Keep Going')
-              .showAlertDialog();
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.success,
+            animType: AnimType.scale,
+            title: 'Nice Answer😊!',
+            desc: 'Keep Going❤️',
+            dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+          ).show();
         }
 
         await player.play(AssetSource(AppAssets.increasingScoreSound));
