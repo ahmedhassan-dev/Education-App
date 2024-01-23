@@ -3,6 +3,7 @@ import 'package:education_app/services/auth.dart';
 import 'package:education_app/utilities/router.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.subscribeToTopic('admin');
     return Provider<AuthBase>(
       create: (_) => Auth(),
       child: MaterialApp(
