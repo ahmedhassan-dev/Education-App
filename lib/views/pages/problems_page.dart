@@ -32,6 +32,7 @@ class _ProblemPageState extends State<ProblemPage> {
   Map userData = {};
   int score = 0;
   Map<String, String> lastProblem = {};
+  Map<String, dynamic> userScores = {};
   Map<String, dynamic> lastProblemIdx = {};
   Map<String, dynamic> lastProblemTime = {};
   List<Problems>? retrievedProblemList;
@@ -68,11 +69,15 @@ class _ProblemPageState extends State<ProblemPage> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     userData = snapshot.data()!;
-    score = userData["userScore"];
+    score = userData["totalScore"];
+    userScores = userData["userScores"];
     lastProblemIdx =
         userData["lastProblemIdx"]; //Adding the firebase map to the local map
     lastProblemTime =
         userData["lastProblemTime"]; //Adding the firebase map to the local map
+    if (userData["userScores"][widget.courseList.subject] == null) {
+      userScores[widget.courseList.subject] = 0;
+    }
     if (userData["lastProblemIdx"][widget.courseList.subject] == null) {
       lastProblemIdx[widget.courseList.subject] =
           0; // Adding new subject to the map
@@ -86,13 +91,17 @@ class _ProblemPageState extends State<ProblemPage> {
   updatingUserData() async {
     if (!solvedBefore) {
       score += retrievedProblemList![problemIndex].scoreNum;
+      userScores[widget.courseList.subject] =
+          userScores[widget.courseList.subject] +
+              retrievedProblemList![problemIndex].scoreNum;
       lastProblemIdx[widget.courseList.subject] = problemIndex + 1;
       lastProblemTime[widget.courseList.subject] = DateTime.now().toString();
       await FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .update({
-        "userScore": score,
+        "totalScore": score,
+        "userScores": userScores,
         "lastProblemIdx": lastProblemIdx,
         "lastProblemTime": lastProblemTime
       });
@@ -407,7 +416,7 @@ class _ProblemPageState extends State<ProblemPage> {
                                     controller: _solutionController,
                                     decoration: const InputDecoration(
                                       labelText: 'Solution',
-                                      fillColor: Colors.white,
+                                      fillColor: Color.fromRGBO(42, 42, 42, 1),
                                       filled: true,
                                     ),
                                     validator: (value) {

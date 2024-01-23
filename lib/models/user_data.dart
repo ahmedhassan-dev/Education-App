@@ -2,7 +2,8 @@ class UserData {
   final String uid;
   final String? userName;
   final String? email;
-  final int userScore;
+  final int totalScore;
+  final Map<String, int> userScores;
   final Map<String, int> lastProblemIdx;
   final Map<String, String> lastProblemTime;
 
@@ -10,7 +11,8 @@ class UserData {
       {required this.uid,
       required this.userName,
       required this.email,
-      this.userScore = 0,
+      this.totalScore = 0,
+      this.userScores = const {},
       this.lastProblemIdx = const {},
       this.lastProblemTime = const {}});
 
@@ -20,7 +22,8 @@ class UserData {
     result.addAll({'uid': uid});
     result.addAll({'userName': userName});
     result.addAll({'email': email});
-    result.addAll({'userScore': userScore});
+    result.addAll({'totalScore': totalScore});
+    result.addAll({'userScores': userScores});
     result.addAll({'lastProblemIdx': lastProblemIdx});
     result.addAll({'lastProblemTime': lastProblemTime});
 
@@ -32,7 +35,8 @@ class UserData {
       uid: documentId,
       userName: map['userName'] ?? '',
       email: map['email'] ?? '',
-      userScore: map['userScore'] ?? '',
+      totalScore: map['totalScore'] ?? '',
+      userScores: map['userScores'] ?? '',
       lastProblemIdx: map['lastProblemIdx'] ?? '',
       lastProblemTime: map['lastProblemTime'] ?? '',
     );

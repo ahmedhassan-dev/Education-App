@@ -32,8 +32,6 @@ class AuthController with ChangeNotifier {
     if (mytoken != null && uid != null) {
       await database.setToken(uid, mytoken!);
     }
-    print("__________________________________");
-    print(mytoken);
   }
 
   Future<void> submit() async {

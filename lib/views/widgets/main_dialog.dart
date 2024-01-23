@@ -19,11 +19,17 @@ class MainDialog {
         builder: (_) => AlertDialog(
               title: Text(
                 title,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: Colors.black),
               ),
               content: Text(
                 content,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.black),
               ),
               actions: (actions != null)
                   ? actions!
