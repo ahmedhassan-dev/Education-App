@@ -30,11 +30,12 @@ class _CoursesPageState extends State<CoursesPage> {
       appBar: AppBar(
         title: Text(
           'Courses',
-          style: Theme.of(context).textTheme.headline4!.copyWith(
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
         ),
+        automaticallyImplyLeading: false,
         actions: [
           Consumer<AuthController>(builder: (_, model, __) {
             return ElevatedButton(
@@ -49,6 +50,7 @@ class _CoursesPageState extends State<CoursesPage> {
               ),
               child: const Text(
                 'Log Out',
+                style: TextStyle(color: Colors.white),
               ),
             );
           }),
@@ -76,7 +78,7 @@ class _CoursesPageState extends State<CoursesPage> {
                           Center(
                             child: Text(
                               'No Data Available!',
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         if (courseList != null && courseList.isNotEmpty)

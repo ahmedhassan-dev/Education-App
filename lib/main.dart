@@ -40,12 +40,21 @@ class MyApp extends StatelessWidget {
         title: 'Education App',
         // TODO: Refactor this theme away from the main file
         theme: ThemeData(
+            disabledColor: Colors.white,
+            textTheme: Theme.of(context).textTheme.apply(
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                ),
             appBarTheme:
                 const AppBarTheme(color: Color.fromRGBO(42, 42, 42, 1)),
             scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
             primaryColor: Colors.red,
             inputDecorationTheme: InputDecorationTheme(
-              labelStyle: Theme.of(context).textTheme.subtitle1,
+              labelStyle: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.white),
+              floatingLabelStyle: const TextStyle(color: Colors.white),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0),
                 borderSide: const BorderSide(

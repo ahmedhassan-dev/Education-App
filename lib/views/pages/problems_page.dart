@@ -290,13 +290,13 @@ class _ProblemPageState extends State<ProblemPage> {
                 appBar: AppBar(
                   title: Text(
                     widget.courseList.subject,
-                    style: Theme.of(context).textTheme.headline6!.copyWith(
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                   actions: [
                     Text(
                       score.toString(),
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
