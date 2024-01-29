@@ -14,9 +14,11 @@ import 'package:education_app/views/widgets/problem_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/views/widgets/main_button.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import "dart:ui" as ui;
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -294,6 +296,11 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context);
+    Size s = ui.window.physicalSize / ui.window.devicePixelRatio;
+    bool landscape = s.width > s.height;
+    if (landscape) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    }
     return isLoading
         ? retrievedProblemList!.length == problemIndex
             ? Center(
@@ -305,51 +312,40 @@ class _ProblemPageState extends State<ProblemPage> {
                 ),
               )
             : Scaffold(
-                appBar: AppBar(
-                  title: Text(
-                    widget.courseList.subject,
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  actions: [
-                    Text(
-                      score.toString(),
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Image.asset(
-                      AppAssets.starIcon,
-                      height: 35,
-                    ),
-                    const SizedBox(
-                      width: 5,
+                body: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) => [
+                    SliverAppBar(
+                      title: Text(
+                        widget.courseList.subject,
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      actions: [
+                        Text(
+                          score.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Image.asset(
+                          AppAssets.starIcon,
+                          height: 35,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                drawer: Drawer(
-                  // Add a ListView to the drawer. This ensures the user can scroll
-                  // through the options in the drawer if there isn't enough vertical
-                  // space to fit everything.
-                  child: ListView(
-                    // Important: Remove any padding from the ListView.
-                    padding: EdgeInsets.zero,
-                    children: const [
-                      DrawerHeader(
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(42, 42, 42, 1),
-                        ),
-                        child: Text('User'),
-                      ),
-                    ],
-                  ),
-                ),
-                body: SafeArea(
-                  child: SingleChildScrollView(
+                  body: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
@@ -482,6 +478,23 @@ class _ProblemPageState extends State<ProblemPage> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                drawer: Drawer(
+                  // Add a ListView to the drawer. This ensures the user can scroll
+                  // through the options in the drawer if there isn't enough vertical
+                  // space to fit everything.
+                  child: ListView(
+                    // Important: Remove any padding from the ListView.
+                    padding: EdgeInsets.zero,
+                    children: const [
+                      DrawerHeader(
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(42, 42, 42, 1),
+                        ),
+                        child: Text('User'),
+                      ),
+                    ],
                   ),
                 ),
               )
