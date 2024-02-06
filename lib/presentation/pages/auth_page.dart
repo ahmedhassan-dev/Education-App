@@ -1,15 +1,15 @@
-import 'package:education_app/controllers/auth_controller.dart';
+import 'package:education_app/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:education_app/utilities/assets.dart';
 import 'package:education_app/utilities/enums.dart';
 import 'package:education_app/utilities/routes.dart';
-import 'package:education_app/views/widgets/main_button.dart';
-import 'package:education_app/views/widgets/main_dialog.dart';
-import 'package:education_app/views/widgets/social_media_button.dart';
+import 'package:education_app/presentation/widgets/main_button.dart';
+import 'package:education_app/presentation/widgets/main_dialog.dart';
+import 'package:education_app/presentation/widgets/social_media_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({Key? key}) : super(key: key);
+  const AuthPage({super.key});
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -29,25 +29,23 @@ class _AuthPageState extends State<AuthPage> {
     super.dispose();
   }
 
-  Future<void> _submit(AuthController model) async {
+  Future<void> _submit(BuildContext context) async {
     try {
-      await model.submit();
+      await BlocProvider.of<AuthCubit>(context).submit();
       if (!mounted) return;
-      Navigator.of(context).pushNamed(AppRoutes.landingPageRoute);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.landingPageRoute);
     } catch (e) {
-      // TODO: Need to refactoring
       MainDialog(context: context, title: 'Error', content: e.toString())
           .showAlertDialog();
     }
   }
 
-  Future<void> _googleLogIn(AuthController model) async {
+  Future<void> _googleLogIn(BuildContext context) async {
     try {
-      await model.googleLogIn();
+      await BlocProvider.of<AuthCubit>(context).googleLogIn();
       if (!mounted) return;
-      Navigator.of(context).pushNamed(AppRoutes.landingPageRoute);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.landingPageRoute);
     } catch (e) {
-      // TODO: Need to refactoring
       MainDialog(context: context, title: 'Error', content: e.toString())
           .showAlertDialog();
     }
@@ -56,9 +54,8 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    return Consumer<AuthController>(
-      builder: (_, model, __) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: true,
           body: SafeArea(
@@ -74,7 +71,8 @@ class _AuthPageState extends State<AuthPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        model.authFormType == AuthFormType.login
+                        BlocProvider.of<AuthCubit>(context).authFormType ==
+                                AuthFormType.login
                             ? 'Login'
                             : 'Register',
                         style: Theme.of(context).textTheme.headlineMedium,
@@ -86,7 +84,8 @@ class _AuthPageState extends State<AuthPage> {
                         onEditingComplete: () => FocusScope.of(context)
                             .requestFocus(_passwordFocusNode),
                         textInputAction: TextInputAction.next,
-                        onChanged: model.updateEmail,
+                        onChanged:
+                            BlocProvider.of<AuthCubit>(context).updateEmail,
                         validator: (val) =>
                             val!.isEmpty ? 'Please enter your email!' : null,
                         decoration: const InputDecoration(
@@ -100,7 +99,8 @@ class _AuthPageState extends State<AuthPage> {
                         focusNode: _passwordFocusNode,
                         validator: (val) =>
                             val!.isEmpty ? 'Please enter your password!' : null,
-                        onChanged: model.updatePassword,
+                        onChanged:
+                            BlocProvider.of<AuthCubit>(context).updatePassword,
                         obscureText: true,
                         decoration: const InputDecoration(
                           labelText: 'Password',
@@ -108,7 +108,8 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      if (model.authFormType == AuthFormType.login)
+                      if (BlocProvider.of<AuthCubit>(context).authFormType ==
+                          AuthFormType.login)
                         Align(
                           alignment: Alignment.topRight,
                           child: InkWell(
@@ -118,12 +119,14 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                       const SizedBox(height: 24.0),
                       MainButton(
-                        text: model.authFormType == AuthFormType.login
-                            ? 'Login'
-                            : 'Register',
+                        text:
+                            BlocProvider.of<AuthCubit>(context).authFormType ==
+                                    AuthFormType.login
+                                ? 'Login'
+                                : 'Register',
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            _submit(model);
+                            _submit(context);
                           }
                         },
                       ),
@@ -132,13 +135,15 @@ class _AuthPageState extends State<AuthPage> {
                         alignment: Alignment.center,
                         child: InkWell(
                           child: Text(
-                            model.authFormType == AuthFormType.login
+                            BlocProvider.of<AuthCubit>(context).authFormType ==
+                                    AuthFormType.login
                                 ? 'Don\'t have an account? Register'
                                 : 'Have an account? Login',
                           ),
                           onTap: () {
                             _formKey.currentState!.reset();
-                            model.toggleFormType();
+                            BlocProvider.of<AuthCubit>(context)
+                                .toggleFormType();
                           },
                         ),
                       ),
@@ -146,7 +151,8 @@ class _AuthPageState extends State<AuthPage> {
                       Align(
                           alignment: Alignment.center,
                           child: Text(
-                            model.authFormType == AuthFormType.login
+                            BlocProvider.of<AuthCubit>(context).authFormType ==
+                                    AuthFormType.login
                                 ? 'Or Login with'
                                 : 'Or Register with',
                             style: Theme.of(context).textTheme.titleMedium,
@@ -158,7 +164,7 @@ class _AuthPageState extends State<AuthPage> {
                           SocialMediaButton(
                             iconName: AppAssets.googleIcon,
                             onPress: () {
-                              _googleLogIn(model);
+                              _googleLogIn(context);
                             },
                           ),
                         ],

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:education_app/models/problems.dart';
-import 'package:education_app/models/solved_problems.dart';
+import 'package:education_app/data/models/problems.dart';
+import 'package:education_app/data/models/solved_problems.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreServices {

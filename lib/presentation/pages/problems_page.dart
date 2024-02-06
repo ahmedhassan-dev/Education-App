@@ -2,20 +2,20 @@ import 'dart:collection';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/controllers/database_controller.dart';
-import 'package:education_app/models/courses_model.dart';
-import 'package:education_app/models/problems.dart';
-import 'package:education_app/models/solved_problems.dart';
-import 'package:education_app/services/firestore_services.dart';
+import 'package:education_app/data/models/courses_model.dart';
+import 'package:education_app/data/models/problems.dart';
+import 'package:education_app/data/models/solved_problems.dart';
+import 'package:education_app/data/repository/firestore_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
 import 'package:education_app/utilities/assets.dart';
-import 'package:education_app/views/widgets/main_dialog.dart';
-import 'package:education_app/views/widgets/need_help_list.dart';
-import 'package:education_app/views/widgets/problem_timer.dart';
+import 'package:education_app/presentation/widgets/main_dialog.dart';
+import 'package:education_app/presentation/widgets/need_help_list.dart';
+import 'package:education_app/presentation/widgets/problem_timer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:education_app/views/widgets/main_button.dart';
+import 'package:education_app/presentation/widgets/main_button.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import "dart:ui" as ui;
@@ -295,7 +295,7 @@ class _ProblemPageState extends State<ProblemPage> {
 
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<Database>(context);
+    // final database = Provider.of<Database>(context);
     Size s = ui.window.physicalSize / ui.window.devicePixelRatio;
     bool landscape = s.width > s.height;
     if (landscape) {
@@ -445,7 +445,7 @@ class _ProblemPageState extends State<ProblemPage> {
                               MainButton(
                                   text: "Submit",
                                   onTap: () {
-                                    submitSolution(database);
+                                    // submitSolution(database);
                                   }),
                               needHelp
                                   ? NeedHelpList(

@@ -1,7 +1,7 @@
-import 'package:education_app/models/courses_model.dart';
-import 'package:education_app/models/solved_problems.dart';
-import 'package:education_app/models/user_data.dart';
-import 'package:education_app/services/firestore_services.dart';
+import 'package:education_app/data/models/courses_model.dart';
+import 'package:education_app/data/models/solved_problems.dart';
+import 'package:education_app/data/models/user_data.dart';
+import 'package:education_app/data/repository/firestore_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
 
 abstract class Database {
