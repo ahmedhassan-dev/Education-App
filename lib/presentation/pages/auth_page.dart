@@ -51,6 +51,14 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  showProgressIndicator() {
+    const Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.white,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -126,6 +134,7 @@ class _AuthPageState extends State<AuthPage> {
                                 : 'Register',
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
+                            showProgressIndicator();
                             _submit(context);
                           }
                         },
@@ -164,6 +173,7 @@ class _AuthPageState extends State<AuthPage> {
                           SocialMediaButton(
                             iconName: AppAssets.googleIcon,
                             onPress: () {
+                              showProgressIndicator();
                               _googleLogIn(context);
                             },
                           ),
