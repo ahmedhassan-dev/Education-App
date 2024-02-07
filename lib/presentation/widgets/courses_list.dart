@@ -1,15 +1,14 @@
-import 'package:education_app/controllers/database_controller.dart';
+// import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/data/models/courses_model.dart';
-import 'package:education_app/utilities/routes.dart';
+// import 'package:education_app/utilities/routes.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
 
 class CoursesList extends StatelessWidget {
   final CoursesModel courseList;
   const CoursesList({
-    Key? key,
+    super.key,
     required this.courseList,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

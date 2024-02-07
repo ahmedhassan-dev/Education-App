@@ -1,12 +1,9 @@
-import 'package:education_app/data/models/courses_model.dart';
 import 'package:education_app/data/models/solved_problems.dart';
 import 'package:education_app/data/models/user_data.dart';
-import 'package:education_app/data/repository/firestore_repo.dart';
+import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/utilities/api_path.dart';
 
 abstract class Database {
-  Stream<List<CoursesModel>> courseListStream();
-
   Future<void> setUserData(UserData userData);
   setToken(String uid, String userToken);
   Future<void> submitSolution(SolvedProblems address);
@@ -17,12 +14,6 @@ class FirestoreDatabase implements Database {
   final _service = FirestoreServices.instance;
 
   FirestoreDatabase(this.uid);
-
-  @override
-  Stream<List<CoursesModel>> courseListStream() => _service.collectionsStream(
-        path: ApiPath.courses(),
-        builder: (data, documentId) => CoursesModel.fromMap(data!, documentId),
-      );
 
   @override
   Future<void> setUserData(UserData userData) async => await _service.setData(

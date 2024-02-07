@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CoursesModel {
   final String imgUrl;
   final String subject;
@@ -22,4 +24,7 @@ class CoursesModel {
       subject: map['subject'] ?? '',
     );
   }
+  CoursesModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc)
+      : imgUrl = doc.data()!["imgUrl"],
+        subject = doc.data()!["subject"];
 }

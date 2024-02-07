@@ -4,10 +4,9 @@ import 'package:education_app/data/models/solved_problems.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreServices {
+  FirestoreServices();
   FirestoreServices._();
-
   static final instance = FirestoreServices._();
-
   final _fireStore = FirebaseFirestore.instance;
 
   Future<void> setData({
@@ -37,6 +36,12 @@ class FirestoreServices {
     return snapshot.docs
         .map((docSnapshot) => Problems.fromDocumentSnapshot(docSnapshot))
         .toList();
+  }
+
+  Future<dynamic> retrieveData({required String path}) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await _fireStore.collection(path).get();
+    return snapshot.docs;
   }
 
   Future<List<SolvedProblems>> retrieveSolvedProblems(

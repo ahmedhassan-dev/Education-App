@@ -5,7 +5,7 @@ import 'package:education_app/controllers/database_controller.dart';
 import 'package:education_app/data/models/courses_model.dart';
 import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/data/models/solved_problems.dart';
-import 'package:education_app/data/repository/firestore_repo.dart';
+import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/utilities/api_path.dart';
 import 'package:education_app/utilities/assets.dart';
 import 'package:education_app/presentation/widgets/main_dialog.dart';

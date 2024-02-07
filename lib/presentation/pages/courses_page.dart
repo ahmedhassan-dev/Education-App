@@ -1,9 +1,10 @@
 import 'package:education_app/business_logic/auth_cubit/auth_cubit.dart';
-import 'package:education_app/controllers/database_controller.dart';
+import 'package:education_app/business_logic/courses_cubit/courses_cubit.dart';
 import 'package:education_app/data/models/courses_model.dart';
 import 'package:education_app/presentation/widgets/courses_list.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -14,6 +15,14 @@ class CoursesPage extends StatefulWidget {
 
 class _CoursesPageState extends State<CoursesPage> {
   AuthCubit authCubit = AuthCubit();
+  List<CoursesModel> allCourses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<CoursesCubit>(context).getAllCourses();
+  }
+
   Future<void> _logout(context) async {
     try {
       await authCubit.logOut();
@@ -21,6 +30,52 @@ class _CoursesPageState extends State<CoursesPage> {
     } catch (e) {
       debugPrint('logout error: $e');
     }
+  }
+
+  Widget buildBlocWidget() {
+    return BlocBuilder<CoursesCubit, CoursesState>(
+      builder: (context, state) {
+        if (state is CoursesLoaded) {
+          allCourses = (state).courses;
+          return buildLoadedListWidgets();
+        } else {
+          return showLoadingIndicator();
+        }
+      },
+    );
+  }
+
+  Widget buildLoadedListWidgets() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        child: Column(
+          children: [buildCharactersList(), const SizedBox(height: 24.0)],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCharactersList() {
+    return ListView.builder(
+      itemCount: allCourses.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int i) {
+        final courseType = allCourses[i];
+        return CoursesList(
+          courseList: courseType,
+        );
+      },
+    );
+  }
+
+  Widget showLoadingIndicator() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.white,
+      ),
+    );
   }
 
   @override
@@ -57,51 +112,7 @@ class _CoursesPageState extends State<CoursesPage> {
         ],
         toolbarHeight: 60,
       ),
-      body: const SafeArea(
-        child: SizedBox(),
-        // child: StreamBuilder<List<CoursesModel>>(
-        //     stream: database.courseListStream(),
-        //     builder: (context, snapshot) {
-        //       if (snapshot.connectionState == ConnectionState.active) {
-        //         final courseList = snapshot.data;
-
-        //         return SingleChildScrollView(
-        //           child: Padding(
-        //             padding: const EdgeInsets.symmetric(
-        //                 vertical: 8.0, horizontal: 16.0),
-        //             child: Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: [
-        //                 if (courseList == null || courseList.isEmpty)
-        //                   Center(
-        //                     child: Text(
-        //                       'No Data Available!',
-        //                       style: Theme.of(context).textTheme.titleMedium,
-        //                     ),
-        //                   ),
-        //                 if (courseList != null && courseList.isNotEmpty)
-        //                   ListView.builder(
-        //                     itemCount: courseList.length,
-        //                     shrinkWrap: true,
-        //                     physics: const NeverScrollableScrollPhysics(),
-        //                     itemBuilder: (BuildContext context, int i) {
-        //                       final courseType = courseList[i];
-        //                       return CoursesList(
-        //                         courseList: courseType,
-        //                       );
-        //                     },
-        //                   ),
-        //                 const SizedBox(height: 24.0),
-        //               ],
-        //             ),
-        //           ),
-        //         );
-        //       }
-        //       return const Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     }),
-      ),
+      body: buildBlocWidget(),
     );
   }
 }

@@ -5,11 +5,11 @@ class MainButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool hasCircularBorder;
   const MainButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTap,
     this.hasCircularBorder = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

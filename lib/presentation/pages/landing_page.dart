@@ -1,7 +1,7 @@
-// import 'package:education_app/controllers/auth_controller.dart';
-// import 'package:education_app/controllers/database_controller.dart';
-// import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:education_app/business_logic/auth_cubit/auth_cubit.dart';
+import 'package:education_app/business_logic/courses_cubit/courses_cubit.dart';
+import 'package:education_app/data/repository/courses_repo.dart';
+import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/presentation/pages/auth_page.dart';
 import 'package:education_app/presentation/pages/courses_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +14,9 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthCubit authCubit = AuthCubit();
+    CoursesRepository coursesRepository =
+        CoursesRepository(FirestoreServices());
+    CoursesCubit coursesCubit = CoursesCubit(coursesRepository);
     final auth = FirebaseAuth.instance;
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
@@ -26,8 +29,15 @@ class LandingPage extends StatelessWidget {
               child: const AuthPage(),
             );
           }
-          return BlocProvider<AuthCubit>.value(
-            value: authCubit,
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthCubit>.value(
+                value: authCubit,
+              ),
+              BlocProvider(
+                create: (context) => coursesCubit,
+              ),
+            ],
             child: const CoursesPage(),
           );
         }
