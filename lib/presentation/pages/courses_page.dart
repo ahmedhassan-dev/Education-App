@@ -62,9 +62,9 @@ class _CoursesPageState extends State<CoursesPage> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
-        final courseType = allCourses[i];
+        final courseList = allCourses[i];
         return CoursesList(
-          courseList: courseType,
+          courseList: courseList,
         );
       },
     );
