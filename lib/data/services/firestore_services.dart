@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/data/models/problems.dart';
-import 'package:education_app/data/models/solved_problems.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreServices {
@@ -16,6 +15,21 @@ class FirestoreServices {
     final reference = _fireStore.doc(path);
     debugPrint('Request Data: $data');
     await reference.set(data);
+  }
+
+  Future<void> updateUserData(
+      {required String path,
+      required int score,
+      required Map<String, dynamic> userScores,
+      required Map<String, dynamic> lastProblemIdx,
+      required Map<String, dynamic> lastProblemTime}) async {
+    final reference = _fireStore.doc(path);
+    await reference.update({
+      "totalScore": score,
+      "userScores": userScores,
+      "lastProblemIdx": lastProblemIdx,
+      "lastProblemTime": lastProblemTime
+    });
   }
 
   Future<void> deleteData({required String path}) async {
@@ -38,13 +52,32 @@ class FirestoreServices {
         .toList();
   }
 
+  Future<dynamic> retrieveSortedData(
+      {required String subject,
+      required String path,
+      required String sortedBy}) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+        .collection(path)
+        .where("topics", arrayContains: subject)
+        .orderBy(sortedBy)
+        .get();
+    return snapshot.docs;
+  }
+
   Future<dynamic> retrieveData({required String path}) async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await _fireStore.collection(path).get();
     return snapshot.docs;
   }
 
-  Future<List<SolvedProblems>> retrieveSolvedProblems(
+  Future<dynamic> retrieveDataFormDocument(
+      {required String path, required String docName}) async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _fireStore.collection(path).doc(docName).get();
+    return snapshot;
+  }
+
+  Future<dynamic> retrieveSolvedProblems(
       {required String subject,
       required String mainCollectionPath,
       required String uid,
@@ -57,9 +90,7 @@ class FirestoreServices {
         .where("topics", arrayContains: subject)
         .orderBy(sortedBy)
         .get();
-    return snapshot.docs
-        .map((docSnapshot) => SolvedProblems.fromDocumentSnapshot(docSnapshot))
-        .toList();
+    return snapshot.docs;
   }
 
   Stream<T> documentsStream<T>({

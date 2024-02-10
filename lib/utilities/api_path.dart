@@ -1,6 +1,7 @@
 class ApiPath {
   static String courses() => 'courses/';
   static String user(String uid) => 'users/$uid';
+  static String userCollection() => 'users';
   static String userToken(String uid) => 'users/$uid/tokens/${DateTime.now()}';
   static String problems() => 'problems/';
   static String solvedProblems(String uid, String solutionId) =>
