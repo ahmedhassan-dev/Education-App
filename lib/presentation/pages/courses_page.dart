@@ -26,7 +26,7 @@ class _CoursesPageState extends State<CoursesPage> {
   Future<void> _logout(context) async {
     try {
       await authCubit.logOut();
-      Navigator.of(context).pushReplacementNamed(AppRoutes.loginPageRoute);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.selectUserTypeRoute);
     } catch (e) {
       debugPrint('logout error: $e');
     }

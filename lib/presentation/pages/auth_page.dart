@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+  final String userType;
+  const AuthPage({required this.userType, super.key});
 
   @override
   State<AuthPage> createState() => _AuthPageState();

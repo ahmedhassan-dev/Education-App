@@ -59,7 +59,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
-      await database.setUserData(UserData(
+      await database.setUserData(Student(
         uid: user.user?.uid ?? documentIdFromLocalData(),
         userName: "user",
         email: email,
@@ -96,7 +96,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         getAndSendToken(user.uid);
         if (userCredential.additionalUserInfo!.isNewUser) {
-          await database.setUserData(UserData(
+          await database.setUserData(Student(
             uid: user.uid,
             userName: user.displayName,
             email: user.email,

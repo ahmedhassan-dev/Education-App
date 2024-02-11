@@ -1,4 +1,4 @@
-class UserData {
+class Student {
   final String uid;
   final String? userName;
   final String? email;
@@ -7,7 +7,7 @@ class UserData {
   final Map<String, int> lastProblemIdx;
   final Map<String, String> lastProblemTime;
 
-  UserData(
+  Student(
       {required this.uid,
       required this.userName,
       required this.email,
@@ -30,8 +30,8 @@ class UserData {
     return result;
   }
 
-  factory UserData.fromMap(Map<String, dynamic> map, String documentId) {
-    return UserData(
+  factory Student.fromMap(Map<String, dynamic> map, String documentId) {
+    return Student(
       uid: documentId,
       userName: map['userName'] ?? '',
       email: map['email'] ?? '',
