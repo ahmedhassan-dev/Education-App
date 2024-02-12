@@ -1,16 +1,15 @@
-class Student {
-  final String uid;
-  final String? userName;
-  final String? email;
+import 'package:education_app/data/models/user.dart';
+
+class Student extends User {
   final int totalScore;
   final Map<String, int> userScores;
   final Map<String, int> lastProblemIdx;
   final Map<String, String> lastProblemTime;
 
   Student(
-      {required this.uid,
-      required this.userName,
-      required this.email,
+      {required super.uid,
+      required super.userName,
+      required super.email,
       this.totalScore = 0,
       this.userScores = const {},
       this.lastProblemIdx = const {},

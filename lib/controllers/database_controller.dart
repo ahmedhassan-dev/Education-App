@@ -1,5 +1,5 @@
 import 'package:education_app/data/models/solved_problems.dart';
-import 'package:education_app/data/models/user_data.dart';
+import 'package:education_app/data/models/student.dart';
 import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/utilities/api_path.dart';
 

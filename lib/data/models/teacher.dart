@@ -1,16 +1,15 @@
-class Teacher {
-  final String uid;
-  final String? userName;
-  final String? email;
+import 'package:education_app/data/models/user.dart';
+
+class Teacher extends User {
   final String? phoneNum;
   final List<String>? subjects;
   final List<String>? educationalStages;
   final Map<String, String> problemsAdded;
 
   Teacher({
-    required this.uid,
-    required this.userName,
-    required this.email,
+    required super.uid,
+    required super.userName,
+    required super.email,
     this.phoneNum,
     this.subjects = const [],
     this.educationalStages = const [],
