@@ -1,4 +1,4 @@
-class TeacherData {
+class Teacher {
   final String uid;
   final String? userName;
   final String? email;
@@ -7,7 +7,7 @@ class TeacherData {
   final List<String>? educationalStages;
   final Map<String, String> problemsAdded;
 
-  TeacherData({
+  Teacher({
     required this.uid,
     required this.userName,
     required this.email,
@@ -31,8 +31,8 @@ class TeacherData {
     return result;
   }
 
-  factory TeacherData.fromMap(Map<String, dynamic> map, String documentId) {
-    return TeacherData(
+  factory Teacher.fromMap(Map<String, dynamic> map, String documentId) {
+    return Teacher(
       uid: documentId,
       userName: map['userName'] ?? '',
       email: map['email'] ?? '',
@@ -43,7 +43,7 @@ class TeacherData {
     );
   }
 
-  TeacherData copyWith({
+  Teacher copyWith({
     String? uid,
     String? userName,
     String? email,
@@ -52,7 +52,7 @@ class TeacherData {
     List<String>? educationalStages,
     Map<String, String>? problemsAdded,
   }) {
-    return TeacherData(
+    return Teacher(
       uid: uid ?? this.uid,
       userName: userName ?? this.userName,
       email: email ?? this.email,

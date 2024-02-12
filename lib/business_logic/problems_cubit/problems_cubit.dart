@@ -38,7 +38,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   retrieveUserData({required String subject}) async {
     this.subject = subject;
     await problemsRepository
-        .retrieveUserData(path: ApiPath.userCollection(), docName: uid)
+        .retrieveUserData(path: ApiPath.studentCollection(), docName: uid)
         .then((userData) {
       this.userData = userData.data()!;
     });
@@ -63,7 +63,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  updatingUserData() async {
+  updatingStudentData() async {
     if (!solvedBefore) {
       score += retrievedProblemList![problemIndex].scoreNum;
       userScores[subject] =
@@ -71,7 +71,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       lastProblemIdx[subject] = problemIndex + 1;
       lastProblemTime[subject] = DateTime.now().toString();
       problemsRepository.updateUserData(
-          path: ApiPath.user(uid),
+          path: ApiPath.student(uid),
           score: score,
           userScores: userScores,
           lastProblemIdx: lastProblemIdx,
@@ -98,7 +98,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     await problemsRepository
         .retrieveSolvedProblems(
             subject: subject,
-            mainCollectionPath: ApiPath.userCollection(),
+            mainCollectionPath: ApiPath.studentCollection(),
             uid: uid,
             collectionPath: 'solvedProblems',
             sortedBy: 'id')
@@ -199,7 +199,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   Future<void> submitSolution(String solutionController) async {
-    updatingUserData();
+    updatingStudentData();
     solvingDate.add(DateTime.now().toString());
     nextRepeatFun();
 

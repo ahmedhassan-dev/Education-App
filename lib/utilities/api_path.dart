@@ -1,10 +1,14 @@
 class ApiPath {
   static String courses() => 'courses/';
-  static String user(String uid) => 'users/$uid';
-  static String userCollection() => 'users';
-  static String userToken(String uid) => 'users/$uid/tokens/${DateTime.now()}';
+  static String student(String uid) => 'students/$uid';
+  static String teacher(String uid) => 'teachers/$uid';
+  // static String problemsTeacherIdList() =>
+  //     'problems/problemsTeacherIdList/teacherId';
+  static String studentCollection() => 'students';
+  static String userToken(String uid, String userType) =>
+      '${"${userType.toLowerCase()}s"}/$uid/tokens/${DateTime.now()}';
   static String problems() => 'problems/';
   static String solvedProblems(String uid, String solutionId) =>
-      'users/$uid/solvedProblems/$solutionId';
+      'students/$uid/solvedProblems/$solutionId';
   // static String solutions(String uid) => 'users/$uid/solvedProblems/';
 }

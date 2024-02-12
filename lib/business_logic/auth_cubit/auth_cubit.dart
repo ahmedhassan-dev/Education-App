@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/data/models/teacher.dart';
+import 'package:education_app/utilities/api_path.dart';
 // import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:meta/meta.dart';
 import 'package:education_app/controllers/database_controller.dart';
@@ -16,6 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
   String email;
   String password;
   AuthFormType authFormType;
+  String userType;
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
@@ -25,6 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
     this.email = '',
     this.password = '',
     this.authFormType = AuthFormType.login,
+    this.userType = '',
   }) : super(AuthInitial());
 
   Future<void> submit() async {
@@ -40,7 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
   getAndSendToken(String? uid) async {
     mytoken = await FirebaseMessaging.instance.getToken();
     if (mytoken != null && uid != null) {
-      await database.setToken(uid, mytoken!);
+      await database.setToken(uid, mytoken!, ApiPath.userToken(uid, userType));
     }
   }
 
@@ -54,16 +58,42 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void setUserType({required String userType}) {
+    this.userType = userType;
+  }
+
+  userObject(String? uid, String? userName, String? email) {
+    if (userType == "Teacher") {
+      return Teacher(
+        uid: uid ?? documentIdFromLocalData(),
+        userName: userName,
+        email: email,
+      );
+    } else if (userType == "Student") {
+      return Student(
+        uid: uid ?? documentIdFromLocalData(),
+        userName: userName,
+        email: email,
+      );
+    }
+  }
+
+  userPath(String? uid) {
+    if (userType == "Teacher") {
+      return ApiPath.teacher(uid!);
+    } else if (userType == "Student") {
+      return ApiPath.student(uid!);
+    }
+  }
+
   Future<void> signUp() async {
     try {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
-      await database.setUserData(Student(
-        uid: user.user?.uid ?? documentIdFromLocalData(),
-        userName: "user",
-        email: email,
-      ));
+      await database.setUserData(
+          userData: userObject(user.user?.uid, userType, email),
+          path: userPath(user.user!.uid));
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'user-not-found') {
         emit(ErrorOccurred(errorMsg: 'user not found'));
@@ -102,11 +132,9 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         getAndSendToken(user.uid);
         if (userCredential.additionalUserInfo!.isNewUser) {
-          await database.setUserData(Student(
-            uid: user.uid,
-            userName: user.displayName,
-            email: user.email,
-          ));
+          await database.setUserData(
+              userData: userObject(user.uid, user.displayName, user.email),
+              path: userPath(user.uid));
         }
       }
       emit(SubmitionVerified());

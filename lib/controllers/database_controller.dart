@@ -4,8 +4,8 @@ import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/utilities/api_path.dart';
 
 abstract class Database {
-  Future<void> setUserData(Student userData);
-  setToken(String uid, String userToken);
+  Future<void> setUserData({required Student userData, required String path});
+  setToken(String uid, String userToken, String path);
   Future<void> submitSolution(SolvedProblems address);
 }
 
@@ -16,15 +16,17 @@ class FirestoreDatabase implements Database {
   FirestoreDatabase(this.uid);
 
   @override
-  Future<void> setUserData(Student userData) async => await _service.setData(
-        path: ApiPath.user(userData.uid),
+  Future<void> setUserData(
+          {required dynamic userData, required String path}) async =>
+      await _service.setData(
+        path: path,
         data: userData.toMap(),
       );
 
   @override
-  Future<void> setToken(String uid, String userToken) async =>
+  Future<void> setToken(String uid, String userToken, String path) async =>
       await _service.setData(
-        path: ApiPath.userToken(uid),
+        path: path,
         data: {"token": userToken},
       );
 

@@ -24,6 +24,13 @@ class _AuthPageState extends State<AuthPage> {
   final _passwordFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<AuthCubit>(context).setUserType(userType: widget.userType);
+    // BlocProvider.of<ProblemsCubit>(context).retrieveSubjectProblems();
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();

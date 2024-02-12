@@ -16,8 +16,9 @@ class UserTypeList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.loginPageRoute, arguments: userType);
+          Navigator.of(context, rootNavigator: true).pushReplacementNamed(
+              AppRoutes.loginPageRoute,
+              arguments: userType);
         },
         child: Container(
           decoration: BoxDecoration(
