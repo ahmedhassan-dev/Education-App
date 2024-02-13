@@ -5,6 +5,7 @@ class ApiPath {
   // static String problemsTeacherIdList() =>
   //     'problems/problemsTeacherIdList/teacherId';
   static String studentCollection() => 'students';
+  static String teachersCollection() => 'teachers';
   static String userToken(String uid, String userType) =>
       '${"${userType.toLowerCase()}s"}/$uid/tokens/${DateTime.now()}';
   static String problems() => 'problems/';

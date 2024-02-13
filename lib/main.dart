@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               ),
           appBarTheme: const AppBarTheme(color: Color.fromRGBO(42, 42, 42, 1)),
           scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
-          primaryColor: Colors.red,
+          primaryColor: const Color.fromRGBO(244, 67, 54, 1),
           inputDecorationTheme: InputDecorationTheme(
             labelStyle: Theme.of(context)
                 .textTheme
