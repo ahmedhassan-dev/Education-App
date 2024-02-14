@@ -25,7 +25,8 @@ class TeacherCubit extends Cubit<TeacherState> {
   }
 
   initTeacherData() {
-    subjects = teacherData["subjects"];
+    var dynamicSubjects = teacherData["subjects"];
+    subjects = List<String>.from(dynamicSubjects);
     emit(TeacherDataLoaded());
   }
 
