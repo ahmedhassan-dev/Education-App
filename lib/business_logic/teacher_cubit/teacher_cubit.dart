@@ -56,7 +56,6 @@ class TeacherCubit extends Cubit<TeacherState> {
 
   storeSubjectsInSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userType', 'Teacher');
     await prefs.setStringList('subjects', subjects);
   }
 

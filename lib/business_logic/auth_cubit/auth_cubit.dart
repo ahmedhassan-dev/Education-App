@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:education_app/data/models/student.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:education_app/utilities/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -38,7 +39,13 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       await signUp();
     }
+    await storeUserTypeInSharedPreferences();
     emit(SubmitionVerified());
+  }
+
+  storeUserTypeInSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userType', userType);
   }
 
   getAndSendToken(String? uid) async {
@@ -136,6 +143,7 @@ class AuthCubit extends Cubit<AuthState> {
               userData: userObject(user.uid, user.displayName, user.email),
               path: userPath(user.uid));
         }
+        await storeUserTypeInSharedPreferences();
       }
       emit(SubmitionVerified());
     } catch (e) {
