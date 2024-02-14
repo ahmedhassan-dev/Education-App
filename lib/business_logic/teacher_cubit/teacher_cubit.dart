@@ -3,11 +3,12 @@ import 'package:education_app/data/repository/teacher_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'teacher_state.dart';
 
 class TeacherCubit extends Cubit<TeacherState> {
-  dynamic subjects = [];
+  List<String> subjects = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
@@ -48,7 +49,14 @@ class TeacherCubit extends Cubit<TeacherState> {
       data: teacherData,
       path: ApiPath.teacher(uid),
     );
+    await storeSubjectsInSharedPreferences();
     // emit(TeacherDataUpdated());
+  }
+
+  storeSubjectsInSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userType', 'Teacher');
+    await prefs.setStringList('subjects', subjects);
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;
