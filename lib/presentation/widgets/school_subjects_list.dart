@@ -13,9 +13,7 @@ class SchoolSubjectsList extends StatelessWidget {
   Widget buildBlocWidget() {
     return BlocBuilder<TeacherCubit, TeacherState>(
       builder: (context, state) {
-        if (state is SubjectAdded) {
-          return subjectElement(context);
-        } else if (state is Loading) {
+        if (state is Loading) {
           return showLoadingIndicator();
         } else {
           return subjectElement(context);

@@ -9,7 +9,7 @@ part 'teacher_state.dart';
 class TeacherCubit extends Cubit<TeacherState> {
   dynamic subjects = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
-  dynamic teacherData = {};
+  Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
   TeacherCubit(this.teacherRepository) : super(TeacherInitial());
 
@@ -31,16 +31,24 @@ class TeacherCubit extends Cubit<TeacherState> {
   getSelectedSubject({required String subject}) {
     if (subjects.contains(subject)) {
       subjects.removeAt(subjects.indexOf(subject));
-      emit(SubjectDelete());
     } else {
       subjects.add(subject);
-      emit(SubjectAdded());
     }
-    print("subjects: $subjects");
+    emit(SubjectEdited());
   }
 
   bool isSubjectAvailable({required String subject}) {
     return subjects.contains(subject);
+  }
+
+  Future<void> saveSubjects() async {
+    emit(Loading());
+    final teacherData = {"subjects": subjects};
+    await teacherRepository.updateTeacherData(
+      data: teacherData,
+      path: ApiPath.teacher(uid),
+    );
+    // emit(TeacherDataUpdated());
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;

@@ -10,4 +10,11 @@ class TeacherRepository {
         path: path, docName: docName) as dynamic;
     return teacher;
   }
+
+  Future<void> updateTeacherData(
+          {required String path, required Map<String, dynamic> data}) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: data,
+      );
 }

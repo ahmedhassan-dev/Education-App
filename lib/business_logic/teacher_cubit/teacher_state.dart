@@ -7,9 +7,9 @@ final class TeacherInitial extends TeacherState {}
 
 class Loading extends TeacherState {}
 
-class SubjectAdded extends TeacherState {}
+class SubjectEdited extends TeacherState {}
 
-class SubjectDelete extends TeacherState {}
+class TeacherDataUpdated extends TeacherState {}
 
 class TeacherDataLoaded extends TeacherState {
   // final List<CoursesModel> courses;
