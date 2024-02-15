@@ -13,19 +13,14 @@ class ProblemsRepository {
     return userData;
   }
 
-  // TODO: maybe I can make a copywith method in the userdata class to edit theclass and updata the data throw the model
-  Future<void> updateUserData(
-          {required String path,
-          required int score,
-          required Map<String, dynamic> userScores,
-          required Map<String, dynamic> lastProblemIdx,
-          required Map<String, dynamic> lastProblemTime}) async =>
-      await firestoreServices.updateUserData(
-          path: path,
-          score: score,
-          userScores: userScores,
-          lastProblemIdx: lastProblemIdx,
-          lastProblemTime: lastProblemTime);
+  Future<void> updatingStudentData({
+    required String path,
+    required Map<String, dynamic> data,
+  }) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: data,
+      );
 
   Future<List<Problems>> retrieveSubjectProblems(
       {required String subject,

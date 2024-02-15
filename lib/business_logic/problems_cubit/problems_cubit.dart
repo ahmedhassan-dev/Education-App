@@ -70,12 +70,14 @@ class ProblemsCubit extends Cubit<ProblemsState> {
           userScores[subject] + retrievedProblemList![problemIndex].scoreNum;
       lastProblemIdx[subject] = problemIndex + 1;
       lastProblemTime[subject] = DateTime.now().toString();
-      problemsRepository.updateUserData(
-          path: ApiPath.student(uid),
-          score: score,
-          userScores: userScores,
-          lastProblemIdx: lastProblemIdx,
-          lastProblemTime: lastProblemTime);
+      Map<String, dynamic> data = {
+        "totalScore": score,
+        "userScores": userScores,
+        "lastProblemIdx": lastProblemIdx,
+        "lastProblemTime": lastProblemTime
+      };
+      problemsRepository.updatingStudentData(
+          path: ApiPath.student(uid), data: data);
     }
   }
 

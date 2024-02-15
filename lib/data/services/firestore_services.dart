@@ -17,21 +17,6 @@ class FirestoreServices {
     await reference.set(data);
   }
 
-  Future<void> updateUserData(
-      {required String path,
-      required int score,
-      required Map<String, dynamic> userScores,
-      required Map<String, dynamic> lastProblemIdx,
-      required Map<String, dynamic> lastProblemTime}) async {
-    final reference = _fireStore.doc(path);
-    await reference.update({
-      "totalScore": score,
-      "userScores": userScores,
-      "lastProblemIdx": lastProblemIdx,
-      "lastProblemTime": lastProblemTime
-    });
-  }
-
   Future<void> updateData({
     required String path,
     required Map<String, dynamic> data,
