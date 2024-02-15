@@ -9,6 +9,7 @@ part 'teacher_state.dart';
 
 class TeacherCubit extends Cubit<TeacherState> {
   List<String> subjects = [];
+  List<String> educationalStages = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
@@ -26,7 +27,9 @@ class TeacherCubit extends Cubit<TeacherState> {
 
   initTeacherData() {
     var dynamicSubjects = teacherData["subjects"];
+    var dynamicEducationalStages = teacherData["educationalStages"];
     subjects = List<String>.from(dynamicSubjects);
+    educationalStages = List<String>.from(dynamicEducationalStages);
     emit(TeacherDataLoaded());
   }
 
@@ -39,13 +42,28 @@ class TeacherCubit extends Cubit<TeacherState> {
     emit(SubjectEdited());
   }
 
+  getSelectedEducationalStages({required String stage}) {
+    if (educationalStages.contains(stage)) {
+      educationalStages.removeAt(educationalStages.indexOf(stage));
+    } else {
+      educationalStages.add(stage);
+    }
+    emit(SubjectEdited());
+  }
+
   bool isSubjectAvailable({required String subject}) {
     return subjects.contains(subject);
   }
 
+  bool isEducationalStageAvailable({required String stage}) {
+    return educationalStages.contains(stage);
+  }
+
   Future<void> saveSubjects() async {
     emit(Loading());
-    final teacherData = {"subjects": subjects};
+    final teacherData = {
+      "subjects": subjects,
+    };
     await teacherRepository.updateTeacherData(
       data: teacherData,
       path: ApiPath.teacher(uid),
@@ -54,9 +72,25 @@ class TeacherCubit extends Cubit<TeacherState> {
     // emit(TeacherDataUpdated());
   }
 
+  Future<void> saveEducationalStages() async {
+    emit(Loading());
+    final teacherData = {"educationalStages": educationalStages};
+    await teacherRepository.updateTeacherData(
+      data: teacherData,
+      path: ApiPath.teacher(uid),
+    );
+    await storeEducationalStagesInSharedPreferences();
+    // emit(TeacherDataUpdated());
+  }
+
   storeSubjectsInSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('subjects', subjects);
+  }
+
+  storeEducationalStagesInSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('educationalStages', educationalStages);
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;

@@ -8,6 +8,7 @@ import 'package:education_app/data/repository/problems_repo.dart';
 import 'package:education_app/data/repository/teacher_repo.dart';
 import 'package:education_app/data/services/firestore_services.dart';
 import 'package:education_app/presentation/pages/problems_page.dart';
+import 'package:education_app/presentation/pages/select_stage_page.dart';
 import 'package:education_app/presentation/pages/select_user_page.dart';
 import 'package:education_app/presentation/pages/teacher_page.dart';
 import 'package:education_app/utilities/routes.dart';
@@ -24,6 +25,14 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         builder: (_) => BlocProvider<AuthCubit>.value(
           value: AuthCubit(),
           child: const SelectUserPage(),
+        ),
+        settings: settings,
+      );
+    case AppRoutes.selectEducationalStagesRoute:
+      return CupertinoPageRoute(
+        builder: (_) => BlocProvider<TeacherCubit>.value(
+          value: TeacherCubit(TeacherRepository(FirestoreServices())),
+          child: const SelectEducationalStagesPage(),
         ),
         settings: settings,
       );

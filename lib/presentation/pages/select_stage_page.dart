@@ -1,37 +1,25 @@
 import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
+import 'package:education_app/presentation/widgets/educational_stages_list.dart';
 import 'package:education_app/presentation/widgets/main_dialog.dart';
-import 'package:education_app/presentation/widgets/school_subjects_list.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelectSubjectsPage extends StatefulWidget {
-  const SelectSubjectsPage({super.key});
-  static const List<String> schoolSubjects = [
-    'Math',
-    'English',
-    'Physics',
-    'Chemistry',
-    'Science',
-    'History',
-    'Geography',
-    'ICT',
-    'Art',
-    'Biology',
-    'Others'
+class SelectEducationalStagesPage extends StatefulWidget {
+  const SelectEducationalStagesPage({super.key});
+  static const List<String> educationalStages = [
+    'Primary Education',
+    'Middle School',
+    'Secondary Education',
+    'Higher Education',
   ];
 
   @override
-  State<SelectSubjectsPage> createState() => _SelectSubjectsPageState();
+  State<SelectEducationalStagesPage> createState() =>
+      _SelectSubjectsPageState();
 }
 
-class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<TeacherCubit>(context).retrieveTeacherData();
-  }
-
+class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
   Widget buildBlocWidget() {
     return BlocBuilder<TeacherCubit, TeacherState>(
       builder: (context, state) {
@@ -52,15 +40,15 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
     );
   }
 
-  buildSchoolSubjectsList() {
+  buildEducationalStagesList() {
     return ListView.builder(
-      itemCount: SelectSubjectsPage.schoolSubjects.length,
+      itemCount: SelectEducationalStagesPage.educationalStages.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
-        final schoolSubject = SelectSubjectsPage.schoolSubjects[i];
-        return SchoolSubjectsList(
-          subject: schoolSubject,
+        final stage = SelectEducationalStagesPage.educationalStages[i];
+        return EducationalStagesList(
+          stage: stage,
         );
       },
     );
@@ -72,10 +60,10 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
       child: ElevatedButton(
         onPressed: () async {
           try {
-            await BlocProvider.of<TeacherCubit>(context).saveSubjects();
+            await BlocProvider.of<TeacherCubit>(context)
+                .saveEducationalStages();
             if (!mounted) return;
-            Navigator.of(context)
-                .pushReplacementNamed(AppRoutes.selectEducationalStagesRoute);
+            Navigator.of(context).pushReplacementNamed(AppRoutes.teacherRoute);
           } catch (e) {
             MainDialog(context: context, title: 'Error', content: e.toString())
                 .showAlertDialog();
@@ -102,7 +90,7 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
         children: [
           Positioned(
               child: SingleChildScrollView(
-            child: buildSchoolSubjectsList(),
+            child: buildEducationalStagesList(),
           )),
           Positioned(
             right: 0,
@@ -119,12 +107,14 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Choose subjects you can teach?",
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+        title: Flexible(
+          child: Text(
+            "What educational stages have \nyou been involved in?",
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-              ),
+                overflow: TextOverflow.visible),
+          ),
         ),
       ),
       body: buildStackWidget(),
