@@ -6,6 +6,8 @@ class Problems {
   final String title;
   final String problem;
   final String solution;
+  final String stage;
+  final String author;
   final int scoreNum;
   final int time;
   final bool needReview;
@@ -18,6 +20,8 @@ class Problems {
     required this.problem,
     required this.scoreNum,
     required this.solution,
+    required this.stage,
+    required this.author,
     required this.time,
     required this.needReview,
     required this.topics,
@@ -30,6 +34,8 @@ class Problems {
       'title': title,
       'problem': problem,
       'solution': solution,
+      'stage': stage,
+      'author': author,
       'scoreNum': scoreNum,
       'time': time,
       'needReview': needReview,
@@ -45,6 +51,8 @@ class Problems {
       title: map['title'] as String,
       problem: map['problem'] as String,
       solution: map['solution'] as String,
+      stage: map['stage'] as String,
+      author: map['author'] as String,
       scoreNum: map['scoreNum'] as int,
       time: map['time'] as int,
       needReview: map['needReview'] as bool,
@@ -59,6 +67,8 @@ class Problems {
         title = doc.data()!["title"],
         problem = doc.data()!["problem"],
         solution = doc.data()!["solution"],
+        stage = doc.data()!["stage"],
+        author = doc.data()!["author"],
         scoreNum = doc.data()!["scoreNum"],
         time = doc.data()!["time"],
         needReview = doc.data()!["needReview"],
