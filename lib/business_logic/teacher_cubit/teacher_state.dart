@@ -16,3 +16,5 @@ class TeacherDataLoaded extends TeacherState {
 
   // CoursesLoaded();
 }
+
+class ProblemStored extends TeacherState {}

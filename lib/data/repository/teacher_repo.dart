@@ -1,3 +1,4 @@
+import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/data/services/firestore_services.dart';
 
 class TeacherRepository {
@@ -16,5 +17,12 @@ class TeacherRepository {
       await firestoreServices.updateData(
         path: path,
         data: data,
+      );
+
+  Future<void> storeNewProblem(
+          {required String path, required Problems data}) async =>
+      await firestoreServices.setData(
+        path: path,
+        data: data.toMap(),
       );
 }

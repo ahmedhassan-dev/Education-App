@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/data/repository/teacher_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,6 +92,15 @@ class TeacherCubit extends Cubit<TeacherState> {
   storeEducationalStagesInSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('educationalStages', educationalStages);
+  }
+
+  Future<void> storeNewProblem(Problems problem) async {
+    emit(Loading());
+    await teacherRepository.storeNewProblem(
+      path: ApiPath.problems(),
+      data: problem,
+    );
+    emit(ProblemStored());
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;

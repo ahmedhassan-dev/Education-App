@@ -8,6 +8,8 @@ final class ProblemsInitial extends ProblemsState {}
 
 class Loading extends ProblemsState {}
 
+class ProblemsLoaded extends ProblemsState {}
+
 class DataLoaded extends ProblemsState {
   final List<Problems>? retrievedProblemList;
   final dynamic userData;

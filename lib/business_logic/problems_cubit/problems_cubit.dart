@@ -81,7 +81,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  retrieveSubjectProblems() async {
+  retrieveSubjectProblems({bool forTeachers = false}) async {
     await problemsRepository
         .retrieveSubjectProblems(
             subject: subject, path: ApiPath.problems(), sortedBy: 'problemId')
@@ -89,9 +89,16 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       this.retrievedProblemList = retrievedProblemList;
     });
 
-    await initRetrievalSolutions();
-    startCounting = DateTime.now();
+    if (!forTeachers) {
+      await initRetrievalSolutions();
+      startCounting = DateTime.now();
+    } else {
+      emit(ProblemsLoaded());
+    }
   }
+
+  generateNewProblemId() =>
+      "${int.parse(retrievedProblemList!.last.problemId) + 1}";
 
   checkProblemsAvailability() =>
       !(retrievedProblemList!.length == problemIndex);

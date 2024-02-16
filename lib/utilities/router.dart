@@ -47,9 +47,17 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       );
     case AppRoutes.teacherRoute:
       return CupertinoPageRoute(
-        builder: (_) => BlocProvider<TeacherCubit>(
-          create: (context) =>
-              TeacherCubit(TeacherRepository(FirestoreServices())),
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider<TeacherCubit>(
+              create: (context) =>
+                  TeacherCubit(TeacherRepository(FirestoreServices())),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  ProblemsCubit(ProblemsRepository(FirestoreServices())),
+            ),
+          ],
           child: const TeacherPage(),
         ),
         settings: settings,
