@@ -1,10 +1,12 @@
 import 'package:education_app/firebase_options.dart';
+import 'package:education_app/presentation/widgets/simple_bloc_observer.dart';
 import 'package:education_app/utilities/router.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,13 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  runApp(const MyApp());
+  BlocOverrides.runZoned(
+    () {
+      runApp(const MyApp());
+    },
+    blocObserver: SimpleBlocObserver(),
+  );
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

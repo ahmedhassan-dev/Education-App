@@ -9,6 +9,8 @@ class ApiPath {
   static String userToken(String uid, String userType) =>
       '${"${userType.toLowerCase()}s"}/$uid/tokens/${DateTime.now()}';
   static String problems() => 'problems/';
+  static String storingProblem(String problemId) => 'problems/$problemId';
+  static String lastProblemId() => 'publicInfo/';
   static String solvedProblems(String uid, String solutionId) =>
       'students/$uid/solvedProblems/$solutionId';
   // static String solutions(String uid) => 'users/$uid/solvedProblems/';

@@ -97,9 +97,6 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  generateNewProblemId() =>
-      "${int.parse(retrievedProblemList!.last.problemId) + 1}";
-
   checkProblemsAvailability() =>
       !(retrievedProblemList!.length == problemIndex);
 
@@ -215,7 +212,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     final solutionData = SolvedProblems(
       id: solvedProblems != null
           ? solvedProblems!.id
-          : retrievedProblemList![problemIndex].problemId,
+          : retrievedProblemList![problemIndex].problemId!,
       answer: solutionController,
       solvingTime: DateTime.now().difference(startCounting).inSeconds,
       nextRepeat: nextRepeat,
@@ -229,7 +226,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       solution: solutionData,
       path: ApiPath.solvedProblems(
         uid,
-        retrievedProblemList![problemIndex].problemId,
+        retrievedProblemList![problemIndex].problemId!,
       ),
     );
     resetVariables();
@@ -239,7 +236,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     emit(DataLoaded(retrievedProblemList, userData, retrievedSolutionList));
   }
 
-  String get problemId => retrievedProblemList![problemIndex].problemId;
+  String get problemId => retrievedProblemList![problemIndex].problemId!;
   String get title => retrievedProblemList![problemIndex].title;
   List<String> get topics => retrievedProblemList![problemIndex].topics;
   int get expectedTime => retrievedProblemList![problemIndex].time;

@@ -1,9 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:education_app/business_logic/problems_cubit/problems_cubit.dart';
 import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
 import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/presentation/widgets/main_button.dart';
 import 'package:education_app/presentation/widgets/main_dialog.dart';
+import 'package:education_app/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +20,6 @@ class _TeacherPageState extends State<TeacherPage> {
   final _problemController = TextEditingController();
   final _solutionController = TextEditingController();
   final _stageController = TextEditingController();
-  final _authorController = TextEditingController();
   final _scoreNumController = TextEditingController();
   final _timeController = TextEditingController();
   final _topicsController = TextEditingController();
@@ -29,8 +28,7 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProblemsCubit>(context)
-        .retrieveSubjectProblems(forTeachers: true);
+    BlocProvider.of<TeacherCubit>(context).getEmailFromSharedPreferences();
   }
 
   @override
@@ -39,7 +37,6 @@ class _TeacherPageState extends State<TeacherPage> {
     _problemController.dispose();
     _solutionController.dispose();
     _stageController.dispose();
-    _authorController.dispose();
     _scoreNumController.dispose();
     _timeController.dispose();
     _topicsController.dispose();
@@ -54,49 +51,53 @@ class _TeacherPageState extends State<TeacherPage> {
           context: context,
           dialogType: DialogType.success,
           animType: AnimType.scale,
-          title: 'Nice Answer😊!',
+          title: 'Problem Saved😊!',
           desc: 'Keep Going❤️',
           dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
         ).show();
-        final problem = Problems(
-          id: BlocProvider.of<ProblemsCubit>(context)
-              .generateNewProblemId(), // TODO: I have to check that it will not be empty or nullable
-          problemId: "10",
-          title: _titleController.text.trim(),
-          problem: _problemController.text.trim(),
-          solution: _solutionController.text.trim(),
-          stage: _stageController.text.trim(),
-          author: _authorController.text.trim(),
-          scoreNum: int.parse(_scoreNumController.text.trim()),
-          time: int.parse(_timeController.text.trim()),
-          needReview: true, //-----> check box
-          topics: [_topicsController.text.trim()],
-          videos: [_videosController.text.trim()],
-        );
-        BlocProvider.of<TeacherCubit>(context).storeNewProblem(problem);
-        await Future.delayed(const Duration(seconds: 1), () {});
-        if (!mounted) return;
-        Navigator.of(context).pop();
+        storeNewProblem();
       }
     } catch (e) {
       MainDialog(
               context: context,
-              title: 'Error Saving Problem',
+              title: 'Error Generating New Id',
               content: e.toString())
           .showAlertDialog();
     }
   }
 
   Widget buildBlocWidget() {
-    return BlocBuilder<ProblemsCubit, ProblemsState>(
-      builder: (context, state) {
-        if (state is ProblemsLoaded) {
-          return addNewProblemWidget();
-        } else {
-          return showLoadingIndicator();
-        }
-      },
+    return BlocConsumer<TeacherCubit, TeacherState>(
+        listener: (BuildContext context, TeacherState state) async {
+      if (state is ProblemStored) {
+        await Future.delayed(const Duration(seconds: 1), () {});
+        if (!mounted) return;
+      }
+    }, builder: (context, TeacherState state) {
+      if (state is UserEmailRetrieved || state is ProblemStored) {
+        return addNewProblemWidget();
+      } else {
+        return showLoadingIndicator();
+      }
+    });
+  }
+
+  Future<void> storeNewProblem() async {
+    final problem = Problems(
+      id: null, // TODO: I have to check that it will not be empty or nullable
+      problemId: null,
+      title: _titleController.text.trim(),
+      problem: _problemController.text.trim(),
+      solution: _solutionController.text.trim(),
+      stage: _stageController.text.trim(),
+      author: context.read<TeacherCubit>().getUserEmail,
+      scoreNum: int.parse(_scoreNumController.text.trim()),
+      time: int.parse(_timeController.text.trim()),
+      needReview: true, //-----> check box
+      topics: [_topicsController.text.trim()],
+      videos: [_videosController.text.trim()],
     );
+    BlocProvider.of<TeacherCubit>(context).saveNewProblem(problem: problem);
   }
 
   Widget addNewProblemWidget() {
@@ -118,9 +119,9 @@ class _TeacherPageState extends State<TeacherPage> {
               children: [
                 TextFormField(
                   controller: _titleController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Title',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) =>
@@ -129,9 +130,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _problemController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Problem',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) =>
@@ -140,9 +141,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _solutionController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Solution',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) =>
@@ -151,9 +152,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _scoreNumController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Score Numbers',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) => value!.isNotEmpty
@@ -163,9 +164,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _timeController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Expected Time',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) => value!.isNotEmpty
@@ -175,9 +176,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _stageController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Stage',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) =>
@@ -186,9 +187,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _topicsController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Topics',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) =>
@@ -197,9 +198,9 @@ class _TeacherPageState extends State<TeacherPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _videosController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Explanation Link',
-                    fillColor: Colors.white,
+                    fillColor: AppColors.textFormFieldFillColor,
                     filled: true,
                   ),
                   validator: (value) => value!.isNotEmpty
@@ -207,15 +208,13 @@ class _TeacherPageState extends State<TeacherPage> {
                       : 'Please enter your the explanation link',
                 ),
                 const SizedBox(height: 32.0),
-                BlocBuilder<TeacherCubit, TeacherState>(
-                  builder: (context, state) {
-                    return MainButton(
-                      text: 'Save Problem',
-                      onTap: () => saveProblem(),
-                      hasCircularBorder: true,
-                    );
+                MainButton(
+                  text: 'Save Problem',
+                  onTap: () {
+                    saveProblem();
                   },
-                ),
+                  hasCircularBorder: true,
+                )
               ],
             ),
           ),
@@ -234,6 +233,6 @@ class _TeacherPageState extends State<TeacherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return addNewProblemWidget();
+    return buildBlocWidget();
   }
 }

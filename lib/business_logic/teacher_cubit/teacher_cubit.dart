@@ -12,6 +12,8 @@ class TeacherCubit extends Cubit<TeacherState> {
   List<String> subjects = [];
   List<String> educationalStages = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
+  String newProblemId = "0";
+  late String getUserEmail;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
   TeacherCubit(this.teacherRepository) : super(TeacherInitial());
@@ -97,10 +99,31 @@ class TeacherCubit extends Cubit<TeacherState> {
   Future<void> storeNewProblem(Problems problem) async {
     emit(Loading());
     await teacherRepository.storeNewProblem(
-      path: ApiPath.problems(),
+      path: ApiPath.storingProblem(newProblemId),
       data: problem,
     );
     emit(ProblemStored());
+  }
+
+  saveNewProblem({required Problems problem}) async {
+    await generateProblemId(); //TODO: I have to validate that newProblemId genertated
+    problem = problem.copyWith(id: newProblemId, problemId: newProblemId);
+    await storeNewProblem(problem);
+  }
+
+  generateProblemId() async {
+    await teacherRepository
+        .retrieveLastProblemId(
+            path: ApiPath.lastProblemId(), docName: 'problemsCount')
+        .then((lastProblemId) {
+      newProblemId = (lastProblemId.data()!["problemsCount"] + 1).toString();
+    });
+  }
+
+  getEmailFromSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    getUserEmail = prefs.getString('email')!;
+    emit(UserEmailRetrieved());
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;

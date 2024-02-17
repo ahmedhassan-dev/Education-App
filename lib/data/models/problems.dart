@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Problems {
-  final String id;
-  final String problemId;
+  final String? id;
+  final String? problemId;
   final String title;
   final String problem;
   final String solution;
@@ -78,4 +78,34 @@ class Problems {
         videos = doc.data()!["videos"] == null
             ? null
             : doc.data()?["videos"].cast<String>();
+
+  Problems copyWith({
+    String? id,
+    String? problemId,
+    String? title,
+    String? problem,
+    String? solution,
+    String? stage,
+    String? author,
+    int? scoreNum,
+    int? time,
+    bool? needReview,
+    List<String>? topics,
+    List<String>? videos,
+  }) {
+    return Problems(
+      id: id ?? this.id,
+      problemId: problemId ?? this.problemId,
+      title: title ?? this.title,
+      problem: problem ?? this.problem,
+      solution: solution ?? this.solution,
+      stage: stage ?? this.stage,
+      author: author ?? this.author,
+      scoreNum: scoreNum ?? this.scoreNum,
+      time: time ?? this.time,
+      needReview: needReview ?? this.needReview,
+      topics: topics ?? this.topics,
+      videos: videos ?? this.videos,
+    );
+  }
 }

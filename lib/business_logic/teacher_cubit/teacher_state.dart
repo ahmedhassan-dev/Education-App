@@ -11,10 +11,8 @@ class SubjectEdited extends TeacherState {}
 
 class TeacherDataUpdated extends TeacherState {}
 
-class TeacherDataLoaded extends TeacherState {
-  // final List<CoursesModel> courses;
+class UserEmailRetrieved extends TeacherState {}
 
-  // CoursesLoaded();
-}
+class TeacherDataLoaded extends TeacherState {}
 
 class ProblemStored extends TeacherState {}

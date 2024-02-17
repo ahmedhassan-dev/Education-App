@@ -12,6 +12,13 @@ class TeacherRepository {
     return teacher;
   }
 
+  Future<dynamic> retrieveLastProblemId(
+      {required String path, required String docName}) async {
+    final lastProblemId = await firestoreServices.retrieveDataFormDocument(
+        path: path, docName: docName) as dynamic;
+    return lastProblemId;
+  }
+
   Future<void> updateTeacherData(
           {required String path, required Map<String, dynamic> data}) async =>
       await firestoreServices.updateData(
