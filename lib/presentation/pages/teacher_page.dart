@@ -70,6 +70,7 @@ class _TeacherPageState extends State<TeacherPage> {
     return BlocConsumer<TeacherCubit, TeacherState>(
         listener: (BuildContext context, TeacherState state) async {
       if (state is ProblemStored) {
+        resetAllControllers();
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
         Navigator.pop(context);
@@ -81,6 +82,17 @@ class _TeacherPageState extends State<TeacherPage> {
         return showLoadingIndicator();
       }
     });
+  }
+
+  void resetAllControllers() {
+    _titleController.text = "";
+    _problemController.text = "";
+    _solutionController.text = "";
+    _stageController.text = "";
+    _scoreNumController.text = "";
+    _timeController.text = "";
+    _topicsController.text = "";
+    _videosController.text = "";
   }
 
   Future<void> storeNewProblem() async {
