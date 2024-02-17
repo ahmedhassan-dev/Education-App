@@ -11,6 +11,7 @@ class ApiPath {
   static String problems() => 'problems/';
   static String storingProblem(String problemId) => 'problems/$problemId';
   static String lastProblemId() => 'publicInfo/';
+  static String problemsCount() => 'publicInfo/problemsCount/';
   static String solvedProblems(String uid, String solutionId) =>
       'students/$uid/solvedProblems/$solutionId';
   // static String solutions(String uid) => 'users/$uid/solvedProblems/';

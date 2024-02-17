@@ -97,18 +97,19 @@ class TeacherCubit extends Cubit<TeacherState> {
   }
 
   Future<void> storeNewProblem(Problems problem) async {
-    emit(Loading());
     await teacherRepository.storeNewProblem(
       path: ApiPath.storingProblem(newProblemId),
       data: problem,
     );
-    emit(ProblemStored());
   }
 
   saveNewProblem({required Problems problem}) async {
+    emit(Loading());
     await generateProblemId(); //TODO: I have to validate that newProblemId genertated
     problem = problem.copyWith(id: newProblemId, problemId: newProblemId);
     await storeNewProblem(problem);
+    await updateProblemsCount();
+    emit(ProblemStored());
   }
 
   generateProblemId() async {
@@ -118,6 +119,14 @@ class TeacherCubit extends Cubit<TeacherState> {
         .then((lastProblemId) {
       newProblemId = (lastProblemId.data()!["problemsCount"] + 1).toString();
     });
+  }
+
+  Future<void> updateProblemsCount() async {
+    final problemsCount = {"problemsCount": int.parse(newProblemId)};
+    await teacherRepository.updateProblemsCount(
+      data: problemsCount,
+      path: ApiPath.problemsCount(),
+    );
   }
 
   getEmailFromSharedPreferences() async {

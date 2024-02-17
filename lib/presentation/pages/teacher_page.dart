@@ -72,6 +72,7 @@ class _TeacherPageState extends State<TeacherPage> {
       if (state is ProblemStored) {
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
+        Navigator.pop(context);
       }
     }, builder: (context, TeacherState state) {
       if (state is UserEmailRetrieved || state is ProblemStored) {

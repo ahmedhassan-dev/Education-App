@@ -26,6 +26,13 @@ class TeacherRepository {
         data: data,
       );
 
+  Future<void> updateProblemsCount(
+          {required String path, required Map<String, dynamic> data}) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: data,
+      );
+
   Future<void> storeNewProblem(
           {required String path, required Problems data}) async =>
       await firestoreServices.setData(
