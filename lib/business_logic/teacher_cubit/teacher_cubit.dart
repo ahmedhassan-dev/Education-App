@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/data/repository/teacher_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
+import 'package:education_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   late String getUserEmail;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
-  TeacherCubit(this.teacherRepository) : super(TeacherInitial());
+  TeacherCubit(this.teacherRepository) : super(Loading());
 
   retrieveTeacherData() async {
     emit(Loading());
@@ -115,7 +116,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   generateProblemId() async {
     await teacherRepository
         .retrieveLastProblemId(
-            path: ApiPath.lastProblemId(), docName: 'problemsCount')
+            path: ApiPath.publicInfo(), docName: 'problemsCount')
         .then((lastProblemId) {
       newProblemId = (lastProblemId.data()!["problemsCount"] + 1).toString();
     });
@@ -133,6 +134,26 @@ class TeacherCubit extends Cubit<TeacherState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     getUserEmail = prefs.getString('email')!;
     emit(UserEmailRetrieved());
+  }
+
+  late String latestAppVersion;
+  checkForUpdates() async {
+    emit(Loading());
+    await getLatestAppVersion();
+    if (latestAppVersion != teacherVersion) {
+      emit(NeedUpdate());
+    } else {
+      await getEmailFromSharedPreferences();
+    }
+  }
+
+  getLatestAppVersion() async {
+    await teacherRepository
+        .getLatestAppVersion(
+            path: ApiPath.publicInfo(), docName: 'teacherVersion')
+        .then((latestAppVersion) {
+      this.latestAppVersion = latestAppVersion.data()!["teacherVersion"];
+    });
   }
 
   bool get isSubjectsEmpty => subjects.isEmpty;

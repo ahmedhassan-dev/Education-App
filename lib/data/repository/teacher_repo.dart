@@ -19,6 +19,13 @@ class TeacherRepository {
     return lastProblemId;
   }
 
+  Future<dynamic> getLatestAppVersion(
+      {required String path, required String docName}) async {
+    final latestAppVersion = await firestoreServices.retrieveDataFormDocument(
+        path: path, docName: docName) as dynamic;
+    return latestAppVersion;
+  }
+
   Future<void> updateTeacherData(
           {required String path, required Map<String, dynamic> data}) async =>
       await firestoreServices.updateData(

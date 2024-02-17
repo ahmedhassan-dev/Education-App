@@ -10,7 +10,7 @@ class ApiPath {
       '${"${userType.toLowerCase()}s"}/$uid/tokens/${DateTime.now()}';
   static String problems() => 'problems/';
   static String storingProblem(String problemId) => 'problems/$problemId';
-  static String lastProblemId() => 'publicInfo/';
+  static String publicInfo() => 'publicInfo/';
   static String problemsCount() => 'publicInfo/problemsCount/';
   static String solvedProblems(String uid, String solutionId) =>
       'students/$uid/solvedProblems/$solutionId';

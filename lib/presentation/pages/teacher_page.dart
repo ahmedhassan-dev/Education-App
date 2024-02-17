@@ -3,6 +3,7 @@ import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
 import 'package:education_app/data/models/problems.dart';
 import 'package:education_app/presentation/widgets/main_button.dart';
 import 'package:education_app/presentation/widgets/main_dialog.dart';
+import 'package:education_app/presentation/widgets/need_update.dart';
 import 'package:education_app/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TeacherCubit>(context).getEmailFromSharedPreferences();
+    BlocProvider.of<TeacherCubit>(context).checkForUpdates();
   }
 
   @override
@@ -76,7 +77,9 @@ class _TeacherPageState extends State<TeacherPage> {
         Navigator.pop(context);
       }
     }, builder: (context, TeacherState state) {
-      if (state is UserEmailRetrieved || state is ProblemStored) {
+      if (state is NeedUpdate) {
+        return const NeedToUpdate();
+      } else if (state is UserEmailRetrieved || state is ProblemStored) {
         return addNewProblemWidget();
       } else {
         return showLoadingIndicator();
