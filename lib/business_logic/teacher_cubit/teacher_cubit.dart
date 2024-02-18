@@ -14,7 +14,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   List<String> educationalStages = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
   String newProblemId = "0";
-  late String getUserEmail;
+  late String email;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
   TeacherCubit(this.teacherRepository) : super(Loading());
@@ -132,7 +132,7 @@ class TeacherCubit extends Cubit<TeacherState> {
 
   getEmailFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    getUserEmail = prefs.getString('email')!;
+    email = prefs.getString('email')!;
     emit(UserEmailRetrieved());
   }
 

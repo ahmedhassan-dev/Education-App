@@ -40,7 +40,7 @@ class AuthCubit extends Cubit<AuthState> {
       await signUp();
     }
     await storeUserTypeInSharedPreferences();
-    await storeTeacherEmailInSharedPreferences();
+    await storeTeacherEmailInSharedPreferences(email: email);
     emit(SubmitionVerified());
   }
 
@@ -49,7 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
     await prefs.setString('userType', userType);
   }
 
-  storeTeacherEmailInSharedPreferences() async {
+  storeTeacherEmailInSharedPreferences({required String email}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
   }
@@ -150,7 +150,7 @@ class AuthCubit extends Cubit<AuthState> {
               path: userPath(user.uid));
         }
         await storeUserTypeInSharedPreferences();
-        await storeTeacherEmailInSharedPreferences();
+        await storeTeacherEmailInSharedPreferences(email: user.email!);
       }
       emit(SubmitionVerified());
     } catch (e) {

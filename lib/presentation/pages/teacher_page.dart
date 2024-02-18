@@ -106,7 +106,7 @@ class _TeacherPageState extends State<TeacherPage> {
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),
       stage: _stageController.text.trim(),
-      author: context.read<TeacherCubit>().getUserEmail,
+      author: context.read<TeacherCubit>().email,
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
       needReview: true, //-----> check box
