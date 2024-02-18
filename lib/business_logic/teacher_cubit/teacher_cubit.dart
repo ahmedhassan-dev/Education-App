@@ -17,7 +17,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   late String email;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
-  TeacherCubit(this.teacherRepository) : super(Loading());
+  TeacherCubit(this.teacherRepository) : super(TeacherInitial());
 
   retrieveTeacherData() async {
     emit(Loading());
