@@ -2,6 +2,7 @@ import 'package:education_app/business_logic/auth_cubit/auth_cubit.dart';
 import 'package:education_app/business_logic/courses_cubit/courses_cubit.dart';
 import 'package:education_app/business_logic/problems_cubit/problems_cubit.dart';
 import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
+import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:education_app/data/repository/courses_repo.dart';
 import 'package:education_app/data/repository/problems_repo.dart';
 import 'package:education_app/data/repository/teacher_repo.dart';
@@ -41,7 +42,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget selectInitPage(auth) {
-    AuthCubit authCubit = AuthCubit();
+    AuthCubit authCubit = AuthCubit(AuthRepository(FirestoreServices()));
     CoursesRepository coursesRepository =
         CoursesRepository(FirestoreServices());
     CoursesCubit coursesCubit = CoursesCubit(coursesRepository);

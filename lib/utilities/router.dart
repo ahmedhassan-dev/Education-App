@@ -3,6 +3,7 @@ import 'package:education_app/business_logic/courses_cubit/courses_cubit.dart';
 import 'package:education_app/business_logic/problems_cubit/problems_cubit.dart';
 import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
 import 'package:education_app/data/models/courses_model.dart';
+import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:education_app/data/repository/courses_repo.dart';
 import 'package:education_app/data/repository/problems_repo.dart';
 import 'package:education_app/data/repository/teacher_repo.dart';
@@ -23,7 +24,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.selectUserTypeRoute:
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(),
+          value: AuthCubit(AuthRepository(FirestoreServices())),
           child: const SelectUserPage(),
         ),
         settings: settings,
@@ -40,7 +41,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final userType = settings.arguments as String;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(),
+          value: AuthCubit(AuthRepository(FirestoreServices())),
           child: AuthPage(userType: userType),
         ),
         settings: settings,
@@ -67,7 +68,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         builder: (_) => MultiBlocProvider(
           providers: [
             BlocProvider<AuthCubit>.value(
-              value: AuthCubit(),
+              value: AuthCubit(AuthRepository(FirestoreServices())),
             ),
             BlocProvider(
               create: (context) =>

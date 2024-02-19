@@ -1,3 +1,4 @@
+import 'package:education_app/data/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthBase {
@@ -9,11 +10,17 @@ abstract class AuthBase {
 
   Future<User?> signUpWithEmailAndPassword(String email, String password);
 
+  Future<void> setUserData({required User userData, required String path});
+
+  Future<void> setToken(Map<String, String> userToken, String path);
+
   Future<void> logout();
 }
 
-class Auth implements AuthBase {
+class AuthRepository implements AuthBase {
   final _firebaseAuth = FirebaseAuth.instance;
+  FirestoreServices firestoreServices;
+  AuthRepository(this.firestoreServices);
 
   @override
   Future<User?> loginWithEmailAndPassword(String email, String password) async {
@@ -36,6 +43,22 @@ class Auth implements AuthBase {
   @override
   User? get currentUser => _firebaseAuth.currentUser;
 
+  @override
+  Future<void> setUserData(
+          {required dynamic userData, required String path}) async =>
+      await firestoreServices.setData(
+        path: path,
+        data: userData.toMap(),
+      );
+
+  @override
+  Future<void> setToken(Map<String, String> userToken, String path) async =>
+      await firestoreServices.setData(
+        path: path,
+        data: userToken,
+      );
+
+  //TODO: need to be refactored
   @override
   Future<void> logout() async => await _firebaseAuth.signOut();
 }

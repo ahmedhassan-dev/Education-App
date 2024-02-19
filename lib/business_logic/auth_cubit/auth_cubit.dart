@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/data/models/teacher.dart';
+import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:education_app/utilities/api_path.dart';
-// import 'package:education_app/data/repository/auth_repo.dart';
 import 'package:meta/meta.dart';
-import 'package:education_app/controllers/database_controller.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:education_app/utilities/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +14,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   String? mytoken;
-  // final AuthBase auth;
+  AuthRepository authRepository;
   String email;
   String password;
   AuthFormType authFormType;
@@ -23,9 +22,8 @@ class AuthCubit extends Cubit<AuthState> {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
-  final database = FirestoreDatabase('123');
-  AuthCubit({
-    // required this.auth,
+  AuthCubit(
+    this.authRepository, {
     this.email = '',
     this.password = '',
     this.authFormType = AuthFormType.login,
@@ -57,7 +55,9 @@ class AuthCubit extends Cubit<AuthState> {
   getAndSendToken(String? uid) async {
     mytoken = await FirebaseMessaging.instance.getToken();
     if (mytoken != null && uid != null) {
-      await database.setToken(uid, mytoken!, ApiPath.userToken(uid, userType));
+      Map<String, String> userToken = {"token": mytoken!};
+      await authRepository.setToken(
+          userToken, ApiPath.userToken(uid, userType));
     }
   }
 
@@ -104,7 +104,7 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
-      await database.setUserData(
+      await authRepository.setUserData(
           userData: userObject(user.user?.uid, userType, email),
           path: userPath(user.user!.uid));
     } on FirebaseAuthException catch (ex) {
@@ -118,9 +118,14 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> logOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
+  // Future<void> logOut() async {
+  //   try {
+  //     await FirebaseAuth.instance.signOut();
+  //     emit(LogedOut());
+  //   } catch (e) {
+  //     emit(LogedOutError(errorMsg: e.toString()));
+  //   }
+  // }
 
   User getLoggedInUser() {
     User firebaseUser = FirebaseAuth.instance.currentUser!;
@@ -145,7 +150,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         getAndSendToken(user.uid);
         if (userCredential.additionalUserInfo!.isNewUser) {
-          await database.setUserData(
+          await authRepository.setUserData(
               userData: userObject(user.uid, user.displayName, user.email),
               path: userPath(user.uid));
         }

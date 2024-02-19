@@ -14,7 +14,7 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
-  AuthCubit authCubit = AuthCubit();
+  // AuthCubit authCubit = AuthCubit();
   List<CoursesModel> allCourses = [];
 
   @override
@@ -23,26 +23,31 @@ class _CoursesPageState extends State<CoursesPage> {
     BlocProvider.of<CoursesCubit>(context).getAllCourses();
   }
 
-  Future<void> _logout(context) async {
-    try {
-      await authCubit.logOut();
-      Navigator.of(context).pushReplacementNamed(AppRoutes.selectUserTypeRoute);
-    } catch (e) {
-      debugPrint('logout error: $e');
-    }
-  }
+  // Future<void> _logout(context) async {
+  //   try {
+  //     await authCubit.logOut();
+  //   } catch (e) {
+  //     debugPrint('logout error: $e');
+  //   }
+  // }
 
   Widget buildBlocWidget() {
-    return BlocBuilder<CoursesCubit, CoursesState>(
-      builder: (context, state) {
-        if (state is CoursesLoaded) {
-          allCourses = (state).courses;
-          return buildLoadedListWidgets();
-        } else {
-          return showLoadingIndicator();
-        }
-      },
-    );
+    return BlocConsumer<CoursesCubit, CoursesState>(
+        listener: (BuildContext context, CoursesState state) {
+      if (state is LogedOut) {
+        Navigator.of(context)
+            .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
+      } else if (state is LogedOutError) {
+        debugPrint('logout error: ${state.errorMsg}');
+      }
+    }, builder: (context, state) {
+      if (state is CoursesLoaded) {
+        allCourses = (state).courses;
+        return buildLoadedListWidgets();
+      } else {
+        return showLoadingIndicator();
+      }
+    });
   }
 
   Widget buildLoadedListWidgets() {
@@ -91,20 +96,24 @@ class _CoursesPageState extends State<CoursesPage> {
         ),
         automaticallyImplyLeading: false,
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              _logout(context);
+          BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: () {
+                  // BlocProvider.of<AuthCubit>(context).logOut();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                ),
+                child: const Text(
+                  'Log Out',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
-              ),
-            ),
-            child: const Text(
-              'Log Out',
-              style: TextStyle(color: Colors.white),
-            ),
           ),
           const SizedBox(
             width: 10,
