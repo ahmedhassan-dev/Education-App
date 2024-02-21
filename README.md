@@ -1,16 +1,12 @@
-# education_app
+# Education App
 
-A new Flutter project.
+This is an education app built with Flutter & Dart, built (and still working on it).
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+1. Firebase Authentication
+    - Email based sign up/in
+    - Google Sign in
+2. Cloud Firestore
+3. Firebase Messaging
+4. Provider State management before refactoring it to Bloc
+5. Cashing data in shared_preferences
