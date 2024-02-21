@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:education_app/business_logic/problems_cubit/problems_cubit.dart';
+import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/data/models/courses_model.dart';
 import 'package:education_app/data/models/solved_problems.dart';
 import 'package:education_app/utilities/assets.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import "dart:ui" as ui;
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -120,7 +123,7 @@ class _ProblemPageState extends State<ProblemPage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -135,9 +138,7 @@ class _ProblemPageState extends State<ProblemPage> {
                                     color: Colors.white,
                                   ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        verticalSpace(10),
                         Row(
                           children: [
                             const SizedBox(
@@ -168,7 +169,7 @@ class _ProblemPageState extends State<ProblemPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
                 child: Column(
                   children: [
                     Text(
@@ -177,9 +178,7 @@ class _ProblemPageState extends State<ProblemPage> {
                             color: Colors.white,
                           ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    verticalSpace(20),
                     Form(
                       key: _formKey,
                       child: TextFormField(
@@ -202,12 +201,13 @@ class _ProblemPageState extends State<ProblemPage> {
                             return null;
                           }),
                     ),
-                    const SizedBox(height: 16.0),
+                    verticalSpace(16),
                     MainButton(
                         text: "Submit",
                         onTap: () {
                           submitSolution(context);
                         }),
+                    verticalSpace(5),
                     context.read<ProblemsCubit>().needHelp
                         ? NeedHelpList(
                             solutions: context.read<ProblemsCubit>().videos)
@@ -293,16 +293,12 @@ class _ProblemPageState extends State<ProblemPage> {
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
               color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(
-          width: 5,
-        ),
+        horizontalSpace(5),
         Image.asset(
           AppAssets.starIcon,
-          height: 35,
+          height: 35.h,
         ),
-        const SizedBox(
-          width: 5,
-        ),
+        horizontalSpace(5)
       ],
     );
   }

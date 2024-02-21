@@ -7,6 +7,7 @@ import 'package:education_app/presentation/widgets/need_update.dart';
 import 'package:education_app/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TeacherPage extends StatefulWidget {
   const TeacherPage({super.key});
@@ -129,8 +130,7 @@ class _TeacherPageState extends State<TeacherPage> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+            padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
             child: Column(
               children: [
                 TextFormField(

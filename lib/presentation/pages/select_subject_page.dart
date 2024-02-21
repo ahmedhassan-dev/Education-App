@@ -4,6 +4,7 @@ import 'package:education_app/presentation/widgets/school_subjects_list.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectSubjectsPage extends StatefulWidget {
   const SelectSubjectsPage({super.key});
@@ -107,7 +108,7 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
           Positioned(
             right: 0,
             left: 0,
-            bottom: 10,
+            bottom: 10.h,
             child: _submitButton(),
           )
         ],

@@ -5,6 +5,7 @@ import 'package:education_app/presentation/widgets/courses_list.dart';
 import 'package:education_app/utilities/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -53,7 +54,7 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget buildLoadedListWidgets() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         child: Column(
           children: [buildCharactersList(), const SizedBox(height: 24.0)],
         ),
@@ -119,7 +120,7 @@ class _CoursesPageState extends State<CoursesPage> {
             width: 10,
           )
         ],
-        toolbarHeight: 60,
+        toolbarHeight: 60.h,
       ),
       body: buildBlocWidget(),
     );

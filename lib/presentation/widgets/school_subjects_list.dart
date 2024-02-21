@@ -2,6 +2,7 @@ import 'package:education_app/business_logic/teacher_cubit/teacher_cubit.dart';
 import 'package:education_app/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SchoolSubjectsList extends StatelessWidget {
   final String subject;
@@ -32,7 +33,7 @@ class SchoolSubjectsList extends StatelessWidget {
 
   Widget subjectElement(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.h),
       child: GestureDetector(
         onTap: () {
           BlocProvider.of<TeacherCubit>(context)
@@ -45,9 +46,9 @@ class SchoolSubjectsList extends StatelessWidget {
                   ? AppColors.primaryColor
                   : AppColors.secondaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(16))),
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          height: 140,
+          margin: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          height: 140.h,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

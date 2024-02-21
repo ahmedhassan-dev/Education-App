@@ -42,6 +42,7 @@ dependencies:
   bloc: ^8.1.2
   meta: ^1.10.0
   shared_preferences: ^2.2.2
+  flutter_screenutil: ^5.9.0
 
 dev_dependencies:
   flutter_test:
