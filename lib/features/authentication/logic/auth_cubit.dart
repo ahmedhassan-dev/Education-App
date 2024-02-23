@@ -37,9 +37,6 @@ class AuthCubit extends Cubit<AuthState> {
     } else {
       await signUp();
     }
-    await storeUserTypeInSharedPreferences();
-    await storeTeacherEmailInSharedPreferences(email: email);
-    emit(SubmitionVerified());
   }
 
   storeUserTypeInSharedPreferences() async {
@@ -66,6 +63,18 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
+      await storeUserTypeInSharedPreferences();
+      await storeTeacherEmailInSharedPreferences(email: email);
+      emit(SubmitionVerified());
+    } on FirebaseAuthException catch (ex) {
+      if (ex.code == 'user-not-found') {
+        emit(ErrorOccurred(errorMsg: 'User not found'));
+      } else if (ex.code == 'wrong-password') {
+        emit(ErrorOccurred(errorMsg: 'Wrong password'));
+      } else if (ex.code == 'too-many-requests') {
+        emit(ErrorOccurred(errorMsg: 'Please try again later'));
+      }
+      emit(ErrorOccurred(errorMsg: ex.code));
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
@@ -107,12 +116,16 @@ class AuthCubit extends Cubit<AuthState> {
       await authRepository.setUserData(
           userData: userObject(user.user?.uid, userType, email),
           path: userPath(user.user!.uid));
+      await storeUserTypeInSharedPreferences();
+      await storeTeacherEmailInSharedPreferences(email: email);
+      emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
-      if (ex.code == 'user-not-found') {
-        emit(ErrorOccurred(errorMsg: 'user not found'));
+      if (ex.code == 'email-already-in-use') {
+        emit(ErrorOccurred(errorMsg: 'Email already in use'));
       } else if (ex.code == 'wrong-password') {
-        emit(ErrorOccurred(errorMsg: 'wrong password'));
+        emit(ErrorOccurred(errorMsg: 'Wrong password'));
       }
+      emit(ErrorOccurred(errorMsg: ex.code));
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
@@ -158,6 +171,8 @@ class AuthCubit extends Cubit<AuthState> {
         await storeTeacherEmailInSharedPreferences(email: user.email!);
       }
       emit(SubmitionVerified());
+    } on FirebaseAuthException catch (ex) {
+      emit(ErrorOccurred(errorMsg: ex.code));
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
@@ -186,6 +201,6 @@ class AuthCubit extends Cubit<AuthState> {
     this.email = email ?? this.email;
     this.password = password ?? this.password;
     this.authFormType = authFormType ?? this.authFormType;
-    emit(UpdateEmailAndPassword());
+    // emit(UpdateEmailAndPassword());
   }
 }
