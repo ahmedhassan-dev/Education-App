@@ -1,9 +1,11 @@
+import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/teacher/ui/widgets/educational_stages_list.dart';
 import 'package:education_app/core/widgets/main_dialog.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectEducationalStagesPage extends StatefulWidget {
   const SelectEducationalStagesPage({super.key});
@@ -26,7 +28,7 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
         if (state is Loading) {
           return showLoadingIndicator();
         } else {
-          return buildStackWidget();
+          return buildStageWidget();
         }
       },
     );
@@ -83,21 +85,42 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
     );
   }
 
-  buildStackWidget() {
-    return SizedBox(
-      height: double.infinity,
-      child: Stack(
+  buildStageWidget() {
+    return SafeArea(
+      child: Column(
         children: [
-          Positioned(
-              child: SingleChildScrollView(
-            child: buildEducationalStagesList(),
-          )),
-          Positioned(
-            right: 0,
-            left: 0,
-            bottom: 10,
-            child: _submitButton(),
-          )
+          Container(
+            decoration: BoxDecoration(color: AppColors.secondaryColor),
+            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+            child: Center(
+              child: Text(
+                "What educational stages have you been involved in?",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    overflow: TextOverflow.visible),
+              ),
+            ),
+          ),
+          Expanded(
+            child: SizedBox(
+              height: double.infinity,
+              child: Stack(
+                children: [
+                  Positioned(
+                      child: SingleChildScrollView(
+                    child: buildEducationalStagesList(),
+                  )),
+                  Positioned(
+                    right: 0,
+                    left: 0,
+                    bottom: 10,
+                    child: _submitButton(),
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -105,19 +128,6 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Flexible(
-          child: Text(
-            "What educational stages have \nyou been involved in?",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                overflow: TextOverflow.visible),
-          ),
-        ),
-      ),
-      body: buildStackWidget(),
-    );
+    return buildBlocWidget();
   }
 }
