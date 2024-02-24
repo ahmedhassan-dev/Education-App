@@ -4,7 +4,6 @@ import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/features/courses/data/models/courses_model.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/core/constants/assets.dart';
-import 'package:education_app/core/widgets/main_dialog.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
 import 'package:education_app/features/problems/ui/widgets/problem_timer.dart';
 import 'package:flutter/material.dart';
@@ -85,11 +84,14 @@ class _ProblemPageState extends State<ProblemPage> {
         _solutionController.text = "";
       }
     } catch (e) {
-      MainDialog(
-              context: context,
-              title: 'Error Submiting Solution',
-              content: e.toString())
-          .showAlertDialog();
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        animType: AnimType.scale,
+        title: 'Error Submiting Solution',
+        desc: e.toString(),
+        dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+      ).show();
     }
   }
 

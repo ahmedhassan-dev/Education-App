@@ -1,5 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
-import 'package:education_app/core/widgets/main_dialog.dart';
 import 'package:education_app/features/teacher/ui/widgets/school_subjects_list.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -78,8 +78,14 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
             Navigator.of(context)
                 .pushReplacementNamed(AppRoutes.selectEducationalStagesRoute);
           } catch (e) {
-            MainDialog(context: context, title: 'Error', content: e.toString())
-                .showAlertDialog();
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.warning,
+              animType: AnimType.scale,
+              title: 'Error',
+              desc: e.toString(),
+              dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+            ).show();
           }
         },
         style: ElevatedButton.styleFrom(

@@ -2,7 +2,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
-import 'package:education_app/core/widgets/main_dialog.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -60,11 +59,14 @@ class _TeacherPageState extends State<TeacherPage> {
         storeNewProblem();
       }
     } catch (e) {
-      MainDialog(
+      AwesomeDialog(
               context: context,
+              dialogType: DialogType.warning,
+              animType: AnimType.scale,
               title: 'Error Generating New Id',
-              content: e.toString())
-          .showAlertDialog();
+              desc: e.toString(),
+              dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1))
+          .show();
     }
   }
 
