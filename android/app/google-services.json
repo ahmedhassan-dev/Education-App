@@ -12,7 +12,20 @@
           "package_name": "com.example.education_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "893761268354-06dv05nkq7i0b14jclf74mvn44lf4hvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.education_app",
+            "certificate_hash": "c147f04b66cc539e2dd7a8fe7265799c3bde0018"
+          }
+        },
+        {
+          "client_id": "893761268354-9flacgt6m7bbs0hv28dff2e1jo72u3nv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBjlb1OzUzFdUpyrd2_DxZ2kBYEUlqcUOU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893761268354-9flacgt6m7bbs0hv28dff2e1jo72u3nv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "893761268354-6nr96vvq9iih7ohottggn3psgkpq758c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.educationApp"
+              }
+            }
+          ]
         }
       }
     }

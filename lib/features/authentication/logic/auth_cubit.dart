@@ -201,6 +201,6 @@ class AuthCubit extends Cubit<AuthState> {
     this.email = email ?? this.email;
     this.password = password ?? this.password;
     this.authFormType = authFormType ?? this.authFormType;
-    // emit(UpdateEmailAndPassword());
+    emit(UpdateEmailAndPassword());
   }
 }
