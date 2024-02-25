@@ -25,6 +25,7 @@ class _TeacherPageState extends State<TeacherPage> {
   final _timeController = TextEditingController();
   final _topicsController = TextEditingController();
   final _videosController = TextEditingController();
+  bool reviewManuallyCheckBox = false;
 
   @override
   void initState() {
@@ -112,7 +113,7 @@ class _TeacherPageState extends State<TeacherPage> {
       author: context.read<TeacherCubit>().email,
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
-      needReview: true, //-----> check box
+      needReview: reviewManuallyCheckBox,
       topics: [_topicsController.text.trim()],
       videos: [_videosController.text.trim()],
     );
@@ -124,7 +125,7 @@ class _TeacherPageState extends State<TeacherPage> {
       appBar: AppBar(
         title: Text(
           "Adding New Problem",
-          style: Theme.of(context).textTheme.subtitle1,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         centerTitle: true,
       ),
@@ -225,7 +226,22 @@ class _TeacherPageState extends State<TeacherPage> {
                       ? null
                       : 'Please enter your the explanation link',
                 ),
-                const SizedBox(height: 32.0),
+                Row(
+                  children: [
+                    Checkbox(
+                        activeColor: AppColors.primaryColor,
+                        side: BorderSide(color: AppColors.whiteColor),
+                        value: reviewManuallyCheckBox,
+                        onChanged: (val) => setState(() {
+                              reviewManuallyCheckBox = val!;
+                            })),
+                    Text(
+                      "Review manually",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    )
+                  ],
+                ),
+                const SizedBox(height: 7.0),
                 MainButton(
                   text: 'Save Problem',
                   onTap: () {
