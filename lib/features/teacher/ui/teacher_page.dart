@@ -4,6 +4,7 @@ import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -201,31 +202,18 @@ class _TeacherPageState extends State<TeacherPage> {
                     filled: true,
                   ),
                   validator: (value) =>
-                      value!.isNotEmpty ? null : 'Please enter your the stage',
+                      value!.isNotEmpty ? null : 'Please enter your stage',
                 ),
                 const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _topicsController,
-                  decoration: InputDecoration(
+                TextFormFieldWithAddButton(
+                    controller: _topicsController,
                     labelText: 'Topics',
-                    fillColor: AppColors.textFormFieldFillColor,
-                    filled: true,
-                  ),
-                  validator: (value) =>
-                      value!.isNotEmpty ? null : 'Please enter your any topic',
-                ),
+                    onTap: () {}),
                 const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _videosController,
-                  decoration: InputDecoration(
+                TextFormFieldWithAddButton(
+                    controller: _videosController,
                     labelText: 'Explanation Link',
-                    fillColor: AppColors.textFormFieldFillColor,
-                    filled: true,
-                  ),
-                  validator: (value) => value!.isNotEmpty
-                      ? null
-                      : 'Please enter your the explanation link',
-                ),
+                    onTap: () {}),
                 Row(
                   children: [
                     Checkbox(
