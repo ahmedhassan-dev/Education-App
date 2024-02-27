@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
@@ -9,6 +10,7 @@ import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_a
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TeacherPage extends StatefulWidget {
   const TeacherPage({super.key});
@@ -52,6 +54,9 @@ class _TeacherPageState extends State<TeacherPage> {
 
   Future<void> saveProblem() async {
     try {
+      if (_videosController.text.trim().isNotEmpty) {
+        convertUrlToId(); //TODO: Have to stop submission if the URL is not valid
+      }
       if (_formKey.currentState!.validate()) {
         AwesomeDialog(
           context: context,
@@ -111,9 +116,6 @@ class _TeacherPageState extends State<TeacherPage> {
   Future<void> storeNewProblem() async {
     if (_topicsController.text.trim().isNotEmpty) {
       topicsList.add(_topicsController.text.trim());
-    }
-    if (_videosController.text.trim().isNotEmpty) {
-      videosList.add(_videosController.text.trim());
     }
     final problem = Problems(
       id: null, // TODO: I have to check that it will not be empty or nullable
@@ -236,9 +238,7 @@ class _TeacherPageState extends State<TeacherPage> {
                     stringList: videosList,
                     onTap: () {
                       if (_videosController.text.trim().isNotEmpty) {
-                        videosList.add(_videosController.text.trim());
-                        _videosController.text = "";
-                        setState(() {});
+                        convertUrlToId();
                       }
                     }),
                 Row(
@@ -270,6 +270,18 @@ class _TeacherPageState extends State<TeacherPage> {
         ),
       ),
     );
+  }
+
+  void convertUrlToId() {
+    String? videoId =
+        YoutubePlayer.convertUrlToId(_videosController.text.trim());
+    if (videoId != null) {
+      videosList.add(videoId);
+    } else {
+      showSnackBar(context, "Please enter a valid URL");
+    }
+    _videosController.text = "";
+    setState(() {});
   }
 
   Widget showLoadingIndicator() {
