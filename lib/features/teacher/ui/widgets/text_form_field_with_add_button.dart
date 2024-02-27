@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TextFormFieldWithAddButton extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
+  final List<String> stringList;
   final VoidCallback onTap;
   const TextFormFieldWithAddButton({
     super.key,
     required this.controller,
     required this.labelText,
+    required this.stringList,
     required this.onTap,
   });
 
@@ -24,7 +26,7 @@ class TextFormFieldWithAddButton extends StatelessWidget {
             filled: true,
             contentPadding: EdgeInsets.only(
                 right: 40.w, left: 15.w, bottom: 20.h, top: 20.h)),
-        validator: (value) => value!.isNotEmpty
+        validator: (value) => (value!.isNotEmpty || stringList.isNotEmpty)
             ? null
             : 'Please enter any ${labelText.toLowerCase()}',
       ),

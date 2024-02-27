@@ -4,6 +4,7 @@ import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/features/teacher/ui/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,8 @@ class _TeacherPageState extends State<TeacherPage> {
   final _topicsController = TextEditingController();
   final _videosController = TextEditingController();
   bool reviewManuallyCheckBox = false;
+  List<String> topicsList = [];
+  List<String> videosList = [];
 
   @override
   void initState() {
@@ -101,9 +104,17 @@ class _TeacherPageState extends State<TeacherPage> {
     _timeController.text = "";
     _topicsController.text = "";
     _videosController.text = "";
+    topicsList = [];
+    videosList = [];
   }
 
   Future<void> storeNewProblem() async {
+    if (_topicsController.text.trim().isNotEmpty) {
+      topicsList.add(_topicsController.text.trim());
+    }
+    if (_videosController.text.trim().isNotEmpty) {
+      videosList.add(_videosController.text.trim());
+    }
     final problem = Problems(
       id: null, // TODO: I have to check that it will not be empty or nullable
       problemId: null,
@@ -115,8 +126,8 @@ class _TeacherPageState extends State<TeacherPage> {
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
       needReview: reviewManuallyCheckBox,
-      topics: [_topicsController.text.trim()],
-      videos: [_videosController.text.trim()],
+      topics: topicsList,
+      videos: videosList,
     );
     BlocProvider.of<TeacherCubit>(context).saveNewProblem(problem: problem);
   }
@@ -205,15 +216,31 @@ class _TeacherPageState extends State<TeacherPage> {
                       value!.isNotEmpty ? null : 'Please enter your stage',
                 ),
                 const SizedBox(height: 16.0),
+                GetListOfStringsText(stringList: topicsList),
                 TextFormFieldWithAddButton(
                     controller: _topicsController,
                     labelText: 'Topics',
-                    onTap: () {}),
+                    stringList: topicsList,
+                    onTap: () {
+                      if (_topicsController.text.trim().isNotEmpty) {
+                        topicsList.add(_topicsController.text.trim());
+                        _topicsController.text = "";
+                        setState(() {});
+                      }
+                    }),
                 const SizedBox(height: 16.0),
+                GetListOfStringsText(stringList: videosList),
                 TextFormFieldWithAddButton(
                     controller: _videosController,
                     labelText: 'Explanation Link',
-                    onTap: () {}),
+                    stringList: videosList,
+                    onTap: () {
+                      if (_videosController.text.trim().isNotEmpty) {
+                        videosList.add(_videosController.text.trim());
+                        _videosController.text = "";
+                        setState(() {});
+                      }
+                    }),
                 Row(
                   children: [
                     Checkbox(
