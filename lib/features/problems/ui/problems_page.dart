@@ -6,6 +6,7 @@ import 'package:education_app/features/problems/data/models/solved_problems.dart
 import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
 import 'package:education_app/features/problems/ui/widgets/problem_timer.dart';
+import 'package:education_app/features/problems/ui/widgets/text_form_field_with_camera_button.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:flutter/services.dart';
@@ -182,15 +183,11 @@ class _ProblemPageState extends State<ProblemPage> {
                     ),
                     verticalSpace(20),
                     Form(
-                      key: _formKey,
-                      child: TextFormField(
+                        key: _formKey,
+                        child: TextFormFieldWithCameraButton(
                           controller: _solutionController,
-                          decoration: const InputDecoration(
-                            labelText: 'Solution',
-                            fillColor: Color.fromRGBO(42, 42, 42, 1),
-                            filled: true,
-                          ),
-                          validator: (value) {
+                          labelText: 'Solution',
+                          validator: (String? value) {
                             if (value!.isEmpty) {
                               return 'Please enter your solution';
                             } else if (value !=
@@ -201,8 +198,9 @@ class _ProblemPageState extends State<ProblemPage> {
                               return 'Wrong Answer!';
                             }
                             return null;
-                          }),
-                    ),
+                          },
+                          onTap: () {},
+                        )),
                     verticalSpace(16),
                     MainButton(
                         text: "Submit",
