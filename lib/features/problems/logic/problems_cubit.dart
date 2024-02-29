@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:math';
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
@@ -6,6 +8,8 @@ import 'package:education_app/features/problems/data/repos/problems_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' show basename;
 part 'problems_state.dart';
 
 class ProblemsCubit extends Cubit<ProblemsState> {
@@ -34,6 +38,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   List<String> needHelpTime = [];
   bool needHelp = false;
   String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
+  Uint8List? imgPath;
+  String? imgName;
 
   retrieveUserData({required String subject}) async {
     this.subject = subject;
@@ -234,6 +240,25 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     solvedBeforeFun();
     addOldSolution2New();
     emit(DataLoaded(retrievedProblemList, userData, retrievedSolutionList));
+  }
+
+  pickImage(ImageSource source) async {
+    emit(Loading());
+    final XFile? pickedImg = await ImagePicker().pickImage(source: source);
+    try {
+      if (pickedImg != null) {
+        imgPath = await pickedImg.readAsBytes();
+        imgName = basename(pickedImg.path);
+        int random = Random().nextInt(9999999);
+        imgName = "$random$imgName";
+        print(imgName);
+        emit(ImageLoaded());
+      } else {
+        print("NO img selected");
+      }
+    } catch (e) {
+      print("Error => $e");
+    }
   }
 
   String get problemId => retrievedProblemList![problemIndex].problemId!;

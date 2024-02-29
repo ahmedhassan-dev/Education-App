@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/features/courses/data/models/courses_model.dart';
@@ -15,6 +16,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import "dart:ui" as ui;
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProblemPage extends StatefulWidget {
   final CoursesModel courseList;
@@ -96,10 +98,51 @@ class _ProblemPageState extends State<ProblemPage> {
     }
   }
 
+  cameraOrGalleryDialog(BuildContext blocContext) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          backgroundColor: AppColors.secondaryColor,
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                BlocProvider.of<ProblemsCubit>(blocContext)
+                    .pickImage(ImageSource.camera);
+                Navigator.pop(context);
+              },
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                "From Camera",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                ),
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                BlocProvider.of<ProblemsCubit>(blocContext)
+                    .pickImage(ImageSource.gallery);
+                Navigator.pop(context);
+              },
+              padding: EdgeInsets.all(20.w),
+              child: Text(
+                "From Gallary",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildBlocWidget() {
     return BlocBuilder<ProblemsCubit, ProblemsState>(
       builder: (context, state) {
-        if (state is DataLoaded) {
+        if (state is DataLoaded || state is ImageLoaded) {
           // retrievedProblemList = (state).retrievedProblemList;
           // userData = (state).userData;
           // retrievedSolutionList = (state).retrievedSolutionList;
@@ -199,7 +242,9 @@ class _ProblemPageState extends State<ProblemPage> {
                             }
                             return null;
                           },
-                          onTap: () {},
+                          onTap: () {
+                            cameraOrGalleryDialog(context);
+                          },
                         )),
                     verticalSpace(16),
                     MainButton(
@@ -207,6 +252,14 @@ class _ProblemPageState extends State<ProblemPage> {
                         onTap: () {
                           submitSolution(context);
                         }),
+                    BlocProvider.of<ProblemsCubit>(context).imgPath != null
+                        ? CircleAvatar(
+                            radius: 71,
+                            backgroundImage: MemoryImage(
+                                BlocProvider.of<ProblemsCubit>(context)
+                                    .imgPath!),
+                          )
+                        : const SizedBox(),
                     verticalSpace(5),
                     context.read<ProblemsCubit>().needHelp
                         ? NeedHelpList(

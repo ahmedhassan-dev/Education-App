@@ -8,6 +8,8 @@ final class ProblemsInitial extends ProblemsState {}
 
 class Loading extends ProblemsState {}
 
+class ImageLoaded extends ProblemsState {}
+
 class ProblemsLoaded extends ProblemsState {}
 
 class DataLoaded extends ProblemsState {
