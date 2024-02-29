@@ -252,14 +252,6 @@ class _ProblemPageState extends State<ProblemPage> {
                         onTap: () {
                           submitSolution(context);
                         }),
-                    BlocProvider.of<ProblemsCubit>(context).imgPath != null
-                        ? CircleAvatar(
-                            radius: 71,
-                            backgroundImage: MemoryImage(
-                                BlocProvider.of<ProblemsCubit>(context)
-                                    .imgPath!),
-                          )
-                        : const SizedBox(),
                     verticalSpace(5),
                     context.read<ProblemsCubit>().needHelp
                         ? NeedHelpList(

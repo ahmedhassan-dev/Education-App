@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
@@ -10,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' show basename;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:education_app/core/constants/constants.dart';
 part 'problems_state.dart';
 
 class ProblemsCubit extends Cubit<ProblemsState> {
@@ -38,8 +39,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   List<String> needHelpTime = [];
   bool needHelp = false;
   String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
-  Uint8List? imgPath;
-  String? imgName;
+  late Uint8List imgPath;
+  late String imgName;
 
   retrieveUserData({required String subject}) async {
     this.subject = subject;
@@ -249,9 +250,10 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       if (pickedImg != null) {
         imgPath = await pickedImg.readAsBytes();
         imgName = basename(pickedImg.path);
-        int random = Random().nextInt(9999999);
-        imgName = "$random$imgName";
-        print(imgName);
+        await getImgURL(
+          imgName: imgName,
+          imgPath: imgPath,
+        );
         emit(ImageLoaded());
       } else {
         print("NO img selected");
@@ -259,6 +261,19 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     } catch (e) {
       print("Error => $e");
     }
+  }
+
+  Future<String> getImgURL({
+    required String imgName,
+    required Uint8List imgPath,
+  }) async {
+    final storageRef = FirebaseStorage.instance.ref(
+        "Solutions/$uid/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
+    UploadTask uploadTask =
+        storageRef.putData(imgPath); // use this code if u are using flutter web
+    TaskSnapshot snap = await uploadTask;
+    String url = await snap.ref.getDownloadURL(); // Get img url
+    return url;
   }
 
   String get problemId => retrievedProblemList![problemIndex].problemId!;
