@@ -54,29 +54,12 @@ class _ProblemPageState extends State<ProblemPage> {
         if (_solutionController.text.trim() !=
                 BlocProvider.of<ProblemsCubit>(context).solution &&
             BlocProvider.of<ProblemsCubit>(context).needReview) {
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.infoReverse,
-            animType: AnimType.scale,
-            title: 'Keep Going😉',
-            desc: 'We will review your answer soon❤️!',
-            dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-            // btnCancelOnPress: () {},
-            // btnOkOnPress: () {},
-          ).show();
+          reviewAnswerAwesomeDialog(context).show();
         } else {
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.success,
-            animType: AnimType.scale,
-            title: 'Nice Answer😊!',
-            desc: 'Keep Going❤️',
-            dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-          ).show();
+          keepGoingAwesomeDialog(context).show();
         }
 
         await player.play(AssetSource(AppAssets.increasingScoreSound));
-        // await database.submitSolution(solutionData);
         BlocProvider.of<ProblemsCubit>(context)
             .submitSolution(_solutionController.text.trim());
 
@@ -96,6 +79,30 @@ class _ProblemPageState extends State<ProblemPage> {
         dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
       ).show();
     }
+  }
+
+  AwesomeDialog keepGoingAwesomeDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.scale,
+      title: 'Nice Answer😊!',
+      desc: 'Keep Going❤️',
+      dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+    );
+  }
+
+  AwesomeDialog reviewAnswerAwesomeDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.infoReverse,
+      animType: AnimType.scale,
+      title: 'Keep Going😉',
+      desc: 'We will review your answer soon❤️!',
+      dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+      // btnCancelOnPress: () {},
+      // btnOkOnPress: () {},
+    );
   }
 
   cameraOrGalleryDialog(BuildContext blocContext) {
@@ -140,24 +147,31 @@ class _ProblemPageState extends State<ProblemPage> {
   }
 
   Widget buildBlocWidget() {
-    return BlocBuilder<ProblemsCubit, ProblemsState>(
-      builder: (context, state) {
-        if (state is DataLoaded || state is ImageLoaded) {
-          // retrievedProblemList = (state).retrievedProblemList;
-          // userData = (state).userData;
-          // retrievedSolutionList = (state).retrievedSolutionList;
-          if (BlocProvider.of<ProblemsCubit>(context)
-                  .checkProblemsAvailability() ==
-              true) {
-            return buildLoadedProblemsWidgets();
-          } else {
-            return noProblemsAvailable();
-          }
+    return BlocConsumer<ProblemsCubit, ProblemsState>(
+        listener: (BuildContext context, ProblemsState state) async {
+      if (state is ImageLoaded) {
+        reviewAnswerAwesomeDialog(context).show();
+        await player.play(AssetSource(AppAssets.increasingScoreSound));
+        await Future.delayed(const Duration(seconds: 1), () {});
+        if (!mounted) return;
+        Navigator.pop(context);
+      }
+    }, builder: (context, state) {
+      if (state is DataLoaded || state is ImageLoaded) {
+        // retrievedProblemList = (state).retrievedProblemList;
+        // userData = (state).userData;
+        // retrievedSolutionList = (state).retrievedSolutionList;
+        if (BlocProvider.of<ProblemsCubit>(context)
+                .checkProblemsAvailability() ==
+            true) {
+          return buildLoadedProblemsWidgets();
         } else {
-          return showLoadingIndicator();
+          return noProblemsAvailable();
         }
-      },
-    );
+      } else {
+        return showLoadingIndicator();
+      }
+    });
   }
 
   Widget buildLoadedProblemsWidgets() {
@@ -230,6 +244,8 @@ class _ProblemPageState extends State<ProblemPage> {
                         child: TextFormFieldWithCameraButton(
                           controller: _solutionController,
                           labelText: 'Solution',
+                          needReview: BlocProvider.of<ProblemsCubit>(context)
+                              .needReview,
                           validator: (String? value) {
                             if (value!.isEmpty) {
                               return 'Please enter your solution';

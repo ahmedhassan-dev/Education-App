@@ -37,6 +37,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   List<String> failureTime = [];
   List<String> solvingDate = [];
   List<String> needHelpTime = [];
+  List<String> solutionImgURL = [];
   bool needHelp = false;
   String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
   late Uint8List imgPath;
@@ -175,6 +176,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       failureTime.addAll(retrievedSolutionList![problemIndex].failureTime);
       solvingDate.addAll(retrievedSolutionList![problemIndex].solvingDate);
       needHelpTime.addAll(retrievedSolutionList![problemIndex].needHelp);
+      solutionImgURL
+          .addAll(retrievedSolutionList![problemIndex].solutionImgURL);
     }
   }
 
@@ -200,6 +203,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     failureTime = [];
     solvingDate = [];
     needHelpTime = [];
+    solutionImgURL = [];
   }
 
   showNeedHelpList() {
@@ -211,7 +215,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     failureTime.add(DateTime.now().toString());
   }
 
-  Future<void> submitSolution(String solutionController) async {
+  Future<void> submitSolution(String? solutionController) async {
     updatingStudentData();
     solvingDate.add(DateTime.now().toString());
     nextRepeatFun();
@@ -227,6 +231,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       failureTime: failureTime,
       needHelp: needHelpTime,
       solvingDate: solvingDate,
+      solutionImgURL: solutionImgURL,
     );
     emit(Loading());
     await problemsRepository.submitSolution(
@@ -243,18 +248,19 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     emit(DataLoaded(retrievedProblemList, userData, retrievedSolutionList));
   }
 
-  pickImage(ImageSource source) async {
+  Future<void> pickImage(ImageSource source) async {
     emit(Loading());
     final XFile? pickedImg = await ImagePicker().pickImage(source: source);
     try {
       if (pickedImg != null) {
         imgPath = await pickedImg.readAsBytes();
         imgName = basename(pickedImg.path);
-        await getImgURL(
+        await uploadImage(
           imgName: imgName,
           imgPath: imgPath,
         );
         emit(ImageLoaded());
+        submitSolution(null);
       } else {
         print("NO img selected");
       }
@@ -263,17 +269,21 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  Future<String> getImgURL({
+  Future<void> uploadImage({
     required String imgName,
     required Uint8List imgPath,
   }) async {
     final storageRef = FirebaseStorage.instance.ref(
-        "Solutions/$uid/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
+        "Solutions/${userData["email"]}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
     UploadTask uploadTask =
         storageRef.putData(imgPath); // use this code if u are using flutter web
     TaskSnapshot snap = await uploadTask;
-    String url = await snap.ref.getDownloadURL(); // Get img url
-    return url;
+    await getImgURL(snap);
+  }
+
+  Future<void> getImgURL(TaskSnapshot snap) async {
+    final String imgURL = await snap.ref.getDownloadURL(); // Get img url
+    solutionImgURL.add(imgURL);
   }
 
   String get problemId => retrievedProblemList![problemIndex].problemId!;
