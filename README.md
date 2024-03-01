@@ -11,3 +11,4 @@ This is an education app built with Flutter & Dart, built (and still working on 
 4. Flavors for Development and Production environment
 5. Provider State management before refactoring it to Bloc
 6. Cashing data in shared_preferences
+7. Image picker
