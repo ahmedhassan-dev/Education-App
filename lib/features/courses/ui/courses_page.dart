@@ -1,6 +1,6 @@
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
-import 'package:education_app/features/courses/data/models/courses_model.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/ui/widgets/courses_list.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class CoursesPage extends StatefulWidget {
 
 class _CoursesPageState extends State<CoursesPage> {
   // AuthCubit authCubit = AuthCubit();
-  List<CoursesModel> allCourses = [];
+  List<Courses> allCourses = [];
 
   @override
   void initState() {

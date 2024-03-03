@@ -1,10 +1,10 @@
-import 'package:education_app/features/courses/data/models/courses_model.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoursesList extends StatelessWidget {
-  final CoursesModel courseList;
+  final Courses courseList;
   const CoursesList({
     super.key,
     required this.courseList,

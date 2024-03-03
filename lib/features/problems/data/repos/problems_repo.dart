@@ -1,3 +1,4 @@
+import 'package:education_app/features/authentication/data/models/student.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/core/services/firestore_services.dart';
@@ -6,11 +7,11 @@ class ProblemsRepository {
   FirestoreServices firestoreServices;
   ProblemsRepository(this.firestoreServices);
 
-  Future<dynamic> retrieveUserData(
+  Future<Student> retrieveUserData(
       {required String path, required String docName}) async {
-    final userData = await firestoreServices.retrieveDataFormDocument(
-        path: path, docName: docName) as dynamic;
-    return userData;
+    dynamic userData = await firestoreServices.retrieveDataFormDocument(
+        path: path, docName: docName);
+    return Student.fromJson(userData.data()!);
   }
 
   Future<void> updatingStudentData({
@@ -29,7 +30,7 @@ class ProblemsRepository {
     final subjectProblems = await firestoreServices.retrieveSortedData(
         subject: subject, path: path, sortedBy: sortedBy) as List;
     return subjectProblems
-        .map((docSnapshot) => Problems.fromDocumentSnapshot(docSnapshot))
+        .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();
   }
 
@@ -46,7 +47,7 @@ class ProblemsRepository {
         collectionPath: collectionPath,
         sortedBy: sortedBy) as List;
     return subjectProblems
-        .map((docSnapshot) => SolvedProblems.fromDocumentSnapshot(docSnapshot))
+        .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
         .toList();
   }
 
@@ -54,6 +55,6 @@ class ProblemsRepository {
           {required SolvedProblems solution, required String path}) =>
       firestoreServices.setData(
         path: path,
-        data: solution.toMap(),
+        data: solution.toJson(),
       );
 }

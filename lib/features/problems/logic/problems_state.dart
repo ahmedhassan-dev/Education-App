@@ -12,6 +12,14 @@ class ImageLoaded extends ProblemsState {}
 
 class ProblemsLoaded extends ProblemsState {}
 
+class NOImageSelected extends ProblemsState {}
+
+class ErrorOccurred extends ProblemsState {
+  final String errorMsg;
+
+  ErrorOccurred({required this.errorMsg});
+}
+
 class DataLoaded extends ProblemsState {
   final List<Problems>? retrievedProblemList;
   final dynamic userData;

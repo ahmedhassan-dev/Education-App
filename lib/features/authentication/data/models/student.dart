@@ -1,5 +1,8 @@
 import 'package:education_app/features/authentication/data/models/user.dart';
+import 'package:json_annotation/json_annotation.dart';
+part 'student.g.dart';
 
+@JsonSerializable()
 class Student extends User {
   final int totalScore;
   final Map<String, int> userScores;
@@ -15,29 +18,8 @@ class Student extends User {
       this.lastProblemIdx = const {},
       this.lastProblemTime = const {}});
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
+  factory Student.fromJson(Map<String, dynamic>? json) =>
+      _$StudentFromJson(json!);
 
-    result.addAll({'uid': uid});
-    result.addAll({'userName': userName});
-    result.addAll({'email': email});
-    result.addAll({'totalScore': totalScore});
-    result.addAll({'userScores': userScores});
-    result.addAll({'lastProblemIdx': lastProblemIdx});
-    result.addAll({'lastProblemTime': lastProblemTime});
-
-    return result;
-  }
-
-  factory Student.fromMap(Map<String, dynamic> map, String documentId) {
-    return Student(
-      uid: documentId,
-      userName: map['userName'] ?? '',
-      email: map['email'] ?? '',
-      totalScore: map['totalScore'] ?? '',
-      userScores: map['userScores'] ?? '',
-      lastProblemIdx: map['lastProblemIdx'] ?? '',
-      lastProblemTime: map['lastProblemTime'] ?? '',
-    );
-  }
+  Map<String, dynamic> toJson() => _$StudentToJson(this);
 }

@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
+import 'package:education_app/features/authentication/data/models/student.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/features/problems/data/repos/problems_repo.dart';
@@ -25,7 +26,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   List<Problems>? retrievedProblemList;
   DateTime startCounting = DateTime.now();
   List<String> solvedProblemsList = [];
-  dynamic userData = {};
+  late Student studentData;
   List<Problems> problems = [];
   ProblemsRepository problemsRepository;
   List<SolvedProblems>? retrievedSolutionList;
@@ -34,10 +35,10 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   SolvedProblems? solvedProblems;
   bool solvedBefore = false;
   Queue<int> prbolemIndexQueue = Queue<int>();
-  List<String> failureTime = [];
-  List<String> solvingDate = [];
-  List<String> needHelpTime = [];
-  List<String> solutionImgURL = [];
+  List<dynamic> failureTime = [];
+  List<dynamic> solvingDate = [];
+  List<dynamic> needHelpTime = [];
+  List<dynamic> solutionImgURL = [];
   bool needHelp = false;
   String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
   late Uint8List imgPath;
@@ -47,27 +48,27 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     this.subject = subject;
     await problemsRepository
         .retrieveUserData(path: ApiPath.studentCollection(), docName: uid)
-        .then((userData) {
-      this.userData = userData.data()!;
+        .then((studentData) {
+      this.studentData = studentData;
     });
     initUserData();
   }
 
   initUserData() {
-    score = userData["totalScore"];
-    userScores = userData["userScores"];
+    score = studentData.totalScore;
+    userScores = studentData.userScores;
     lastProblemIdx =
-        userData["lastProblemIdx"]; //Adding the firebase map to the local map
+        studentData.lastProblemIdx; //Adding the firebase map to the local map
     lastProblemTime =
-        userData["lastProblemTime"]; //Adding the firebase map to the local map
-    if (userData["userScores"][subject] == null) {
+        studentData.lastProblemTime; //Adding the firebase map to the local map
+    if (studentData.userScores[subject] == null) {
       userScores[subject] = 0;
     }
-    if (userData["lastProblemIdx"][subject] == null) {
+    if (studentData.lastProblemIdx[subject] == null) {
       lastProblemIdx[subject] = 0; // Adding new subject to the map
       lastProblemTime[subject] = "0"; // Adding new subject to the map
     } else {
-      problemIndex = userData["lastProblemIdx"][subject];
+      problemIndex = studentData.lastProblemIdx[subject]!;
     }
   }
 
@@ -126,7 +127,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     nextRepeatProblemsIndex();
     solvedBeforeFun();
     addOldSolution2New();
-    emit(DataLoaded(retrievedProblemList, userData, retrievedSolutionList));
+    emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
   }
 
   nextRepeatProblemsIndex() {
@@ -159,7 +160,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       problemIndex = prbolemIndexQueue.first;
       waitForSolving = true;
     } else if (prbolemIndexQueue.isEmpty) {
-      problemIndex = userData["lastProblemIdx"][subject];
+      problemIndex = studentData.lastProblemIdx[subject]!;
     }
   }
 
@@ -219,33 +220,36 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     updatingStudentData();
     solvingDate.add(DateTime.now().toString());
     nextRepeatFun();
-
-    final solutionData = SolvedProblems(
-      id: solvedProblems != null
-          ? solvedProblems!.id
-          : retrievedProblemList![problemIndex].problemId!,
-      answer: solutionController,
-      solvingTime: DateTime.now().difference(startCounting).inSeconds,
-      nextRepeat: nextRepeat,
-      topics: retrievedProblemList![problemIndex].topics,
-      failureTime: failureTime,
-      needHelp: needHelpTime,
-      solvingDate: solvingDate,
-      solutionImgURL: solutionImgURL,
-    );
-    emit(Loading());
-    await problemsRepository.submitSolution(
-      solution: solutionData,
-      path: ApiPath.solvedProblems(
-        uid,
-        retrievedProblemList![problemIndex].problemId!,
-      ),
-    );
+    try {
+      final solutionData = SolvedProblems(
+        id: solvedProblems != null
+            ? solvedProblems!.id
+            : retrievedProblemList![problemIndex].problemId!,
+        answer: solutionController,
+        solvingTime: DateTime.now().difference(startCounting).inSeconds,
+        nextRepeat: nextRepeat,
+        topics: retrievedProblemList![problemIndex].topics,
+        failureTime: failureTime,
+        needHelp: needHelpTime,
+        solvingDate: solvingDate,
+        solutionImgURL: solutionImgURL,
+      );
+      emit(Loading());
+      await problemsRepository.submitSolution(
+        solution: solutionData,
+        path: ApiPath.solvedProblems(
+          uid,
+          retrievedProblemList![problemIndex].problemId!,
+        ),
+      );
+    } catch (e) {
+      emit(ErrorOccurred(errorMsg: e.toString()));
+    }
     resetVariables();
     showRepeatedProblems();
     solvedBeforeFun();
     addOldSolution2New();
-    emit(DataLoaded(retrievedProblemList, userData, retrievedSolutionList));
+    emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
   }
 
   Future<void> pickImage(ImageSource source) async {
@@ -262,10 +266,10 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         emit(ImageLoaded());
         submitSolution(null);
       } else {
-        print("NO img selected");
+        emit(NOImageSelected());
       }
     } catch (e) {
-      print("Error => $e");
+      emit(ErrorOccurred(errorMsg: e.toString()));
     }
   }
 
@@ -274,7 +278,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     required Uint8List imgPath,
   }) async {
     final storageRef = FirebaseStorage.instance.ref(
-        "Solutions/${userData["email"]}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
+        "Solutions/${studentData.email}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
     UploadTask uploadTask =
         storageRef.putData(imgPath); // use this code if u are using flutter web
     TaskSnapshot snap = await uploadTask;
@@ -288,11 +292,13 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   String get problemId => retrievedProblemList![problemIndex].problemId!;
   String get title => retrievedProblemList![problemIndex].title;
-  List<String> get topics => retrievedProblemList![problemIndex].topics;
+  List<String> get topics =>
+      retrievedProblemList![problemIndex].topics as List<String>;
   int get expectedTime => retrievedProblemList![problemIndex].time;
   String get problem => retrievedProblemList![problemIndex].problem;
   String get solution => retrievedProblemList![problemIndex].solution;
   bool get needReview => retrievedProblemList![problemIndex].needReview;
-  List<String> get videos => retrievedProblemList![problemIndex].videos;
+  List<String> get videos =>
+      retrievedProblemList![problemIndex].videos as List<String>;
   String get userScore => score.toString();
 }

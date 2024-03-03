@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreServices {
@@ -29,20 +28,6 @@ class FirestoreServices {
     final reference = _fireStore.doc(path);
     debugPrint('Path: $path');
     await reference.delete();
-  }
-
-  Future<List<Problems>> retrieveProblems(
-      {required String subject,
-      required String path,
-      required String sortedBy}) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection(path)
-        .where("topics", arrayContains: subject)
-        .orderBy(sortedBy)
-        .get();
-    return snapshot.docs
-        .map((docSnapshot) => Problems.fromDocumentSnapshot(docSnapshot))
-        .toList();
   }
 
   Future<dynamic> retrieveSortedData(

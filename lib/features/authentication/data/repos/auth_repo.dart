@@ -48,7 +48,7 @@ class AuthRepository implements AuthBase {
           {required dynamic userData, required String path}) async =>
       await firestoreServices.setData(
         path: path,
-        data: userData.toMap(),
+        data: userData.toJson(),
       );
 
   @override

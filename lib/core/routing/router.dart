@@ -2,7 +2,7 @@ import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
-import 'package:education_app/features/courses/data/models/courses_model.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
 import 'package:education_app/features/problems/data/repos/problems_repo.dart';
@@ -80,7 +80,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
     case AppRoutes.problemPage:
-      final courseList = settings.arguments as CoursesModel;
+      final courseList = settings.arguments as Courses;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) =>

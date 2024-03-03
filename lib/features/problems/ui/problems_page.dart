@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/core/helpers/spacing.dart';
-import 'package:education_app/features/courses/data/models/courses_model.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
@@ -19,7 +19,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProblemPage extends StatefulWidget {
-  final CoursesModel courseList;
+  final Courses courseList;
   const ProblemPage({super.key, required this.courseList});
 
   @override

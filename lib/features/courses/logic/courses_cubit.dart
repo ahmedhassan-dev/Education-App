@@ -1,16 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:education_app/features/courses/data/models/courses_model.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
 
 part 'courses_state.dart';
 
 class CoursesCubit extends Cubit<CoursesState> {
-  List<CoursesModel> courses = [];
+  List<Courses> courses = [];
   CoursesRepository coursesRepository;
   CoursesCubit(this.coursesRepository) : super(CoursesInitial());
 
-  List<CoursesModel> getAllCourses() {
+  List<Courses> getAllCourses() {
     coursesRepository.getAllCourses(path: ApiPath.courses()).then((courses) {
       emit(CoursesLoaded(courses));
       this.courses = courses;

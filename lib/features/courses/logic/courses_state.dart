@@ -13,7 +13,7 @@ final class LogedOutError extends CoursesState {
 }
 
 class CoursesLoaded extends CoursesState {
-  final List<CoursesModel> courses;
+  final List<Courses> courses;
 
   CoursesLoaded(this.courses);
 }

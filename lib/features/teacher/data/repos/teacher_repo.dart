@@ -44,6 +44,6 @@ class TeacherRepository {
           {required String path, required Problems data}) async =>
       await firestoreServices.setData(
         path: path,
-        data: data.toMap(),
+        data: data.toJson(),
       );
 }
