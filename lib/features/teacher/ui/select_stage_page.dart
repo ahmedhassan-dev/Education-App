@@ -65,7 +65,8 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
             await BlocProvider.of<TeacherCubit>(context)
                 .saveEducationalStages();
             if (!mounted) return;
-            Navigator.of(context).pushReplacementNamed(AppRoutes.teacherRoute);
+            Navigator.of(context)
+                .pushReplacementNamed(AppRoutes.landingPageRoute);
           } catch (e) {
             AwesomeDialog(
               context: context,

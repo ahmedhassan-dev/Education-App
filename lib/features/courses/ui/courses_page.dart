@@ -56,13 +56,13 @@ class _CoursesPageState extends State<CoursesPage> {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         child: Column(
-          children: [buildCharactersList(), const SizedBox(height: 24.0)],
+          children: [buildCoursesList(), const SizedBox(height: 24.0)],
         ),
       ),
     );
   }
 
-  Widget buildCharactersList() {
+  Widget buildCoursesList() {
     return ListView.builder(
       itemCount: allCourses.length,
       shrinkWrap: true,
