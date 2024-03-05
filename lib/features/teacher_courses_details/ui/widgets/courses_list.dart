@@ -3,21 +3,21 @@ import 'package:education_app/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SubjectsList extends StatelessWidget {
-  final String subject;
-  const SubjectsList({
+class CoursesList extends StatelessWidget {
+  final String course;
+  const CoursesList({
     super.key,
-    required this.subject,
+    required this.course,
   });
 
-  Widget subjectElement(context) {
+  Widget courseElement(context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context, rootNavigator: true).pushNamed(
               AppRoutes.teacherCoursesDetailsRoute,
-              arguments: subject);
+              arguments: course);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -30,7 +30,7 @@ class SubjectsList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                subject,
+                course,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -46,6 +46,6 @@ class SubjectsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return subjectElement(context);
+    return courseElement(context);
   }
 }
