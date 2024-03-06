@@ -9,7 +9,8 @@ import 'package:education_app/features/courses/ui/courses_page.dart';
 import 'package:education_app/features/teacher/ui/select_subject_page.dart';
 import 'package:education_app/features/teacher/ui/select_user_page.dart';
 import 'package:education_app/features/teacher_courses/ui/teacher_courses_page.dart';
-import 'package:education_app/features/teacher_subjects_details/logic/teacher_subjects_details_cubit.dart';
+import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
+import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/teacher_subject_courses_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,8 @@ class _LandingPageState extends State<LandingPage> {
               );
             } else if (subjects!.length == 1) {
               return BlocProvider(
-                create: (context) => TeacherSubjectsDetailsCubit(),
+                create: (context) => TeacherSubjectDetailsCubit(
+                    SubjectCoursesRepository(FirestoreServices())),
                 child: TeacherSubjectCoursesPage(subject: subjects![0]),
               );
             }

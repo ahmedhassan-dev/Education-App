@@ -16,7 +16,8 @@ import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/features/authentication/ui/auth_page.dart';
 import 'package:education_app/features/courses/ui/courses_page.dart';
 import 'package:education_app/features/onboarding/landing_page.dart';
-import 'package:education_app/features/teacher_subjects_details/logic/teacher_subjects_details_cubit.dart';
+import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
+import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/teacher_subject_courses_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,7 +70,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final subject = settings.arguments as String;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
-          create: (context) => TeacherSubjectsDetailsCubit(),
+          create: (context) => TeacherSubjectDetailsCubit(
+              SubjectCoursesRepository(FirestoreServices())),
           child: TeacherSubjectCoursesPage(
             subject: subject,
           ),

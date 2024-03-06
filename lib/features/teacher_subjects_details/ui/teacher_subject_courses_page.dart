@@ -1,8 +1,10 @@
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
+import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/widgets/courses_list.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/widgets/no_available_courses.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TeacherSubjectCoursesPage extends StatefulWidget {
@@ -16,6 +18,13 @@ class TeacherSubjectCoursesPage extends StatefulWidget {
 
 class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
   List<Courses> allCourses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TeacherSubjectDetailsCubit>(context)
+        .getSubjectCourses(subject: widget.subject);
+  }
 
   PreferredSizeWidget? appBar() {
     return AppBar(
