@@ -44,8 +44,10 @@ class AuthCubit extends Cubit<AuthState> {
     await prefs.setString('userType', userType);
   }
 
-  storeTeacherEmailInSharedPreferences({required String email}) async {
+  storeTeacherDataInSharedPreferences(
+      {required String userName, required String email}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', userName);
     await prefs.setString('email', email);
   }
 
@@ -64,7 +66,9 @@ class AuthCubit extends Cubit<AuthState> {
           .signInWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
       await storeUserTypeInSharedPreferences();
-      await storeTeacherEmailInSharedPreferences(email: email);
+      // TODO: Need to get userName.
+      await storeTeacherDataInSharedPreferences(
+          userName: userType, email: email);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'user-not-found') {
@@ -117,7 +121,9 @@ class AuthCubit extends Cubit<AuthState> {
           userData: userObject(user.user?.uid, userType, email),
           path: userPath(user.user!.uid));
       await storeUserTypeInSharedPreferences();
-      await storeTeacherEmailInSharedPreferences(email: email);
+      // TODO: Need to get userName.
+      await storeTeacherDataInSharedPreferences(
+          userName: userType, email: email);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'email-already-in-use') {
@@ -168,7 +174,9 @@ class AuthCubit extends Cubit<AuthState> {
               path: userPath(user.uid));
         }
         await storeUserTypeInSharedPreferences();
-        await storeTeacherEmailInSharedPreferences(email: user.email!);
+        // TODO: Need to get userName.
+        await storeTeacherDataInSharedPreferences(
+            userName: user.displayName ?? userType, email: user.email!);
       }
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {

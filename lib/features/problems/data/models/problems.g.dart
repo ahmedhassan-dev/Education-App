@@ -14,7 +14,7 @@ Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
       scoreNum: json['scoreNum'] as int,
       solution: json['solution'] as String,
       stage: json['stage'] as String,
-      author: json['author'] as String,
+      author: json['author'] as Map<String, dynamic>,
       time: json['time'] as int,
       needReview: json['needReview'] as bool,
       topics: json['topics'] as List<dynamic>,

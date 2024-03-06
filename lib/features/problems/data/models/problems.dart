@@ -40,7 +40,7 @@ class Problems extends CourseData {
     String? problem,
     String? solution,
     String? stage,
-    String? author,
+    Map<String, dynamic>? author,
     int? scoreNum,
     int? time,
     bool? needReview,

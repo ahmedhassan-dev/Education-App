@@ -1,10 +1,11 @@
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoursesList extends StatelessWidget {
-  final String course;
+  final Courses course;
   const CoursesList({
     super.key,
     required this.course,
@@ -30,7 +31,7 @@ class CoursesList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                course,
+                course.author["ahmedhassan.op9@gmail.com"],
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

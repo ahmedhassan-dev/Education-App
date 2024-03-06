@@ -49,7 +49,7 @@ class FirestoreServices {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
         .collection(path)
         .where("author", isEqualTo: author)
-        .where("topics", arrayContains: subject)
+        .where("subject", isEqualTo: subject)
         .get();
     return snapshot.docs;
   }

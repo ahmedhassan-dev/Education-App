@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
@@ -17,7 +18,7 @@ class TeacherSubjectCoursesPage extends StatefulWidget {
 }
 
 class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
-  List<Courses> allCourses = [];
+  List<Courses> subjectCourses = [];
 
   @override
   void initState() {
@@ -52,6 +53,32 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
     );
   }
 
+  Widget buildBlocWidget() {
+    return BlocConsumer<TeacherSubjectDetailsCubit, TeacherSubjectDetailsState>(
+        listener: (BuildContext context, TeacherSubjectDetailsState state) {
+      if (state is ErrorOccurred) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.warning,
+          animType: AnimType.scale,
+          title: 'Error',
+          desc: state.errorMsg.toString(),
+          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+        ).show();
+      }
+    }, builder: (context, state) {
+      if (state is CoursesLoaded) {
+        subjectCourses = (state).courses;
+        if (subjectCourses.isEmpty) {
+          return const NoAvailableCourses();
+        }
+        return buildLoadedListWidgets();
+      } else {
+        return showLoadingIndicator();
+      }
+    });
+  }
+
   Widget buildLoadedListWidgets() {
     return SingleChildScrollView(
       child: Padding(
@@ -65,13 +92,13 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
 
   Widget buildCoursesList() {
     return ListView.builder(
-      itemCount: 1,
+      itemCount: subjectCourses.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
-        // final subject = widget.subjects[i];
-        return const CoursesList(
-          course: "course",
+        final course = subjectCourses[i];
+        return CoursesList(
+          course: course,
         );
       },
     );
@@ -87,10 +114,9 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: appBar(),
-        body: allCourses.isEmpty
-            ? const NoAvailableCourses()
-            : buildLoadedListWidgets());
+    return Scaffold(appBar: appBar(), body: buildBlocWidget());
+    // allCourses.isEmpty
+    //     ? const NoAvailableCourses()
+    //     : buildLoadedListWidgets());
   }
 }
