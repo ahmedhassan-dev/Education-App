@@ -1,7 +1,7 @@
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
-import 'package:education_app/features/teacher_courses_details/ui/widgets/courses_list.dart';
-import 'package:education_app/features/teacher_courses_details/ui/widgets/no_available_courses.dart';
+import 'package:education_app/features/teacher_subjects_details/ui/widgets/courses_list.dart';
+import 'package:education_app/features/teacher_subjects_details/ui/widgets/no_available_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -60,6 +60,7 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
+        // final subject = widget.subjects[i];
         return const CoursesList(
           course: "course",
         );

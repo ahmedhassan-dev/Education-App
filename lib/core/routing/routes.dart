@@ -8,6 +8,6 @@ class AppRoutes {
   static const String coursesPage = '/courses';
   static const String teacherRoute = '/teacher';
   static const String teacherCoursesRoute = '/teacher-courses';
-  static const String teacherCoursesDetailsRoute =
+  static const String teacherSubjectsDetailsRoute =
       '/teacher-courses/teacher-courses-details';
 }
