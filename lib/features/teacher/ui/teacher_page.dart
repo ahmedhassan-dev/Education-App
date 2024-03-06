@@ -92,7 +92,7 @@ class _TeacherPageState extends State<TeacherPage> {
     }, builder: (context, TeacherState state) {
       if (state is NeedUpdate) {
         return const NeedToUpdate();
-      } else if (state is UserEmailRetrieved || state is ProblemStored) {
+      } else if (state is UserDataRetrieved || state is ProblemStored) {
         return addNewProblemWidget();
       } else {
         return showLoadingIndicator();
@@ -124,7 +124,10 @@ class _TeacherPageState extends State<TeacherPage> {
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),
       stage: _stageController.text.trim(),
-      author: context.read<TeacherCubit>().email,
+      author: {
+        context.read<TeacherCubit>().email:
+            context.read<TeacherCubit>().userName
+      },
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
       needReview: reviewManuallyCheckBox,

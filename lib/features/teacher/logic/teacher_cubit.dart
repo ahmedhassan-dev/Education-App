@@ -14,6 +14,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   List<String> educationalStages = [];
   String uid = FirebaseAuth.instance.currentUser!.uid;
   String newProblemId = "0";
+  late String userName;
   late String email;
   Map<String, dynamic> teacherData = {};
   TeacherRepository teacherRepository;
@@ -130,10 +131,11 @@ class TeacherCubit extends Cubit<TeacherState> {
     );
   }
 
-  getEmailFromSharedPreferences() async {
+  getTeacherDataFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('userName')!;
     email = prefs.getString('email')!;
-    emit(UserEmailRetrieved());
+    emit(UserDataRetrieved());
   }
 
   late String latestAppVersion;
@@ -143,7 +145,7 @@ class TeacherCubit extends Cubit<TeacherState> {
     if (latestAppVersion != teacherVersion) {
       emit(NeedUpdate());
     } else {
-      await getEmailFromSharedPreferences();
+      await getTeacherDataFromSharedPreferences();
     }
   }
 

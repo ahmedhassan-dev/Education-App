@@ -11,7 +11,7 @@ class SubjectEdited extends TeacherState {}
 
 class TeacherDataUpdated extends TeacherState {}
 
-class UserEmailRetrieved extends TeacherState {}
+class UserDataRetrieved extends TeacherState {}
 
 class TeacherDataLoaded extends TeacherState {}
 

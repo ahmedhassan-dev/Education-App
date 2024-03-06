@@ -42,6 +42,18 @@ class FirestoreServices {
     return snapshot.docs;
   }
 
+  Future<dynamic> retrieveSubjectCoursesData(
+      {required String subject,
+      required String author,
+      required String path}) async {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
+        .collection(path)
+        .where("author", isEqualTo: author)
+        .where("subject", isEqualTo: subject)
+        .get();
+    return snapshot.docs;
+  }
+
   Future<dynamic> retrieveData({required String path}) async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await _fireStore.collection(path).get();
