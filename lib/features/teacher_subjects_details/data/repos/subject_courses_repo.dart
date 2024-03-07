@@ -7,9 +7,9 @@ class SubjectCoursesRepository {
   Future<List<Courses>> getSubjectCourses(
       {required String path,
       required String subject,
-      required String author}) async {
+      required String authorEmail}) async {
     final courses = await firestoreServices.retrieveSubjectCoursesData(
-        path: path, subject: subject, author: author) as List;
+        path: path, subject: subject, authorEmail: authorEmail) as List;
     return courses
         .map((docSnapshot) => Courses.fromJson(docSnapshot.data()!))
         .toList();

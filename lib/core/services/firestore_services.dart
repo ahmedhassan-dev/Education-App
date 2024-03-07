@@ -44,11 +44,11 @@ class FirestoreServices {
 
   Future<dynamic> retrieveSubjectCoursesData(
       {required String subject,
-      required String author,
+      required String authorEmail,
       required String path}) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
         .collection(path)
-        .where("author", isEqualTo: author)
+        .where("authorEmail", isEqualTo: authorEmail)
         .where("subject", isEqualTo: subject)
         .get();
     return snapshot.docs;

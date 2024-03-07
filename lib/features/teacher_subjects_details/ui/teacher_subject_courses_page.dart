@@ -81,11 +81,9 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
 
   Widget buildLoadedListWidgets() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
-        child: Column(
-          children: [buildCoursesList(), const SizedBox(height: 24.0)],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [buildCoursesList(), const SizedBox(height: 24.0)],
       ),
     );
   }
@@ -115,8 +113,5 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: appBar(), body: buildBlocWidget());
-    // allCourses.isEmpty
-    //     ? const NoAvailableCourses()
-    //     : buildLoadedListWidgets());
   }
 }
