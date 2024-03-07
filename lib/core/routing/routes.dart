@@ -10,4 +10,6 @@ class AppRoutes {
   static const String teacherCoursesRoute = '/teacher-courses';
   static const String teacherSubjectsDetailsRoute =
       '/teacher-courses/teacher-courses-details';
+  static const String addNewCoursePage =
+      '/teacher-courses/teacher-courses-details/add-new-course';
 }

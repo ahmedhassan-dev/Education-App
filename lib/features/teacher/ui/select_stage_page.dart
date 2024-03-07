@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/constants/stages.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/teacher/ui/widgets/educational_stages_list.dart';
@@ -9,12 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectEducationalStagesPage extends StatefulWidget {
   const SelectEducationalStagesPage({super.key});
-  static const List<String> educationalStages = [
-    'Primary Education',
-    'Middle School',
-    'Secondary Education',
-    'Higher Education',
-  ];
 
   @override
   State<SelectEducationalStagesPage> createState() =>
@@ -44,11 +39,11 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
 
   buildEducationalStagesList() {
     return ListView.builder(
-      itemCount: SelectEducationalStagesPage.educationalStages.length,
+      itemCount: EducationalStages.educationalStages.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
-        final stage = SelectEducationalStagesPage.educationalStages[i];
+        final stage = EducationalStages.educationalStages[i];
         return EducationalStagesList(
           stage: stage,
         );

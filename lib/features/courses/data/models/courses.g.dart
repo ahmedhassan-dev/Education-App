@@ -9,7 +9,7 @@ part of 'courses.dart';
 Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
       imgUrl: json['imgUrl'] as String,
       subject: json['subject'] as String,
-      descriptions: json['descriptions'] as String,
+      description: json['description'] as String,
       authorEmail: json['authorEmail'] as String,
       authorName: json['authorName'] as String,
       stage: json['stage'] as String,
@@ -23,5 +23,5 @@ Map<String, dynamic> _$CoursesToJson(Courses instance) => <String, dynamic>{
       'topics': instance.topics,
       'imgUrl': instance.imgUrl,
       'subject': instance.subject,
-      'descriptions': instance.descriptions,
+      'description': instance.description,
     };

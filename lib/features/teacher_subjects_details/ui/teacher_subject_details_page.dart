@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/widgets/courses_list.dart';
@@ -8,16 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TeacherSubjectCoursesPage extends StatefulWidget {
+class TeacherSubjectDetailsPage extends StatefulWidget {
   final String subject;
-  const TeacherSubjectCoursesPage({super.key, required this.subject});
+  const TeacherSubjectDetailsPage({super.key, required this.subject});
 
   @override
-  State<TeacherSubjectCoursesPage> createState() =>
-      _TeacherSubjectCoursesPageState();
+  State<TeacherSubjectDetailsPage> createState() =>
+      _TeacherSubjectDetailsPageState();
 }
 
-class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
+class _TeacherSubjectDetailsPageState extends State<TeacherSubjectDetailsPage> {
   List<Courses> subjectCourses = [];
 
   @override
@@ -39,7 +41,10 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
       automaticallyImplyLeading: false,
       actions: [
         InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRoutes.addNewCoursePage,
+                  arguments: widget.subject);
+            },
             child: Icon(
               Icons.add,
               color: AppColors.whiteColor,
@@ -70,11 +75,14 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
       if (state is CoursesLoaded) {
         subjectCourses = (state).courses;
         if (subjectCourses.isEmpty) {
-          return const NoAvailableCourses();
+          return NoAvailableCourses(onTap: () {
+            Navigator.of(context).pushNamed(AppRoutes.addNewCoursePage,
+                arguments: widget.subject);
+          });
         }
         return buildLoadedListWidgets();
       } else {
-        return showLoadingIndicator();
+        return const ShowLoadingIndicator();
       }
     });
   }
@@ -99,14 +107,6 @@ class _TeacherSubjectCoursesPageState extends State<TeacherSubjectCoursesPage> {
           course: course,
         );
       },
-    );
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
     );
   }
 

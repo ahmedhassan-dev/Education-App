@@ -43,7 +43,7 @@ class CoursesList extends StatelessWidget {
               GetListOfStringsText(stringList: course.topics.cast<String>()),
               Flexible(
                 child: Text(
-                  course.descriptions,
+                  course.description,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
