@@ -14,7 +14,8 @@ Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
       scoreNum: json['scoreNum'] as int,
       solution: json['solution'] as String,
       stage: json['stage'] as String,
-      author: json['author'] as Map<String, dynamic>,
+      authorEmail: json['authorEmail'] as String,
+      authorName: json['authorName'] as String,
       time: json['time'] as int,
       needReview: json['needReview'] as bool,
       topics: json['topics'] as List<dynamic>,
@@ -22,7 +23,8 @@ Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
     );
 
 Map<String, dynamic> _$ProblemsToJson(Problems instance) => <String, dynamic>{
-      'author': instance.author,
+      'authorEmail': instance.authorEmail,
+      'authorName': instance.authorName,
       'stage': instance.stage,
       'topics': instance.topics,
       'id': instance.id,

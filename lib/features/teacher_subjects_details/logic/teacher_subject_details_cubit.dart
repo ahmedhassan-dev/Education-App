@@ -27,7 +27,7 @@ class TeacherSubjectDetailsCubit extends Cubit<TeacherSubjectDetailsState> {
     await getEmailFromSharedPreferences();
     subjectCoursesRepository
         .getSubjectCourses(
-            path: ApiPath.courses(), subject: subject, author: email!)
+            path: ApiPath.courses(), subject: subject, authorEmail: email!)
         .then((courses) {
       emit(CoursesLoaded(courses));
       this.courses = courses;

@@ -5,7 +5,7 @@ import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
-import 'package:education_app/features/teacher/ui/widgets/get_list_of_strings_text.dart';
+import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,10 +124,8 @@ class _TeacherPageState extends State<TeacherPage> {
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),
       stage: _stageController.text.trim(),
-      author: {
-        context.read<TeacherCubit>().email:
-            context.read<TeacherCubit>().userName
-      },
+      authorEmail: context.read<TeacherCubit>().email,
+      authorName: context.read<TeacherCubit>().userName,
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
       needReview: reviewManuallyCheckBox,

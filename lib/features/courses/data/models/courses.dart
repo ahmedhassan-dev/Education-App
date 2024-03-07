@@ -6,11 +6,14 @@ part 'courses.g.dart';
 class Courses extends CourseData {
   final String imgUrl;
   final String subject;
+  final String descriptions;
 
   Courses(
       {required this.imgUrl,
       required this.subject,
-      required super.author,
+      required this.descriptions,
+      required super.authorEmail,
+      required super.authorName,
       required super.stage,
       required super.topics});
 
