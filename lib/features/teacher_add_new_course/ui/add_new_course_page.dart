@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/teacher_add_new_course/logic/add_new_course_cubit.dart';
@@ -70,8 +71,11 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
       if (state is CourseDataStored) {
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
-        Navigator.pop(context);
-        Navigator.pop(context);
+        Navigator.popUntil(context,
+            ModalRoute.withName(AppRoutes.teacherSubjectsDetailsRoute));
+        Navigator.of(context).pushReplacementNamed(
+            AppRoutes.teacherSubjectsDetailsRoute,
+            arguments: widget.subject);
       } else if (state is ErrorOccurred) {
         showWarningAwesomeDialog(context, state).show();
       }

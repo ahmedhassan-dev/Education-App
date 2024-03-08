@@ -1,5 +1,6 @@
 class ApiPath {
   static String courses() => 'courses/';
+  static String coursesID(String courseID) => 'courses/$courseID';
   static String student(String uid) => 'students/$uid';
   static String teacher(String uid) => 'teachers/$uid';
   // static String problemsTeacherIdList() =>

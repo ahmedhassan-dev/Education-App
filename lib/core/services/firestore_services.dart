@@ -42,21 +42,15 @@ class FirestoreServices {
     return snapshot.docs;
   }
 
-  Future<dynamic> retrieveSubjectCoursesData(
-      {required String subject,
-      required String authorEmail,
-      required String path}) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection(path)
-        .where("authorEmail", isEqualTo: authorEmail)
-        .where("subject", isEqualTo: subject)
-        .get();
-    return snapshot.docs;
-  }
-
-  Future<dynamic> retrieveData({required String path}) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await _fireStore.collection(path).get();
+  Future<dynamic> retrieveData({
+    required String path,
+    Query Function(Query query)? queryBuilder,
+  }) async {
+    Query query = _fireStore.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    QuerySnapshot snapshot = await query.get();
     return snapshot.docs;
   }
 

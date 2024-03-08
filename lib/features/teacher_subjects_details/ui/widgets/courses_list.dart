@@ -17,9 +17,8 @@ class CoursesList extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context, rootNavigator: true).pushNamed(
-              AppRoutes.teacherSubjectsDetailsRoute,
-              arguments: course);
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.teacherRoute, arguments: course);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -35,7 +34,7 @@ class CoursesList extends StatelessWidget {
               Text(
                 "${course.stage} Course",
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

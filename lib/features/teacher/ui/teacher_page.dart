@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TeacherPage extends StatefulWidget {
-  const TeacherPage({super.key});
+  final Courses course;
+  const TeacherPage({super.key, required this.course});
 
   @override
   State<TeacherPage> createState() => _TeacherPageState();
