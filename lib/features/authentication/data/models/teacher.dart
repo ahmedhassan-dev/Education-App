@@ -4,7 +4,6 @@ part 'teacher.g.dart';
 
 @JsonSerializable()
 class Teacher extends User {
-  final String? phoneNum;
   final List<dynamic>? subjects;
   final List<dynamic>? educationalStages;
   final Map<String, String> problemsAdded;
@@ -13,7 +12,7 @@ class Teacher extends User {
     required super.uid,
     required super.userName,
     required super.email,
-    this.phoneNum,
+    required super.phoneNum,
     this.subjects = const [],
     this.educationalStages = const [],
     this.problemsAdded = const {},

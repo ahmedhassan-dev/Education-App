@@ -13,6 +13,8 @@ class ErrorOccurred extends AuthState {
   ErrorOccurred({required this.errorMsg});
 }
 
+class GetUserData extends AuthState {}
+
 class SubmitionVerified extends AuthState {}
 
 class UpdateEmailAndPassword extends AuthState {}

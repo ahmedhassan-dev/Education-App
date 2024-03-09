@@ -13,6 +13,7 @@ class Student extends User {
       {required super.uid,
       required super.userName,
       required super.email,
+      required super.phoneNum,
       this.totalScore = 0,
       this.userScores = const {},
       this.lastProblemIdx = const {},

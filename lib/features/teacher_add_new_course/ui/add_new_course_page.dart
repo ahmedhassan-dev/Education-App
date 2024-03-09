@@ -73,6 +73,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
         if (!mounted) return;
         Navigator.popUntil(context,
             ModalRoute.withName(AppRoutes.teacherSubjectsDetailsRoute));
+        // TODO: I have to test this again with one subject
         Navigator.of(context).pushReplacementNamed(
             AppRoutes.teacherSubjectsDetailsRoute,
             arguments: widget.subject);

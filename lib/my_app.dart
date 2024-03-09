@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
             primaryColor: const Color.fromRGBO(244, 67, 54, 1),
             inputDecorationTheme: InputDecorationTheme(
+              hintStyle: const TextStyle(color: Colors.white),
               labelStyle: Theme.of(context)
                   .textTheme
                   .titleMedium!

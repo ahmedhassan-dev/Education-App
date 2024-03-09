@@ -18,7 +18,10 @@ class AuthCubit extends Cubit<AuthState> {
   String email;
   String password;
   AuthFormType authFormType;
+  String? userName;
+  String? phoneNum;
   String userType;
+  String? uid;
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
@@ -30,13 +33,49 @@ class AuthCubit extends Cubit<AuthState> {
     this.userType = '',
   }) : super(AuthInitial());
 
-  Future<void> submit() async {
-    emit(Loading());
-    if (authFormType == AuthFormType.login) {
-      await signIn();
-    } else {
-      await signUp();
+  late bool userDataAvailability;
+  Future<bool> checkUserDataAvailability(String uid) async {
+    userDataAvailability = await checkUserDataAvailabilityInSharedPreferences();
+    if (userDataAvailability) {
+      return true;
     }
+    await checkUserDataAvailabilityInFireStore(uid);
+    return userDataAvailability;
+  }
+
+  Future<bool> checkUserDataAvailabilityInSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userName = prefs.getString('userName');
+    if (userName == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<void> checkUserDataAvailabilityInFireStore(String uid) async {
+    await authRepository
+        .getUserData(
+            path: "${userType.toLowerCase()}s", uid: uid, userType: userType)
+        .then((data) async {
+      if (data == null) {
+        userDataAvailability = false;
+      } else if (userType == "Teacher") {
+        Teacher teacher = data as Teacher;
+        await storeUserDataInSharedPreferences(
+            userName: teacher.userName!,
+            email: teacher.email!,
+            phoneNum: teacher.phoneNum!);
+        userDataAvailability = true;
+      } else {
+        Student student = data as Student;
+        await storeUserDataInSharedPreferences(
+            userName: student.userName!,
+            email: student.email!,
+            phoneNum: student.phoneNum!);
+        userDataAvailability = true;
+      }
+    });
   }
 
   storeUserTypeInSharedPreferences() async {
@@ -44,11 +83,14 @@ class AuthCubit extends Cubit<AuthState> {
     await prefs.setString('userType', userType);
   }
 
-  storeTeacherDataInSharedPreferences(
-      {required String userName, required String email}) async {
+  storeUserDataInSharedPreferences(
+      {required String userName,
+      required String email,
+      required String phoneNum}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userName', userName);
     await prefs.setString('email', email);
+    await prefs.setString('phoneNum', phoneNum);
   }
 
   getAndSendToken(String? uid) async {
@@ -61,14 +103,13 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signIn() async {
+    emit(Loading());
     try {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
       await storeUserTypeInSharedPreferences();
-      // TODO: Need to get userName.
-      await storeTeacherDataInSharedPreferences(
-          userName: userType, email: email);
+      await checkUserDataAvailability(user.user!.uid);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'user-not-found') {
@@ -88,19 +129,20 @@ class AuthCubit extends Cubit<AuthState> {
     this.userType = userType;
   }
 
-  userObject(String? uid, String? userName, String? email) {
+  userObject(String? uid, String? userName, String? email, String? phoneNum) {
     if (userType == "Teacher") {
       return Teacher(
         uid: uid ?? documentIdFromLocalData(),
         userName: userName,
         email: email,
+        phoneNum: phoneNum,
       );
     } else if (userType == "Student") {
       return Student(
-        uid: uid ?? documentIdFromLocalData(),
-        userName: userName,
-        email: email,
-      );
+          uid: uid ?? documentIdFromLocalData(),
+          userName: userName,
+          email: email,
+          phoneNum: phoneNum);
     }
   }
 
@@ -112,18 +154,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signUp() async {
+  Future<void> signUp(String userName, String phoneNum) async {
+    emit(Loading());
     try {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       getAndSendToken(user.user?.uid);
       await authRepository.setUserData(
-          userData: userObject(user.user?.uid, userType, email),
+          userData: userObject(user.user?.uid, userName, email, phoneNum),
           path: userPath(user.user!.uid));
       await storeUserTypeInSharedPreferences();
-      // TODO: Need to get userName.
-      await storeTeacherDataInSharedPreferences(
-          userName: userType, email: email);
+      await storeUserDataInSharedPreferences(
+          userName: userName, email: email, phoneNum: phoneNum);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'email-already-in-use') {
@@ -146,9 +188,14 @@ class AuthCubit extends Cubit<AuthState> {
   //   }
   // }
 
-  User getLoggedInUser() {
-    User firebaseUser = FirebaseAuth.instance.currentUser!;
-    return firebaseUser;
+  Future<void> storeUserData(String userName, String phoneNum) async {
+    await authRepository.setUserData(
+        userData: userObject(uid, userName, email, phoneNum),
+        path: userPath(uid));
+    await storeUserTypeInSharedPreferences();
+    await storeUserDataInSharedPreferences(
+        userName: userName, email: email, phoneNum: phoneNum);
+    emit(SubmitionVerified());
   }
 
   Future<void> googleLogIn() async {
@@ -168,17 +215,20 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (user != null) {
         getAndSendToken(user.uid);
+        uid = user.uid;
+        email = user.email!;
         if (userCredential.additionalUserInfo!.isNewUser) {
-          await authRepository.setUserData(
-              userData: userObject(user.uid, user.displayName, user.email),
-              path: userPath(user.uid));
+          emit(GetUserData());
+        } else {
+          await checkUserDataAvailability(user.uid);
+          if (userDataAvailability) {
+            await storeUserTypeInSharedPreferences();
+            emit(SubmitionVerified());
+          } else {
+            emit(GetUserData());
+          }
         }
-        await storeUserTypeInSharedPreferences();
-        // TODO: Need to get userName.
-        await storeTeacherDataInSharedPreferences(
-            userName: user.displayName ?? userType, email: user.email!);
       }
-      emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       emit(ErrorOccurred(errorMsg: ex.code));
     } catch (e) {

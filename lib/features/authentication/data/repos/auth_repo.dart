@@ -1,4 +1,6 @@
 import 'package:education_app/core/services/firestore_services.dart';
+import 'package:education_app/features/authentication/data/models/student.dart';
+import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthBase {
@@ -15,6 +17,9 @@ abstract class AuthBase {
   Future<void> setToken(Map<String, String> userToken, String path);
 
   Future<void> logout();
+
+  Future<dynamic> getUserData(
+      {required String path, required String uid, required String userType});
 }
 
 class AuthRepository implements AuthBase {
@@ -57,6 +62,29 @@ class AuthRepository implements AuthBase {
         path: path,
         data: userToken,
       );
+
+  @override
+  Future<dynamic> getUserData(
+      {required String path,
+      required String uid,
+      required String userType}) async {
+    final document = await firestoreServices.retrieveData(
+        path: path,
+        queryBuilder: (query) => query.where("uid", isEqualTo: uid)) as List;
+    if (document.isEmpty) {
+      return null;
+    } else if (userType == "Teacher") {
+      return document
+          .map((docSnapshot) => Teacher.fromJson(docSnapshot.data()!))
+          .toList()
+          .first;
+    } else {
+      return document
+          .map((docSnapshot) => Student.fromJson(docSnapshot.data()!))
+          .toList()
+          .first;
+    }
+  }
 
   //TODO: need to be refactored
   @override
