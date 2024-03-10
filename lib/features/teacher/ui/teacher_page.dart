@@ -1,4 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/loading_overlay.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
@@ -7,6 +9,7 @@ import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
+import 'package:education_app/features/teacher/ui/course_problems_modal_bottom_sheet.dart';
 import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +29,6 @@ class _TeacherPageState extends State<TeacherPage> {
   final _titleController = TextEditingController();
   final _problemController = TextEditingController();
   final _solutionController = TextEditingController();
-  final _stageController = TextEditingController();
   final _scoreNumController = TextEditingController();
   final _timeController = TextEditingController();
   final _topicsController = TextEditingController();
@@ -34,6 +36,7 @@ class _TeacherPageState extends State<TeacherPage> {
   bool reviewManuallyCheckBox = false;
   List<String> topicsList = [];
   List<String> videosList = [];
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -46,7 +49,6 @@ class _TeacherPageState extends State<TeacherPage> {
     _titleController.dispose();
     _problemController.dispose();
     _solutionController.dispose();
-    _stageController.dispose();
     _scoreNumController.dispose();
     _timeController.dispose();
     _topicsController.dispose();
@@ -71,15 +73,18 @@ class _TeacherPageState extends State<TeacherPage> {
         storeNewProblem();
       }
     } catch (e) {
-      AwesomeDialog(
-              context: context,
-              dialogType: DialogType.warning,
-              animType: AnimType.scale,
-              title: 'Error Generating New Id',
-              desc: e.toString(),
-              dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1))
-          .show();
+      showAwesomeErrorDialog(e.toString()).show();
     }
+  }
+
+  AwesomeDialog showAwesomeErrorDialog(String error) {
+    return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        animType: AnimType.scale,
+        title: 'Error',
+        desc: error,
+        dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1));
   }
 
   Widget buildBlocWidget() {
@@ -90,14 +95,21 @@ class _TeacherPageState extends State<TeacherPage> {
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
         Navigator.pop(context);
+      } else if (state is LoadingModalBottomSheetData) {
+        _loadingOverlay.show(context);
+      } else if (state is ModalBottomSheetProblemsLoaded) {
+        _loadingOverlay.hide();
+        showProblemsModel(context, problemsList: state.problemsList);
+      } else if (state is ErrorOccurred) {
+        showAwesomeErrorDialog(state.errorMsg).show();
       }
     }, builder: (context, TeacherState state) {
       if (state is NeedUpdate) {
         return const NeedToUpdate();
-      } else if (state is UserDataRetrieved || state is ProblemStored) {
-        return addNewProblemWidget();
+      } else if (state is Loading) {
+        return const ShowLoadingIndicator();
       } else {
-        return showLoadingIndicator();
+        return addNewProblemWidget();
       }
     });
   }
@@ -106,7 +118,6 @@ class _TeacherPageState extends State<TeacherPage> {
     _titleController.text = "";
     _problemController.text = "";
     _solutionController.text = "";
-    _stageController.text = "";
     _scoreNumController.text = "";
     _timeController.text = "";
     _topicsController.text = "";
@@ -119,13 +130,14 @@ class _TeacherPageState extends State<TeacherPage> {
     if (_topicsController.text.trim().isNotEmpty) {
       topicsList.add(_topicsController.text.trim());
     }
+    topicsList.add(widget.course.subject);
     final problem = Problems(
-      id: null, // TODO: I have to check that it will not be empty or nullable
+      id: null,
       problemId: null,
       title: _titleController.text.trim(),
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),
-      stage: _stageController.text.trim(),
+      stage: widget.course.stage,
       authorEmail: context.read<TeacherCubit>().email,
       authorName: context.read<TeacherCubit>().userName,
       scoreNum: int.parse(_scoreNumController.text.trim()),
@@ -140,11 +152,35 @@ class _TeacherPageState extends State<TeacherPage> {
   Widget addNewProblemWidget() {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Adding New Problem",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        centerTitle: true,
+        title: Text("Adding New Problem",
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(fontWeight: FontWeight.bold)),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 50.h,
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              BlocProvider.of<TeacherCubit>(context)
+                  .getCourseProblems(widget.course);
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 13.w),
+              backgroundColor: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.0),
+              ),
+            ),
+            child: const Text(
+              'My Problems',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -208,17 +244,6 @@ class _TeacherPageState extends State<TeacherPage> {
                   validator: (value) => value!.isNotEmpty
                       ? null
                       : 'Please enter the expected time',
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _stageController,
-                  decoration: InputDecoration(
-                    labelText: 'Stage',
-                    fillColor: AppColors.textFormFieldFillColor,
-                    filled: true,
-                  ),
-                  validator: (value) =>
-                      value!.isNotEmpty ? null : 'Please enter your stage',
                 ),
                 const SizedBox(height: 16.0),
                 GetListOfStringsText(stringList: topicsList),
@@ -285,14 +310,6 @@ class _TeacherPageState extends State<TeacherPage> {
     }
     _videosController.text = "";
     setState(() {});
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
-    );
   }
 
   @override

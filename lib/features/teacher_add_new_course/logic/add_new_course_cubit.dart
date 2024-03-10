@@ -16,12 +16,9 @@ class AddNewCourseCubit extends Cubit<AddNewCourseState> {
 
   Future<void> getTeacherDataFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      userName = prefs.getString('userName');
-      email = prefs.getString('email');
-    } catch (e) {
-      emit(ErrorOccurred(errorMsg: e.toString()));
-    }
+    userName = prefs.getString('userName');
+    email = prefs.getString('email');
+
     emit(TeacherDataLoaded());
   }
 

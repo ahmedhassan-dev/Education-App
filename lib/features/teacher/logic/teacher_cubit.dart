@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
@@ -105,16 +106,16 @@ class TeacherCubit extends Cubit<TeacherState> {
     );
   }
 
-  saveNewProblem({required Problems problem}) async {
+  Future<void> saveNewProblem({required Problems problem}) async {
     emit(Loading());
-    await generateProblemId(); //TODO: I have to validate that newProblemId genertated
+    await generateProblemId();
     problem = problem.copyWith(id: newProblemId, problemId: newProblemId);
     await storeNewProblem(problem);
     await updateProblemsCount();
     emit(ProblemStored());
   }
 
-  generateProblemId() async {
+  Future<void> generateProblemId() async {
     await teacherRepository
         .retrieveLastProblemId(
             path: ApiPath.publicInfo(), docName: 'problemsCount')
@@ -125,10 +126,14 @@ class TeacherCubit extends Cubit<TeacherState> {
 
   Future<void> updateProblemsCount() async {
     final problemsCount = {"problemsCount": int.parse(newProblemId)};
-    await teacherRepository.updateProblemsCount(
-      data: problemsCount,
-      path: ApiPath.problemsCount(),
-    );
+    try {
+      await teacherRepository.updateProblemsCount(
+        data: problemsCount,
+        path: ApiPath.problemsCount(),
+      );
+    } catch (e) {
+      emit(ErrorOccurred(errorMsg: e.toString()));
+    }
   }
 
   getTeacherDataFromSharedPreferences() async {
@@ -155,6 +160,19 @@ class TeacherCubit extends Cubit<TeacherState> {
             path: ApiPath.publicInfo(), docName: 'teacherVersion')
         .then((latestAppVersion) {
       this.latestAppVersion = latestAppVersion.data()!["teacherVersion"];
+    });
+  }
+
+  Future<void> getCourseProblems(Courses course) async {
+    emit(LoadingModalBottomSheetData());
+    await teacherRepository
+        .retrieveCourseProblems(
+            path: ApiPath.problems(),
+            authorEmail: course.authorEmail,
+            subject: course.subject,
+            stage: course.stage)
+        .then((problemsList) {
+      emit(ModalBottomSheetProblemsLoaded(problemsList: problemsList));
     });
   }
 

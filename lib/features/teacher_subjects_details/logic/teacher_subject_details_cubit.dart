@@ -16,11 +16,7 @@ class TeacherSubjectDetailsCubit extends Cubit<TeacherSubjectDetailsState> {
 
   getEmailFromSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    try {
-      email = prefs.getString('email');
-    } catch (e) {
-      emit(ErrorOccurred(errorMsg: e.toString()));
-    }
+    email = prefs.getString('email');
   }
 
   getSubjectCourses({required String subject}) async {
