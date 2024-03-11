@@ -93,7 +93,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   retrieveSubjectProblems({bool forTeachers = false}) async {
     await problemsRepository
         .retrieveSubjectProblems(
-            subject: subject, path: ApiPath.problems(), sortedBy: 'problemId')
+            subject: subject, path: ApiPath.problems(), sortedBy: 'id')
         .then((retrievedProblemList) {
       this.retrievedProblemList = retrievedProblemList;
     });

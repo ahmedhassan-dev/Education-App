@@ -1,3 +1,4 @@
+import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
@@ -13,58 +14,81 @@ class CoursesList extends StatelessWidget {
   });
 
   Widget courseElement(context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.problemPage, arguments: course);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(16))),
-          margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 32.w),
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          height: 140.h,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GetListOfStringsText(stringList: course.topics.cast<String>()),
-              Text(
-                "${course.stage} Course",
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-              ),
-              Text(
-                course.authorName,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-              ),
-              Flexible(
-                child: Text(
-                  course.description,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context, rootNavigator: true)
+            .pushNamed(AppRoutes.problemPage, arguments: course);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: AppColors.secondaryColor,
+            borderRadius: const BorderRadius.all(Radius.circular(16))),
+        margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 32.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        height: 143.h,
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                RotatedBox(
+                  quarterTurns: 3,
+                  child: Text(
+                    course.subject,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                  ),
+                ),
+                const VerticalDivider(
+                  width: 20,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+            horizontalSpace(5),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GetListOfStringsText(stringList: course.topics.cast<String>()),
+                Text(
+                  "${course.stage} Course",
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                 ),
-              ),
-              SizedBox(
-                height: 10.h,
-              )
-              // Image.asset(AppAssets.selectUserListImages(userType)),
-            ],
-          ),
+                Text(
+                  course.authorName,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                ),
+                SizedBox(
+                  width: 230.w,
+                  child: Flexible(
+                    child: Text(
+                      course.description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                    ),
+                  ),
+                ),
+                verticalSpace(10)
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -73,22 +97,5 @@ class CoursesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return courseElement(context);
-    // Center(
-    //   child: Padding(
-    //     padding: EdgeInsets.symmetric(vertical: 20.h),
-    //     child: GestureDetector(
-    //       onTap: () {
-    //         Navigator.of(context, rootNavigator: true)
-    //             .pushNamed(AppRoutes.problemPage, arguments: course);
-    //       },
-    //       child: SizedBox(
-    //         height: 160.h,
-    //         child: Image.network(
-    //           course.imgUrl,
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
