@@ -48,16 +48,11 @@ class TeacherRepository {
       );
 
   Future<List<Problems>> retrieveCourseProblems(
-      {required String path,
-      required String authorEmail,
-      required String subject,
-      required String stage}) async {
+      {required String path, required String courseId}) async {
     final problems = await firestoreServices.retrieveData(
         path: path,
-        queryBuilder: (query) => query
-            .where("authorEmail", isEqualTo: authorEmail)
-            .where("topics", arrayContains: subject)
-            .where("stage", isEqualTo: stage)) as List;
+        queryBuilder: (query) =>
+            query.where("courseId", isEqualTo: courseId)) as List;
     return problems
         .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();

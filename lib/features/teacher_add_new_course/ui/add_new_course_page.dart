@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
@@ -109,6 +110,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
       topicsList.add(_topicsController.text.trim());
     }
     final Courses course = Courses(
+      id: documentIdFromLocalData(),
       stage: stage!,
       authorEmail: context.read<AddNewCourseCubit>().email!,
       authorName: context.read<AddNewCourseCubit>().userName!,

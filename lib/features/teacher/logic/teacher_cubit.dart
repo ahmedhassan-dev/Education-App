@@ -109,7 +109,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   Future<void> saveNewProblem({required Problems problem}) async {
     emit(Loading());
     await generateProblemId();
-    problem = problem.copyWith(id: newProblemId, problemId: newProblemId);
+    problem = problem.copyWith(id: newProblemId);
     await storeNewProblem(problem);
     await updateProblemsCount();
     emit(ProblemStored());
@@ -166,11 +166,7 @@ class TeacherCubit extends Cubit<TeacherState> {
   Future<void> getCourseProblems(Courses course) async {
     emit(LoadingModalBottomSheetData());
     await teacherRepository
-        .retrieveCourseProblems(
-            path: ApiPath.problems(),
-            authorEmail: course.authorEmail,
-            subject: course.subject,
-            stage: course.stage)
+        .retrieveCourseProblems(path: ApiPath.problems(), courseId: course.id!)
         .then((problemsList) {
       emit(ModalBottomSheetProblemsLoaded(problemsList: problemsList));
     });

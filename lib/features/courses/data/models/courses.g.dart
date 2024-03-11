@@ -7,6 +7,7 @@ part of 'courses.dart';
 // **************************************************************************
 
 Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
+      id: json['id'] as String?,
       imgUrl: json['imgUrl'] as String,
       subject: json['subject'] as String,
       description: json['description'] as String,
@@ -17,6 +18,7 @@ Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
     );
 
 Map<String, dynamic> _$CoursesToJson(Courses instance) => <String, dynamic>{
+      'id': instance.id,
       'authorEmail': instance.authorEmail,
       'authorName': instance.authorName,
       'stage': instance.stage,

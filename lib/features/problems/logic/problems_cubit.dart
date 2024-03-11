@@ -166,8 +166,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   solvedBeforeFun() {
     problemIndex < retrievedProblemList!.length
-        ? solvedBefore = solvedProblemsList
-            .contains(retrievedProblemList![problemIndex].problemId)
+        ? solvedBefore =
+            solvedProblemsList.contains(retrievedProblemList![problemIndex].id)
         : solvedBefore = false;
   }
 
@@ -224,7 +224,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       final solutionData = SolvedProblems(
         id: solvedProblems != null
             ? solvedProblems!.id
-            : retrievedProblemList![problemIndex].problemId!,
+            : retrievedProblemList![problemIndex].id!,
         answer: solutionController,
         solvingTime: DateTime.now().difference(startCounting).inSeconds,
         nextRepeat: nextRepeat,
@@ -239,7 +239,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         solution: solutionData,
         path: ApiPath.solvedProblems(
           uid,
-          retrievedProblemList![problemIndex].problemId!,
+          retrievedProblemList![problemIndex].id!,
         ),
       );
     } catch (e) {
@@ -290,7 +290,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     solutionImgURL.add(imgURL);
   }
 
-  String get problemId => retrievedProblemList![problemIndex].problemId!;
+  String get problemId => retrievedProblemList![problemIndex].id!;
   String get title => retrievedProblemList![problemIndex].title;
   List<String> get topics =>
       retrievedProblemList![problemIndex].topics as List<String>;

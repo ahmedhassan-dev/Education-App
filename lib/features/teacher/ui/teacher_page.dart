@@ -133,7 +133,7 @@ class _TeacherPageState extends State<TeacherPage> {
     topicsList.add(widget.course.subject);
     final problem = Problems(
       id: null,
-      problemId: null,
+      courseId: widget.course.id,
       title: _titleController.text.trim(),
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),

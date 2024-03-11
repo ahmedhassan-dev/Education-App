@@ -8,7 +8,7 @@ part of 'problems.dart';
 
 Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
       id: json['id'] as String?,
-      problemId: json['problemId'] as String?,
+      courseId: json['courseId'] as String?,
       title: json['title'] as String,
       problem: json['problem'] as String,
       scoreNum: json['scoreNum'] as int,
@@ -23,12 +23,12 @@ Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
     );
 
 Map<String, dynamic> _$ProblemsToJson(Problems instance) => <String, dynamic>{
+      'id': instance.id,
       'authorEmail': instance.authorEmail,
       'authorName': instance.authorName,
       'stage': instance.stage,
       'topics': instance.topics,
-      'id': instance.id,
-      'problemId': instance.problemId,
+      'courseId': instance.courseId,
       'title': instance.title,
       'problem': instance.problem,
       'solution': instance.solution,

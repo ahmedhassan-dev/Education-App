@@ -9,7 +9,8 @@ class Courses extends CourseData {
   final String description;
 
   Courses(
-      {required this.imgUrl,
+      {required super.id,
+      required this.imgUrl,
       required this.subject,
       required this.description,
       required super.authorEmail,

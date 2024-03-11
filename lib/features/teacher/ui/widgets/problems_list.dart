@@ -19,7 +19,7 @@ class ProblemsList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${problem.problemId}. ${problem.title}",
+              "${problem.id}. ${problem.title}",
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

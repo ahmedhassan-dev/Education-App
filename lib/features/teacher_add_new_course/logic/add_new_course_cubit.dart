@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
-import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_add_new_course/data/repos/add_new_course_repo.dart';
 import 'package:meta/meta.dart';
@@ -27,7 +26,7 @@ class AddNewCourseCubit extends Cubit<AddNewCourseState> {
   Future<void> saveNewCourse({required Courses course}) async {
     try {
       await addNewCourseRepository.storeNewCourse(
-          path: ApiPath.coursesID(documentIdFromLocalData()), data: course);
+          path: ApiPath.coursesID(course.id!), data: course);
       emit(CourseDataStored());
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));

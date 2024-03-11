@@ -4,8 +4,7 @@ part 'problems.g.dart';
 
 @JsonSerializable()
 class Problems extends CourseData {
-  final String? id;
-  final String? problemId;
+  final String? courseId;
   final String title;
   final String problem;
   final String solution;
@@ -14,8 +13,8 @@ class Problems extends CourseData {
   final bool needReview;
   final List<dynamic> videos;
   Problems({
-    required this.id,
-    required this.problemId,
+    required super.id,
+    required this.courseId,
     required this.title,
     required this.problem,
     required this.scoreNum,
@@ -36,7 +35,7 @@ class Problems extends CourseData {
 
   Problems copyWith({
     String? id,
-    String? problemId,
+    String? courseId,
     String? title,
     String? problem,
     String? solution,
@@ -51,7 +50,7 @@ class Problems extends CourseData {
   }) {
     return Problems(
       id: id ?? this.id,
-      problemId: problemId ?? this.problemId,
+      courseId: courseId ?? this.courseId,
       title: title ?? this.title,
       problem: problem ?? this.problem,
       solution: solution ?? this.solution,
