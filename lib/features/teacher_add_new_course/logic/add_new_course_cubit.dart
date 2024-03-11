@@ -11,6 +11,7 @@ part 'add_new_course_state.dart';
 class AddNewCourseCubit extends Cubit<AddNewCourseState> {
   String? userName;
   String? email;
+  List<String>? subjects;
   AddNewCourseRepository addNewCourseRepository;
   AddNewCourseCubit(this.addNewCourseRepository) : super(Loading());
 
@@ -18,6 +19,7 @@ class AddNewCourseCubit extends Cubit<AddNewCourseState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userName = prefs.getString('userName');
     email = prefs.getString('email');
+    subjects = prefs.getStringList('subjects');
 
     emit(TeacherDataLoaded());
   }

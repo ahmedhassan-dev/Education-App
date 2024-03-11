@@ -73,10 +73,14 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
         if (!mounted) return;
         Navigator.popUntil(context,
             ModalRoute.withName(AppRoutes.teacherSubjectsDetailsRoute));
-        // TODO: I have to test this again with one subject
-        Navigator.of(context).pushReplacementNamed(
-            AppRoutes.teacherSubjectsDetailsRoute,
-            arguments: widget.subject);
+        if (context.read<AddNewCourseCubit>().subjects!.length == 1) {
+          Navigator.of(context).pushNamed(AppRoutes.teacherSubjectsDetailsRoute,
+              arguments: widget.subject);
+        } else {
+          Navigator.of(context).pushReplacementNamed(
+              AppRoutes.teacherSubjectsDetailsRoute,
+              arguments: widget.subject);
+        }
       } else if (state is ErrorOccurred) {
         showWarningAwesomeDialog(context, state).show();
       }
