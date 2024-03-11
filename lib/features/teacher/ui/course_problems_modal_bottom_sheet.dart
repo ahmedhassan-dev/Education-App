@@ -15,7 +15,6 @@ showProblemsModel(BuildContext context,
         heightFactor: 0.9,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            vertical: 60.0.h,
             horizontal: 32.0.w,
           ),
           child: SingleChildScrollView(
@@ -23,7 +22,6 @@ showProblemsModel(BuildContext context,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildProblemsList(problemsList),
-                const SizedBox(height: 24.0)
               ],
             ),
           ),
