@@ -166,7 +166,8 @@ class TeacherCubit extends Cubit<TeacherState> {
   Future<void> getCourseProblems(Courses course) async {
     emit(LoadingModalBottomSheetData());
     await teacherRepository
-        .retrieveCourseProblems(path: ApiPath.problems(), courseId: course.id!)
+        .retrieveCourseProblems(
+            path: ApiPath.problems(), courseId: course.id!, sortedBy: "id")
         .then((problemsList) {
       emit(ModalBottomSheetProblemsLoaded(problemsList: problemsList));
     });
