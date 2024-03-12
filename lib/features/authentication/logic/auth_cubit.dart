@@ -34,16 +34,17 @@ class AuthCubit extends Cubit<AuthState> {
   }) : super(AuthInitial());
 
   late bool userDataAvailability;
-  Future<bool> checkUserDataAvailability(String uid) async {
-    userDataAvailability = await checkUserDataAvailabilityInSharedPreferences();
+  Future<bool> _checkUserDataAvailability(String uid) async {
+    userDataAvailability =
+        await _checkUserDataAvailabilityInSharedPreferences();
     if (userDataAvailability) {
       return true;
     }
-    await checkUserDataAvailabilityInFireStore(uid);
+    await _checkUserDataAvailabilityInFireStore(uid);
     return userDataAvailability;
   }
 
-  Future<bool> checkUserDataAvailabilityInSharedPreferences() async {
+  Future<bool> _checkUserDataAvailabilityInSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userName = prefs.getString('userName');
     if (userName == null) {
@@ -53,7 +54,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> checkUserDataAvailabilityInFireStore(String uid) async {
+  Future<void> _checkUserDataAvailabilityInFireStore(String uid) async {
     await authRepository
         .getUserData(
             path: "${userType.toLowerCase()}s", uid: uid, userType: userType)
@@ -62,14 +63,14 @@ class AuthCubit extends Cubit<AuthState> {
         userDataAvailability = false;
       } else if (userType == "Teacher") {
         Teacher teacher = data as Teacher;
-        await storeUserDataInSharedPreferences(
+        await _storeUserDataInSharedPreferences(
             userName: teacher.userName!,
             email: teacher.email!,
             phoneNum: teacher.phoneNum!);
         userDataAvailability = true;
       } else {
         Student student = data as Student;
-        await storeUserDataInSharedPreferences(
+        await _storeUserDataInSharedPreferences(
             userName: student.userName!,
             email: student.email!,
             phoneNum: student.phoneNum!);
@@ -78,12 +79,12 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  storeUserTypeInSharedPreferences() async {
+  Future<void> _storeUserTypeInSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userType', userType);
   }
 
-  storeUserDataInSharedPreferences(
+  Future<void> _storeUserDataInSharedPreferences(
       {required String userName,
       required String email,
       required String phoneNum}) async {
@@ -93,7 +94,7 @@ class AuthCubit extends Cubit<AuthState> {
     await prefs.setString('phoneNum', phoneNum);
   }
 
-  getAndSendToken(String? uid) async {
+  Future<void> _getAndSendToken(String? uid) async {
     mytoken = await FirebaseMessaging.instance.getToken();
     if (mytoken != null && uid != null) {
       Map<String, String> userToken = {"token": mytoken!};
@@ -107,9 +108,9 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      getAndSendToken(user.user?.uid);
-      await storeUserTypeInSharedPreferences();
-      await checkUserDataAvailability(user.user!.uid);
+      await _getAndSendToken(user.user?.uid);
+      await _storeUserTypeInSharedPreferences();
+      await _checkUserDataAvailability(user.user!.uid);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'user-not-found') {
@@ -159,12 +160,12 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      getAndSendToken(user.user?.uid);
+      await _getAndSendToken(user.user?.uid);
       await authRepository.setUserData(
           userData: userObject(user.user?.uid, userName, email, phoneNum),
           path: userPath(user.user!.uid));
-      await storeUserTypeInSharedPreferences();
-      await storeUserDataInSharedPreferences(
+      await _storeUserTypeInSharedPreferences();
+      await _storeUserDataInSharedPreferences(
           userName: userName, email: email, phoneNum: phoneNum);
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
@@ -179,21 +180,12 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  // Future<void> logOut() async {
-  //   try {
-  //     await FirebaseAuth.instance.signOut();
-  //     emit(LogedOut());
-  //   } catch (e) {
-  //     emit(LogedOutError(errorMsg: e.toString()));
-  //   }
-  // }
-
   Future<void> storeUserData(String userName, String phoneNum) async {
     await authRepository.setUserData(
         userData: userObject(uid, userName, email, phoneNum),
         path: userPath(uid));
-    await storeUserTypeInSharedPreferences();
-    await storeUserDataInSharedPreferences(
+    await _storeUserTypeInSharedPreferences();
+    await _storeUserDataInSharedPreferences(
         userName: userName, email: email, phoneNum: phoneNum);
     emit(SubmitionVerified());
   }
@@ -214,15 +206,15 @@ class AuthCubit extends Cubit<AuthState> {
       User? user = userCredential.user;
 
       if (user != null) {
-        getAndSendToken(user.uid);
+        await _getAndSendToken(user.uid);
         uid = user.uid;
         email = user.email!;
         if (userCredential.additionalUserInfo!.isNewUser) {
           emit(GetUserData());
         } else {
-          await checkUserDataAvailability(user.uid);
+          await _checkUserDataAvailability(user.uid);
           if (userDataAvailability) {
-            await storeUserTypeInSharedPreferences();
+            await _storeUserTypeInSharedPreferences();
             emit(SubmitionVerified());
           } else {
             emit(GetUserData());

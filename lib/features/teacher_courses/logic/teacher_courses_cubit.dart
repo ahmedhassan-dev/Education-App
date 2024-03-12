@@ -1,27 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
-import 'package:education_app/features/courses/data/models/courses.dart';
-import 'package:education_app/features/courses/data/repos/courses_repo.dart';
-import 'package:education_app/core/constants/api_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'courses_state.dart';
+part 'teacher_courses_state.dart';
 
-class CoursesCubit extends Cubit<CoursesState> {
-  List<Courses> courses = [];
-  CoursesRepository coursesRepository;
+class TeacherCoursesCubit extends Cubit<TeacherCoursesState> {
   AuthRepository authRepository;
-  CoursesCubit(this.coursesRepository, this.authRepository)
-      : super(CoursesInitial());
-
-  List<Courses> getAllCourses() {
-    coursesRepository.getAllCourses(path: ApiPath.courses()).then((courses) {
-      emit(CoursesLoaded(courses));
-      this.courses = courses;
-    });
-    return courses;
-  }
+  TeacherCoursesCubit(this.authRepository) : super(TeacherCoursesInitial());
 
   Future<void> logOut() async {
     try {

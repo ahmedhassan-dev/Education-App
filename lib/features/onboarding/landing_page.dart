@@ -46,7 +46,8 @@ class _LandingPageState extends State<LandingPage> {
     AuthCubit authCubit = AuthCubit(AuthRepository(FirestoreServices()));
     CoursesRepository coursesRepository =
         CoursesRepository(FirestoreServices());
-    CoursesCubit coursesCubit = CoursesCubit(coursesRepository);
+    CoursesCubit coursesCubit =
+        CoursesCubit(coursesRepository, AuthRepository(FirestoreServices()));
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {

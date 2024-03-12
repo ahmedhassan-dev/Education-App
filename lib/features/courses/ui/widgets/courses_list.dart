@@ -71,9 +71,9 @@ class CoursesList extends StatelessWidget {
                         color: Colors.white,
                       ),
                 ),
-                SizedBox(
-                  width: 230.w,
-                  child: Flexible(
+                Flexible(
+                  child: SizedBox(
+                    width: 230.w,
                     child: Text(
                       course.description,
                       overflow: TextOverflow.ellipsis,

@@ -1,5 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
-import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/ui/widgets/courses_list.dart';
@@ -17,7 +17,6 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
-  // AuthCubit authCubit = AuthCubit();
   List<Courses> allCourses = [];
 
   @override
@@ -26,14 +25,6 @@ class _CoursesPageState extends State<CoursesPage> {
     BlocProvider.of<CoursesCubit>(context).getAllCourses();
   }
 
-  // Future<void> _logout(context) async {
-  //   try {
-  //     await authCubit.logOut();
-  //   } catch (e) {
-  //     debugPrint('logout error: $e');
-  //   }
-  // }
-
   Widget buildBlocWidget() {
     return BlocConsumer<CoursesCubit, CoursesState>(
         listener: (BuildContext context, CoursesState state) {
@@ -41,7 +32,14 @@ class _CoursesPageState extends State<CoursesPage> {
         Navigator.of(context)
             .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
       } else if (state is LogedOutError) {
-        debugPrint('logout error: ${state.errorMsg}');
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.warning,
+          animType: AnimType.scale,
+          title: 'Logout Error',
+          desc: state.errorMsg.toString(),
+          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+        ).show();
       }
     }, builder: (context, state) {
       if (state is CoursesLoaded) {
@@ -49,17 +47,20 @@ class _CoursesPageState extends State<CoursesPage> {
         if (allCourses.isEmpty) {
           return const NoCoursesAvailable();
         }
-        return buildLoadedListWidgets();
+        return buildCoursesPage();
       } else {
         return const ShowLoadingIndicator();
       }
     });
   }
 
-  Widget buildLoadedListWidgets() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [buildCoursesList(), const SizedBox(height: 24.0)],
+  Widget buildCoursesPage() {
+    return Scaffold(
+      appBar: appBar(context),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [buildCoursesList(), const SizedBox(height: 24.0)],
+        ),
       ),
     );
   }
@@ -80,10 +81,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(context),
-      body: buildBlocWidget(),
-    );
+    return buildBlocWidget();
   }
 
   AppBar appBar(BuildContext context) {
@@ -97,24 +95,20 @@ class _CoursesPageState extends State<CoursesPage> {
       ),
       automaticallyImplyLeading: false,
       actions: [
-        BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            return ElevatedButton(
-              onPressed: () {
-                // BlocProvider.of<AuthCubit>(context).logOut();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.0),
-                ),
-              ),
-              child: const Text(
-                'Log Out',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
+        ElevatedButton(
+          onPressed: () {
+            BlocProvider.of<CoursesCubit>(context).logOut();
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+          ),
+          child: const Text(
+            'Log Out',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         const SizedBox(
           width: 10,

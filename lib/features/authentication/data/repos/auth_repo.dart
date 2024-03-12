@@ -86,7 +86,6 @@ class AuthRepository implements AuthBase {
     }
   }
 
-  //TODO: need to be refactored
   @override
   Future<void> logout() async => await _firebaseAuth.signOut();
 }
