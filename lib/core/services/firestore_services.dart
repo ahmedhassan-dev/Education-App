@@ -30,18 +30,6 @@ class FirestoreServices {
     await reference.delete();
   }
 
-  Future<dynamic> retrieveSortedData(
-      {required String subject,
-      required String path,
-      required String sortedBy}) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection(path)
-        .where("topics", arrayContains: subject)
-        .orderBy(sortedBy)
-        .get();
-    return snapshot.docs;
-  }
-
   Future<dynamic> retrieveData({
     required String path,
     Query Function(Query query)? queryBuilder,
@@ -59,22 +47,6 @@ class FirestoreServices {
     DocumentSnapshot<Map<String, dynamic>> snapshot =
         await _fireStore.collection(path).doc(docName).get();
     return snapshot;
-  }
-
-  Future<dynamic> retrieveSolvedProblems(
-      {required String subject,
-      required String mainCollectionPath,
-      required String uid,
-      required String collectionPath,
-      required String sortedBy}) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection(mainCollectionPath)
-        .doc(uid)
-        .collection(collectionPath)
-        .where("topics", arrayContains: subject)
-        .orderBy(sortedBy)
-        .get();
-    return snapshot.docs;
   }
 
   Stream<T> documentsStream<T>({

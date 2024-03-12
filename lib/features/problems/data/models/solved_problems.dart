@@ -4,6 +4,7 @@ part 'solved_problems.g.dart';
 @JsonSerializable()
 class SolvedProblems {
   final String id;
+  final String? courseId;
   final String? answer;
   final int solvingTime;
   final String nextRepeat;
@@ -14,6 +15,7 @@ class SolvedProblems {
   final List<dynamic> solutionImgURL;
   SolvedProblems({
     required this.id,
+    required this.courseId,
     this.answer,
     required this.solvingTime,
     required this.nextRepeat,

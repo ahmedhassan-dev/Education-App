@@ -32,6 +32,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   List<SolvedProblems>? retrievedSolutionList;
   ProblemsCubit(this.problemsRepository) : super(ProblemsInitial());
   String uid = FirebaseAuth.instance.currentUser!.uid;
+  late String courseId;
   SolvedProblems? solvedProblems;
   bool solvedBefore = false;
   Queue<int> prbolemIndexQueue = Queue<int>();
@@ -90,10 +91,12 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  retrieveSubjectProblems({bool forTeachers = false}) async {
+  Future<void> retrieveCourseProblems(
+      {bool forTeachers = false, required String courseId}) async {
+    this.courseId = courseId;
     await problemsRepository
-        .retrieveSubjectProblems(
-            subject: subject, path: ApiPath.problems(), sortedBy: 'id')
+        .retrieveCourseProblems(
+            path: ApiPath.problems(), courseId: courseId, sortedBy: 'id')
         .then((retrievedProblemList) {
       this.retrievedProblemList = retrievedProblemList;
     });
@@ -112,10 +115,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   initRetrievalSolutions() async {
     await problemsRepository
         .retrieveSolvedProblems(
-            subject: subject,
-            mainCollectionPath: ApiPath.studentCollection(),
-            uid: uid,
-            collectionPath: 'solvedProblems',
+            path: ApiPath.solvedProblemsCollection(uid),
+            courseId: courseId,
             sortedBy: 'id')
         .then((retrievedSolutionList) {
       this.retrievedSolutionList = retrievedSolutionList;
@@ -225,6 +226,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         id: solvedProblems != null
             ? solvedProblems!.id
             : retrievedProblemList![problemIndex].id!,
+        courseId: courseId,
         answer: solutionController,
         solvingTime: DateTime.now().difference(startCounting).inSeconds,
         nextRepeat: nextRepeat,
@@ -266,7 +268,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         emit(ImageLoaded());
         submitSolution(null);
       } else {
-        emit(NOImageSelected());
+        emit(NoImageSelected());
       }
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
@@ -292,13 +294,12 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   String get problemId => retrievedProblemList![problemIndex].id!;
   String get title => retrievedProblemList![problemIndex].title;
-  List<String> get topics =>
-      retrievedProblemList![problemIndex].topics as List<String>;
   int get expectedTime => retrievedProblemList![problemIndex].time;
   String get problem => retrievedProblemList![problemIndex].problem;
   String get solution => retrievedProblemList![problemIndex].solution;
   bool get needReview => retrievedProblemList![problemIndex].needReview;
-  List<String> get videos =>
-      retrievedProblemList![problemIndex].videos as List<String>;
+  List<String> get videos => (retrievedProblemList![problemIndex].videos)
+      .map((item) => item as String)
+      .toList();
   String get userScore => score.toString();
 }

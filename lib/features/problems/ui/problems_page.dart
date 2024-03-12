@@ -19,8 +19,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProblemPage extends StatefulWidget {
-  final Courses courseList;
-  const ProblemPage({super.key, required this.courseList});
+  final Courses course;
+  const ProblemPage({super.key, required this.course});
 
   @override
   State<ProblemPage> createState() => _ProblemPageState();
@@ -37,8 +37,9 @@ class _ProblemPageState extends State<ProblemPage> {
   void initState() {
     super.initState();
     BlocProvider.of<ProblemsCubit>(context)
-        .retrieveUserData(subject: widget.courseList.subject);
-    BlocProvider.of<ProblemsCubit>(context).retrieveSubjectProblems();
+        .retrieveUserData(subject: widget.course.subject);
+    BlocProvider.of<ProblemsCubit>(context)
+        .retrieveCourseProblems(courseId: widget.course.id!);
   }
 
   @override
@@ -205,7 +206,7 @@ class _ProblemPageState extends State<ProblemPage> {
                               width: 30,
                             ),
                             Text(
-                              widget.courseList.subject,
+                              widget.course.subject,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -342,7 +343,7 @@ class _ProblemPageState extends State<ProblemPage> {
   Widget appBar() {
     return SliverAppBar(
       title: Text(
-        widget.courseList.subject,
+        widget.course.subject,
         style: Theme.of(context)
             .textTheme
             .titleLarge!

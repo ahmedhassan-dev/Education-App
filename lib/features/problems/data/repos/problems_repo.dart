@@ -23,30 +23,30 @@ class ProblemsRepository {
         data: data,
       );
 
-  Future<List<Problems>> retrieveSubjectProblems(
-      {required String subject,
-      required String path,
+  Future<List<Problems>> retrieveCourseProblems(
+      {required String path,
+      required String courseId,
       required String sortedBy}) async {
-    final subjectProblems = await firestoreServices.retrieveSortedData(
-        subject: subject, path: path, sortedBy: sortedBy) as List;
-    return subjectProblems
+    final courseProblems = await firestoreServices.retrieveData(
+            path: path,
+            queryBuilder: (query) =>
+                query.where("courseId", isEqualTo: courseId).orderBy(sortedBy))
+        as List;
+    return courseProblems
         .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();
   }
 
   Future<List<SolvedProblems>> retrieveSolvedProblems(
-      {required String subject,
-      required String mainCollectionPath,
-      required String uid,
-      required String collectionPath,
+      {required String path,
+      required String courseId,
       required String sortedBy}) async {
-    final subjectProblems = await firestoreServices.retrieveSolvedProblems(
-        subject: subject,
-        mainCollectionPath: mainCollectionPath,
-        uid: uid,
-        collectionPath: collectionPath,
-        sortedBy: sortedBy) as List;
-    return subjectProblems
+    final courseProblems = await firestoreServices.retrieveData(
+            path: path,
+            queryBuilder: (query) =>
+                query.where("courseId", isEqualTo: courseId).orderBy(sortedBy))
+        as List;
+    return courseProblems
         .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
         .toList();
   }

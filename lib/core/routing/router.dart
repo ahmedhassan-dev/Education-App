@@ -112,12 +112,12 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
     case AppRoutes.problemPage:
-      final courseList = settings.arguments as Courses;
+      final course = settings.arguments as Courses;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) =>
               ProblemsCubit(ProblemsRepository(FirestoreServices())),
-          child: ProblemPage(courseList: courseList),
+          child: ProblemPage(course: course),
         ),
         settings: settings,
       );

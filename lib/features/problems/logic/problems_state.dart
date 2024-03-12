@@ -12,7 +12,7 @@ class ImageLoaded extends ProblemsState {}
 
 class ProblemsLoaded extends ProblemsState {}
 
-class NOImageSelected extends ProblemsState {}
+class NoImageSelected extends ProblemsState {}
 
 class ErrorOccurred extends ProblemsState {
   final String errorMsg;
