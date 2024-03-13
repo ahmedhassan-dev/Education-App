@@ -1,5 +1,7 @@
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
+import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
+import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
@@ -124,7 +126,11 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.landingPageRoute:
     default:
       return CupertinoPageRoute(
-        builder: (_) => const LandingPage(),
+        builder: (_) => BlocProvider(
+          create: (context) =>
+              OnboardingCubit(OnBoardingRepository(FirestoreServices())),
+          child: const LandingPage(),
+        ),
         settings: settings,
       );
   }

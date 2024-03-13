@@ -15,8 +15,10 @@ class CoursesCubit extends Cubit<CoursesState> {
   CoursesCubit(this.coursesRepository, this.authRepository)
       : super(CoursesInitial());
 
-  List<Courses> getAllCourses() {
-    coursesRepository.getAllCourses(path: ApiPath.courses()).then((courses) {
+  Future<List<Courses>> getAllCourses() async {
+    await coursesRepository
+        .getAllCourses(path: ApiPath.courses())
+        .then((courses) {
       emit(CoursesLoaded(courses));
       this.courses = courses;
     });

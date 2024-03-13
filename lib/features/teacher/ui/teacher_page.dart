@@ -6,7 +6,6 @@ import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
-import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/teacher/ui/course_problems_modal_bottom_sheet.dart';
@@ -41,7 +40,8 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TeacherCubit>(context).checkForUpdates();
+    BlocProvider.of<TeacherCubit>(context)
+        .getTeacherDataFromSharedPreferences();
   }
 
   @override
@@ -104,9 +104,7 @@ class _TeacherPageState extends State<TeacherPage> {
         showAwesomeErrorDialog(state.errorMsg).show();
       }
     }, builder: (context, TeacherState state) {
-      if (state is NeedUpdate) {
-        return const NeedToUpdate();
-      } else if (state is Loading) {
+      if (state is Loading) {
         return const ShowLoadingIndicator();
       } else {
         return addNewProblemWidget();

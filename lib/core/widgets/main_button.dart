@@ -4,17 +4,19 @@ class MainButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final bool hasCircularBorder;
+  final double width;
   const MainButton({
     super.key,
     required this.text,
     required this.onTap,
     this.hasCircularBorder = false,
+    this.width = double.infinity,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width,
       height: 50,
       child: ElevatedButton(
         onPressed: onTap,

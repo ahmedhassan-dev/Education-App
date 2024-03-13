@@ -29,5 +29,3 @@ class UserDataRetrieved extends TeacherState {}
 class TeacherDataLoaded extends TeacherState {}
 
 class ProblemStored extends TeacherState {}
-
-class NeedUpdate extends TeacherState {}

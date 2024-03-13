@@ -1,5 +1,8 @@
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
+import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
+import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
@@ -16,7 +19,6 @@ import 'package:education_app/features/teacher_subjects_details/ui/teacher_subje
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -32,18 +34,32 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
-    _connectToSharedPreferences();
+    BlocProvider.of<OnboardingCubit>(context)
+        .getInitDataFromSharedPreferences();
   }
 
-  _connectToSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userType = prefs.getString('userType');
-    subjects = prefs.getStringList('subjects');
-    isLoading = false;
-    setState(() {});
+  Widget buildBlocWidget() {
+    return BlocBuilder<OnboardingCubit, OnboardingState>(
+        builder: (context, OnboardingState state) {
+      if (state is NeedUpdate) {
+        return NeedToUpdate(
+          onTap: () =>
+              BlocProvider.of<OnboardingCubit>(context).downLoadNewVersion(),
+        );
+      } else if (state is LoadSelectUserPage) {
+        return const SelectUserPage();
+      } else if (state is InitDataLoaded) {
+        userType = state.userType;
+        subjects = state.subjects;
+        return selectInitPage();
+      } else {
+        return const ShowLoadingIndicator();
+      }
+    });
   }
 
-  Widget selectInitPage(auth) {
+  final auth = FirebaseAuth.instance;
+  Widget selectInitPage() {
     FirestoreServices fireStoreServices = FirestoreServices();
     AuthCubit authCubit = AuthCubit(AuthRepository(fireStoreServices));
     CoursesRepository coursesRepository = CoursesRepository(fireStoreServices);
@@ -97,13 +113,6 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
-    return isLoading
-        ? const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : selectInitPage(auth);
+    return buildBlocWidget();
   }
 }

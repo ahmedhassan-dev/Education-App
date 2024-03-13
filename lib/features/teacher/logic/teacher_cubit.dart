@@ -3,7 +3,6 @@ import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
-import 'package:education_app/core/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,26 +140,6 @@ class TeacherCubit extends Cubit<TeacherState> {
     userName = prefs.getString('userName')!;
     email = prefs.getString('email')!;
     emit(UserDataRetrieved());
-  }
-
-  late String latestAppVersion;
-  checkForUpdates() async {
-    emit(Loading());
-    await getLatestAppVersion();
-    if (latestAppVersion != teacherVersion) {
-      emit(NeedUpdate());
-    } else {
-      await getTeacherDataFromSharedPreferences();
-    }
-  }
-
-  getLatestAppVersion() async {
-    await teacherRepository
-        .getLatestAppVersion(
-            path: ApiPath.publicInfo(), docName: 'teacherVersion')
-        .then((latestAppVersion) {
-      this.latestAppVersion = latestAppVersion.data()!["teacherVersion"];
-    });
   }
 
   Future<void> getCourseProblems(Courses course) async {
