@@ -9,9 +9,10 @@ This is an education app built with Flutter & Dart, built (and still working on 
     - Email based sign up/in
     - Google Sign in
 2. Cloud Firestore
-3. Firebase Messaging
-4. Flavors for Development and Production environment
-5. Provider State management before refactoring it to Bloc
-6. Cashing data in shared_preferences
-7. Image picker
+3. Firebase Cloud Storage
+4. Firebase Messaging
+5. Flavors for Development and Production environment
+6. Provider State management before refactoring it to Bloc
+7. Cashing data in shared_preferences
+8. Image picker
 
