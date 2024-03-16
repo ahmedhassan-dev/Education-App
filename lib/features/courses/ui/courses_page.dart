@@ -1,13 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/courses_app_bar.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
-import 'package:education_app/features/courses/ui/widgets/courses_list.dart';
 import 'package:education_app/core/routing/routes.dart';
+import 'package:education_app/features/courses/ui/widgets/custom_list_view_course.dart';
 import 'package:education_app/features/courses/ui/widgets/no_available_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -56,65 +56,22 @@ class _CoursesPageState extends State<CoursesPage> {
 
   Widget buildCoursesPage() {
     return Scaffold(
-      appBar: appBar(context),
+      appBar: coursesAppBar(context, () {
+        BlocProvider.of<CoursesCubit>(context).logOut();
+      }),
       body: SingleChildScrollView(
         child: Column(
-          children: [buildCoursesList(), const SizedBox(height: 24.0)],
+          children: [
+            CustomListViewCourse(allCourses: allCourses),
+            const SizedBox(height: 24.0)
+          ],
         ),
       ),
-    );
-  }
-
-  Widget buildCoursesList() {
-    return ListView.builder(
-      itemCount: allCourses.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int i) {
-        final course = allCourses[i];
-        return CoursesList(
-          course: course,
-        );
-      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return buildBlocWidget();
-  }
-
-  AppBar appBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        'Courses',
-        style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-      ),
-      automaticallyImplyLeading: false,
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            BlocProvider.of<CoursesCubit>(context).logOut();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24.0),
-            ),
-          ),
-          child: const Text(
-            'Log Out',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        )
-      ],
-      toolbarHeight: 60.h,
-    );
   }
 }
