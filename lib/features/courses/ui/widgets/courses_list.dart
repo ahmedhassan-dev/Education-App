@@ -1,5 +1,6 @@
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/core/routing/routes.dart';
@@ -37,10 +38,7 @@ class CoursesList extends StatelessWidget {
                   child: Text(
                     course.subject,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    style: Styles.bodyLarge,
                   ),
                 ),
                 const VerticalDivider(
@@ -58,19 +56,10 @@ class CoursesList extends StatelessWidget {
                 Text(
                   "${course.stage} Course",
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  style: Styles.bodyMedium,
                 ),
-                Text(
-                  course.authorName,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                ),
+                Text(course.authorName,
+                    overflow: TextOverflow.ellipsis, style: Styles.bodyMedium),
                 Flexible(
                   child: SizedBox(
                     width: 230.w,
@@ -78,10 +67,7 @@ class CoursesList extends StatelessWidget {
                       course.description,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      style: Styles.bodyMedium,
                     ),
                   ),
                 ),
