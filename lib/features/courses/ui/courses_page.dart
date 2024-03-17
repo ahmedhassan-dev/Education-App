@@ -4,7 +4,7 @@ import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/core/routing/routes.dart';
-import 'package:education_app/features/courses/ui/widgets/custom_list_view_course.dart';
+import 'package:education_app/features/courses/ui/widgets/home_view_body.dart';
 import 'package:education_app/features/courses/ui/widgets/no_available_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,14 +59,7 @@ class _CoursesPageState extends State<CoursesPage> {
       appBar: coursesAppBar(context, () {
         BlocProvider.of<CoursesCubit>(context).logOut();
       }),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomListViewCourse(allCourses: allCourses),
-            const SizedBox(height: 24.0)
-          ],
-        ),
-      ),
+      body: HomeViewBody(allCourses: allCourses),
     );
   }
 
