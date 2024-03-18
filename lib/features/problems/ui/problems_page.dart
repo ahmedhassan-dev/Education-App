@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
@@ -170,7 +171,7 @@ class _ProblemPageState extends State<ProblemPage> {
           return noProblemsAvailable();
         }
       } else {
-        return showLoadingIndicator();
+        return const ShowLoadingIndicator();
       }
     });
   }
@@ -317,14 +318,6 @@ class _ProblemPageState extends State<ProblemPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
       ),
     );
   }
