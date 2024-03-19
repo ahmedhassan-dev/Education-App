@@ -211,6 +211,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   showNeedHelpList() {
     needHelp = true;
     needHelpTime.add(DateTime.now().toString());
+    emit(NeedHelpVideosLoaded());
   }
 
   recordFailureTime() {
@@ -290,6 +291,20 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   Future<void> getImgURL(TaskSnapshot snap) async {
     final String imgURL = await snap.ref.getDownloadURL(); // Get img url
     solutionImgURL.add(imgURL);
+  }
+
+  validateSolution(String? value) {
+    if (value!.isEmpty) {
+      return 'Please enter your solution';
+    } else if (checkSolutionIfNeedReview(value)) {
+      recordFailureTime();
+      return 'Wrong Answer!';
+    }
+    return null;
+  }
+
+  bool checkSolutionIfNeedReview(String value) {
+    return value != solution && !needReview;
   }
 
   String get problemId => retrievedProblemList![problemIndex].id!;

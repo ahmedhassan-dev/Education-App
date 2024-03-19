@@ -10,6 +10,8 @@ class Loading extends ProblemsState {}
 
 class ImageLoaded extends ProblemsState {}
 
+class NeedHelpVideosLoaded extends ProblemsState {}
+
 class ProblemsLoaded extends ProblemsState {}
 
 class NoImageSelected extends ProblemsState {}

@@ -38,7 +38,7 @@ class CoursesList extends StatelessWidget {
                   child: Text(
                     course.subject,
                     overflow: TextOverflow.ellipsis,
-                    style: Styles.bodyLarge,
+                    style: Styles.bodyLarge16,
                   ),
                 ),
                 const VerticalDivider(
@@ -56,10 +56,11 @@ class CoursesList extends StatelessWidget {
                 Text(
                   "${course.stage} Course",
                   overflow: TextOverflow.ellipsis,
-                  style: Styles.bodyMedium,
+                  style: Styles.bodyMedium14,
                 ),
                 Text(course.authorName,
-                    overflow: TextOverflow.ellipsis, style: Styles.bodyMedium),
+                    overflow: TextOverflow.ellipsis,
+                    style: Styles.bodyMedium14),
                 Flexible(
                   child: SizedBox(
                     width: 230.w,
@@ -67,7 +68,7 @@ class CoursesList extends StatelessWidget {
                       course.description,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: Styles.bodyMedium,
+                      style: Styles.bodyMedium14,
                     ),
                   ),
                 ),
