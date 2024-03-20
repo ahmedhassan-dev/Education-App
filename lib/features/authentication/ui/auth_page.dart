@@ -1,11 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/core/constants/enums.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/widgets/main_button.dart';
+import 'package:education_app/features/authentication/ui/user_data_model.dart';
 import 'package:education_app/features/authentication/ui/widgets/social_media_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,15 +20,12 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
-  final _userFormKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  final _mobileController = TextEditingController();
-  final _userNameController = TextEditingController();
-  final _mobileFocusNode = FocusNode();
-  final _userNameFocusNode = FocusNode();
+  final mobileController = TextEditingController();
+  final userNameController = TextEditingController();
 
   @override
   void initState() {
@@ -40,8 +37,8 @@ class _AuthPageState extends State<AuthPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _mobileController.dispose();
-    _userNameController.dispose();
+    mobileController.dispose();
+    userNameController.dispose();
     super.dispose();
   }
 
@@ -52,7 +49,9 @@ class _AuthPageState extends State<AuthPage> {
           Navigator.of(context)
               .pushReplacementNamed(AppRoutes.landingPageRoute);
         } else if (state is GetUserData) {
-          showUserDataModel(context);
+          showUserDataModel(context,
+              userNameController: userNameController,
+              mobileController: mobileController);
         } else if (state is ErrorOccurred) {
           AwesomeDialog(
             context: context,
@@ -69,90 +68,6 @@ class _AuthPageState extends State<AuthPage> {
           return const ShowLoadingIndicator();
         }
         return authWidget();
-      },
-    );
-  }
-
-  showUserDataModel(BuildContext blocContext,
-      {bool? createUserWithEmailAndPassword}) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.secondaryColor,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.9,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 60.0,
-              horizontal: 32.0,
-            ),
-            child: Form(
-              key: _userFormKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Please enter your name and your mobile number',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 60.0),
-                    TextFormField(
-                      controller: _userNameController,
-                      focusNode: _userNameFocusNode,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).requestFocus(_mobileFocusNode),
-                      textInputAction: TextInputAction.next,
-                      validator: (val) =>
-                          val!.isEmpty ? 'Please enter your name!' : null,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                        hintText: 'Enter your name!',
-                      ),
-                    ),
-                    const SizedBox(height: 24.0),
-                    TextFormField(
-                      controller: _mobileController,
-                      focusNode: _mobileFocusNode,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your phone number!';
-                        } else if (value.length < 11) {
-                          return 'Too short for a phone number!';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Mobile',
-                        hintText: 'Enter your mobile number!',
-                      ),
-                    ),
-                    const SizedBox(height: 24.0),
-                    MainButton(
-                      text: 'Register',
-                      onTap: () {
-                        if (_userFormKey.currentState!.validate()) {
-                          if (createUserWithEmailAndPassword == true) {
-                            BlocProvider.of<AuthCubit>(blocContext).signUp(
-                                _userNameController.text.trim(),
-                                _mobileController.text.trim());
-                          } else {
-                            // Signin with google
-                            BlocProvider.of<AuthCubit>(blocContext)
-                                .storeUserData(_userNameController.text.trim(),
-                                    _mobileController.text.trim());
-                          }
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
       },
     );
   }
@@ -232,7 +147,9 @@ class _AuthPageState extends State<AuthPage> {
                           BlocProvider.of<AuthCubit>(context).signIn();
                         } else {
                           showUserDataModel(context,
-                              createUserWithEmailAndPassword: true);
+                              createUserWithEmailAndPassword: true,
+                              userNameController: userNameController,
+                              mobileController: mobileController);
                         }
                       }
                     },
