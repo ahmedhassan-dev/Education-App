@@ -1,3 +1,4 @@
+import 'package:education_app/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/core/routing/router.dart';
 import 'package:education_app/core/routing/routes.dart';
@@ -9,7 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseMessaging.instance.subscribeToTopic('admin');
+    if (!AuthManager.isWeb) {
+      FirebaseMessaging.instance.subscribeToTopic('admin');
+    }
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
