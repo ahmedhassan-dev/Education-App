@@ -118,6 +118,7 @@ class _ProblemPageState extends State<ProblemPage> {
           )
         ],
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               ProblemDetailsSection(

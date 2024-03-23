@@ -77,7 +77,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) => TeacherSubjectDetailsCubit(
-              SubjectCoursesRepository(FirestoreServices())),
+              SubjectCoursesRepository(FirestoreServices()))
+            ..getSubjectCourses(subject: subject),
           child: TeacherSubjectDetailsPage(
             subject: subject,
           ),
@@ -128,8 +129,9 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) =>
-              OnboardingCubit(OnBoardingRepository(FirestoreServices())),
-          child: const LandingPage(),
+              OnboardingCubit(OnBoardingRepository(FirestoreServices()))
+                ..getInitDataFromSharedPreferences(),
+          child: LandingPage(),
         ),
         settings: settings,
       );

@@ -1,25 +1,17 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/widgets/courses_app_bar.dart';
-import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_courses/logic/teacher_courses_cubit.dart';
 import 'package:education_app/features/teacher_courses/ui/widgets/subjects_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TeacherCoursesPage extends StatefulWidget {
+class TeacherCoursesPage extends StatelessWidget {
   final List<String> subjects;
   const TeacherCoursesPage({super.key, required this.subjects});
 
-  @override
-  State<TeacherCoursesPage> createState() => _CoursesPageState();
-}
-
-class _CoursesPageState extends State<TeacherCoursesPage> {
-  List<Courses> allCourses = [];
-
-  Widget buildBlocWidget() {
+  Widget buildBlocWidget(context) {
     return BlocConsumer<TeacherCoursesCubit, TeacherCoursesState>(
         listener: (BuildContext context, TeacherCoursesState state) {
       if (state is LogedOut) {
@@ -36,12 +28,13 @@ class _CoursesPageState extends State<TeacherCoursesPage> {
         ).show();
       }
     }, builder: (context, state) {
-      return teacherCoursesPage();
+      return teacherCoursesPage(context);
     });
   }
 
   Widget buildSubjectsListWidgets() {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         child: Column(
@@ -53,11 +46,11 @@ class _CoursesPageState extends State<TeacherCoursesPage> {
 
   Widget buildSubjectsList() {
     return ListView.builder(
-      itemCount: widget.subjects.length,
+      itemCount: subjects.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
-        final subject = widget.subjects[i];
+        final subject = subjects[i];
         return SubjectsList(
           subject: subject,
         );
@@ -65,7 +58,7 @@ class _CoursesPageState extends State<TeacherCoursesPage> {
     );
   }
 
-  Widget teacherCoursesPage() {
+  Widget teacherCoursesPage(context) {
     return Scaffold(
       appBar: coursesAppBar(context, () {
         BlocProvider.of<TeacherCoursesCubit>(context).logOut();
@@ -76,6 +69,6 @@ class _CoursesPageState extends State<TeacherCoursesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return buildBlocWidget();
+    return buildBlocWidget(context);
   }
 }

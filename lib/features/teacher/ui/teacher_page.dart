@@ -181,6 +181,7 @@ class _TeacherPageState extends State<TeacherPage> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Form(
           key: _formKey,
           child: Padding(

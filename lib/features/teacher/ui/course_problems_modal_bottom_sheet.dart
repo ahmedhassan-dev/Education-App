@@ -18,6 +18,7 @@ showProblemsModel(BuildContext context,
             horizontal: 32.0.w,
           ),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

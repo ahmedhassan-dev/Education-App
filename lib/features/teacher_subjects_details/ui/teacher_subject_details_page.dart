@@ -10,29 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TeacherSubjectDetailsPage extends StatefulWidget {
+class TeacherSubjectDetailsPage extends StatelessWidget {
   final String subject;
   const TeacherSubjectDetailsPage({super.key, required this.subject});
 
-  @override
-  State<TeacherSubjectDetailsPage> createState() =>
-      _TeacherSubjectDetailsPageState();
-}
-
-class _TeacherSubjectDetailsPageState extends State<TeacherSubjectDetailsPage> {
-  List<Courses> subjectCourses = [];
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<TeacherSubjectDetailsCubit>(context)
-        .getSubjectCourses(subject: widget.subject);
-  }
-
-  PreferredSizeWidget? appBar() {
+  PreferredSizeWidget? appBar(BuildContext context) {
     return AppBar(
       title: Text(
-        '${widget.subject} Courses',
+        '$subject Courses',
         style: Theme.of(context).textTheme.headlineMedium!.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -42,8 +27,8 @@ class _TeacherSubjectDetailsPageState extends State<TeacherSubjectDetailsPage> {
       actions: [
         InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(AppRoutes.addNewCoursePage,
-                  arguments: widget.subject);
+              Navigator.of(context)
+                  .pushNamed(AppRoutes.addNewCoursePage, arguments: subject);
             },
             child: Icon(
               Icons.add,
@@ -73,30 +58,34 @@ class _TeacherSubjectDetailsPageState extends State<TeacherSubjectDetailsPage> {
       }
     }, builder: (context, state) {
       if (state is CoursesLoaded) {
-        subjectCourses = (state).courses;
+        final List<Courses> subjectCourses = (state).courses;
         if (subjectCourses.isEmpty) {
           return NoAvailableCourses(onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.addNewCoursePage,
-                arguments: widget.subject);
+            Navigator.of(context)
+                .pushNamed(AppRoutes.addNewCoursePage, arguments: subject);
           });
         }
-        return buildLoadedListWidgets();
+        return buildLoadedListWidgets(subjectCourses);
       } else {
         return const ShowLoadingIndicator();
       }
     });
   }
 
-  Widget buildLoadedListWidgets() {
+  Widget buildLoadedListWidgets(subjectCourses) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [buildCoursesList(), const SizedBox(height: 24.0)],
+        children: [
+          buildCoursesList(subjectCourses),
+          const SizedBox(height: 24.0)
+        ],
       ),
     );
   }
 
-  Widget buildCoursesList() {
+  Widget buildCoursesList(subjectCourses) {
     return ListView.builder(
       itemCount: subjectCourses.length,
       shrinkWrap: true,
@@ -112,6 +101,6 @@ class _TeacherSubjectDetailsPageState extends State<TeacherSubjectDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: appBar(), body: buildBlocWidget());
+    return Scaffold(appBar: appBar(context), body: buildBlocWidget());
   }
 }

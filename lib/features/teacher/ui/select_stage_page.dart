@@ -111,6 +111,7 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
                 children: [
                   Positioned(
                       child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: buildEducationalStagesList(),
                   )),
                   Positioned(
