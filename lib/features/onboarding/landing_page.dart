@@ -2,6 +2,7 @@ import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
+import 'package:education_app/features/onboarding/welcome_page.dart';
 import 'package:education_app/features/onboarding/widgets/need_update.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
@@ -10,7 +11,6 @@ import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/courses/ui/courses_page.dart';
 import 'package:education_app/features/teacher/ui/select_subject_page.dart';
-import 'package:education_app/features/teacher/ui/select_user_page.dart';
 import 'package:education_app/features/teacher_courses/logic/teacher_courses_cubit.dart';
 import 'package:education_app/features/teacher_courses/ui/teacher_courses_page.dart';
 import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
@@ -32,7 +32,7 @@ class LandingPage extends StatelessWidget {
               BlocProvider.of<OnboardingCubit>(context).downLoadNewVersion(),
         );
       } else if (state is LoadSelectUserPage) {
-        return const SelectUserPage();
+        return const WelcomePage();
       } else if (state is InitDataLoaded) {
         final String? userType = state.userType;
         final List<String>? subjects = state.subjects;
@@ -57,7 +57,7 @@ class LandingPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           final user = snapshot.data;
           if (user == null) {
-            return const SelectUserPage();
+            return const WelcomePage();
           }
           if (userType == "Teacher") {
             if (subjects == null) {
@@ -93,7 +93,7 @@ class LandingPage extends StatelessWidget {
             );
           }
         }
-        return const SelectUserPage();
+        return const WelcomePage();
       },
     );
   }

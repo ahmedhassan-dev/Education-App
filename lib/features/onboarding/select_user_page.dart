@@ -1,4 +1,4 @@
-import 'package:education_app/features/teacher/ui/widgets/user_type_list.dart';
+import 'package:education_app/features/onboarding/widgets/user_type_list.dart';
 import 'package:flutter/material.dart';
 
 class SelectUserPage extends StatelessWidget {

@@ -12,7 +12,7 @@ import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/problems/ui/problems_page.dart';
 import 'package:education_app/features/teacher/ui/select_stage_page.dart';
-import 'package:education_app/features/teacher/ui/select_user_page.dart';
+import 'package:education_app/features/onboarding/select_user_page.dart';
 import 'package:education_app/features/teacher/ui/teacher_page.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/features/authentication/ui/auth_page.dart';
