@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Education App',
         // TODO: Refactor this theme away from this file
-        theme: ThemeData(
+        theme: ThemeData.dark().copyWith(
             disabledColor: Colors.white,
-            textTheme: Theme.of(context).textTheme.apply(
-                  bodyColor: Colors.white,
-                  displayColor: Colors.white,
-                ),
+            // textTheme: Theme.of(context).textTheme.apply(
+            //       bodyColor: Colors.white,
+            //       displayColor: Colors.white,
+            //     ),
             appBarTheme:
                 const AppBarTheme(color: Color.fromRGBO(42, 42, 42, 1)),
             scaffoldBackgroundColor: const Color.fromRGBO(18, 18, 18, 1),
