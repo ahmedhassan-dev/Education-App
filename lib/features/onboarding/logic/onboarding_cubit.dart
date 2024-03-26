@@ -21,9 +21,17 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     userType = prefs.getString('userType');
     subjects = prefs.getStringList('subjects');
     if (userType != null) {
-      await _checkForUpdates(userType!);
+      await _checkForUpdatesIfNotWeb();
     } else {
       emit(LoadSelectUserPage());
+    }
+  }
+
+  Future<void> _checkForUpdatesIfNotWeb() async {
+    if (AuthManager.isWeb) {
+      emit(InitDataLoaded(userType: userType, subjects: subjects));
+    } else {
+      await _checkForUpdates(userType!);
     }
   }
 
