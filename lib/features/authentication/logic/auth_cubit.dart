@@ -208,7 +208,7 @@ class AuthCubit extends Cubit<AuthState> {
       User? user = userCredential.user;
 
       if (user != null) {
-        await _getAndSendToken(user.uid);
+        AuthManager.isWeb ? null : await _getAndSendToken(user.uid);
         uid = user.uid;
         email = user.email!;
         if (userCredential.additionalUserInfo!.isNewUser) {
