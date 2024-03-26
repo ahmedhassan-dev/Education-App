@@ -1,6 +1,6 @@
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
-import 'package:education_app/features/teacher/ui/widgets/problems_list.dart';
+import 'package:education_app/features/teacher/add_new_problem/ui/widgets/problems_list.dart';
 import 'package:flutter/material.dart';
 
 showProblemsModel(BuildContext context,

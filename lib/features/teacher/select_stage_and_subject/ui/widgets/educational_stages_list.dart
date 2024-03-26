@@ -1,5 +1,5 @@
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +12,7 @@ class EducationalStagesList extends StatelessWidget {
   });
 
   Widget buildBlocWidget() {
-    return BlocBuilder<TeacherCubit, TeacherState>(
+    return BlocBuilder<SelectStageAndSubjectCubit, SelectStageAndSubjectState>(
       builder: (context, state) {
         if (state is Loading) {
           return showLoadingIndicator();
@@ -36,12 +36,12 @@ class EducationalStagesList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: () {
-          BlocProvider.of<TeacherCubit>(context)
+          BlocProvider.of<SelectStageAndSubjectCubit>(context)
               .getSelectedEducationalStages(stage: stage);
         },
         child: Container(
           decoration: BoxDecoration(
-              color: BlocProvider.of<TeacherCubit>(context)
+              color: BlocProvider.of<SelectStageAndSubjectCubit>(context)
                       .isEducationalStageAvailable(stage: stage)
                   ? AppColors.primaryColor
                   : AppColors.secondaryColor,

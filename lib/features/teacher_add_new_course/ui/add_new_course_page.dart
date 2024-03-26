@@ -12,7 +12,7 @@ import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
-import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
+import 'package:education_app/features/teacher/add_new_problem/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:education_app/features/teacher_add_new_course/ui/widgets/drop_down_menu.dart';
 
 class AddNewCoursePage extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 
-class TeacherRepository {
+class AddNewProblemRepository {
   FirestoreServices firestoreServices;
-  TeacherRepository(this.firestoreServices);
+  AddNewProblemRepository(this.firestoreServices);
 
   Future<dynamic> retrieveTeacherData(
       {required String path, required String docName}) async {

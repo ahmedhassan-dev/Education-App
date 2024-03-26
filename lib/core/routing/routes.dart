@@ -6,7 +6,7 @@ class AppRoutes {
   static const String registerPageRoute = '/register';
   static const String problemPage = '/problem-page';
   static const String coursesPage = '/courses';
-  static const String teacherRoute = '/teacher';
+  static const String addNewProblemRoute = '/add-new-problem';
   static const String teacherCoursesRoute = '/teacher-courses';
   static const String teacherSubjectsDetailsRoute =
       '/teacher-courses/teacher-courses-details';

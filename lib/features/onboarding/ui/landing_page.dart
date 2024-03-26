@@ -4,13 +4,13 @@ import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
 import 'package:education_app/features/onboarding/ui/welcome_page.dart';
 import 'package:education_app/features/onboarding/ui/widgets/need_update.dart';
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
-import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/courses/ui/courses_page.dart';
-import 'package:education_app/features/teacher/ui/select_subject_page.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_subject_page.dart';
 import 'package:education_app/features/teacher_courses/logic/teacher_courses_cubit.dart';
 import 'package:education_app/features/teacher_courses/ui/teacher_courses_page.dart';
 import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
@@ -62,8 +62,8 @@ class LandingPage extends StatelessWidget {
           if (userType == "Teacher") {
             if (subjects == null) {
               return BlocProvider(
-                create: (context) =>
-                    TeacherCubit(TeacherRepository(fireStoreServices)),
+                create: (context) => SelectStageAndSubjectCubit(
+                    SelectStageAndSubjectRepository(fireStoreServices)),
                 child: const SelectSubjectsPage(),
               );
             } else if (subjects.length == 1) {

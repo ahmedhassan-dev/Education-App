@@ -3,17 +3,19 @@ import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
 import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
+import 'package:education_app/features/teacher/add_new_problem/logic/add_new_problem_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
 import 'package:education_app/features/problems/data/repos/problems_repo.dart';
-import 'package:education_app/features/teacher/data/repos/teacher_repo.dart';
+import 'package:education_app/features/teacher/add_new_problem/data/repos/add_new_problem_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/problems/ui/problems_page.dart';
-import 'package:education_app/features/teacher/ui/select_stage_page.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_stage_page.dart';
 import 'package:education_app/features/onboarding/ui/select_user_page.dart';
-import 'package:education_app/features/teacher/ui/teacher_page.dart';
+import 'package:education_app/features/teacher/add_new_problem/ui/add_new_problem_page.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/features/authentication/ui/auth_page.dart';
 import 'package:education_app/features/courses/ui/courses_page.dart';
@@ -39,8 +41,9 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       );
     case AppRoutes.selectEducationalStagesRoute:
       return CupertinoPageRoute(
-        builder: (_) => BlocProvider<TeacherCubit>.value(
-          value: TeacherCubit(TeacherRepository(FirestoreServices())),
+        builder: (_) => BlocProvider<SelectStageAndSubjectCubit>.value(
+          value: SelectStageAndSubjectCubit(
+              SelectStageAndSubjectRepository(FirestoreServices())),
           child: const SelectEducationalStagesPage(),
         ),
         settings: settings,
@@ -54,21 +57,21 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         ),
         settings: settings,
       );
-    case AppRoutes.teacherRoute:
+    case AppRoutes.addNewProblemRoute:
       final Courses course = settings.arguments as Courses;
       return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
           providers: [
-            BlocProvider<TeacherCubit>(
-              create: (context) =>
-                  TeacherCubit(TeacherRepository(FirestoreServices())),
+            BlocProvider<AddNewProblemCubit>(
+              create: (context) => AddNewProblemCubit(
+                  AddNewProblemRepository(FirestoreServices())),
             ),
             BlocProvider(
               create: (context) =>
                   ProblemsCubit(ProblemsRepository(FirestoreServices())),
             ),
           ],
-          child: TeacherPage(course: course),
+          child: AddNewProblemPage(course: course),
         ),
         settings: settings,
       );

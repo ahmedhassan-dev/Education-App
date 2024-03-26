@@ -2,8 +2,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/constants/stages.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
-import 'package:education_app/features/teacher/ui/widgets/educational_stages_list.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/ui/widgets/educational_stages_list.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ class SelectEducationalStagesPage extends StatefulWidget {
 
 class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
   Widget buildBlocWidget() {
-    return BlocBuilder<TeacherCubit, TeacherState>(
+    return BlocBuilder<SelectStageAndSubjectCubit, SelectStageAndSubjectState>(
       builder: (context, state) {
         if (state is Loading) {
           return const ShowLoadingIndicator();
@@ -50,7 +50,7 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
       child: ElevatedButton(
         onPressed: () async {
           try {
-            await BlocProvider.of<TeacherCubit>(context)
+            await BlocProvider.of<SelectStageAndSubjectCubit>(context)
                 .saveEducationalStages();
             if (!mounted) return;
             Navigator.of(context)

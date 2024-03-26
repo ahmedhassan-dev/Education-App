@@ -3,27 +3,27 @@ import 'package:education_app/core/widgets/loading_overlay.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
+import 'package:education_app/features/teacher/add_new_problem/logic/add_new_problem_cubit.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
-import 'package:education_app/features/teacher/ui/course_problems_modal_bottom_sheet.dart';
-import 'package:education_app/features/teacher/ui/widgets/text_form_field_with_add_button.dart';
+import 'package:education_app/features/teacher/add_new_problem/ui/course_problems_modal_bottom_sheet.dart';
+import 'package:education_app/features/teacher/add_new_problem/ui/widgets/text_form_field_with_add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class TeacherPage extends StatefulWidget {
+class AddNewProblemPage extends StatefulWidget {
   final Courses course;
-  const TeacherPage({super.key, required this.course});
+  const AddNewProblemPage({super.key, required this.course});
 
   @override
-  State<TeacherPage> createState() => _TeacherPageState();
+  State<AddNewProblemPage> createState() => _AddNewProblemPageState();
 }
 
-class _TeacherPageState extends State<TeacherPage> {
+class _AddNewProblemPageState extends State<AddNewProblemPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _problemController = TextEditingController();
@@ -40,7 +40,7 @@ class _TeacherPageState extends State<TeacherPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TeacherCubit>(context)
+    BlocProvider.of<AddNewProblemCubit>(context)
         .getTeacherDataFromSharedPreferences();
   }
 
@@ -90,8 +90,8 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   Widget buildBlocWidget() {
-    return BlocConsumer<TeacherCubit, TeacherState>(
-        listener: (BuildContext context, TeacherState state) async {
+    return BlocConsumer<AddNewProblemCubit, AddNewProblemState>(
+        listener: (BuildContext context, AddNewProblemState state) async {
       if (state is ProblemStored) {
         resetAllControllers();
         await Future.delayed(const Duration(seconds: 1), () {});
@@ -105,7 +105,7 @@ class _TeacherPageState extends State<TeacherPage> {
       } else if (state is ErrorOccurred) {
         showAwesomeErrorDialog(state.errorMsg).show();
       }
-    }, builder: (context, TeacherState state) {
+    }, builder: (context, AddNewProblemState state) {
       if (state is Loading) {
         return const ShowLoadingIndicator();
       } else {
@@ -138,15 +138,16 @@ class _TeacherPageState extends State<TeacherPage> {
       problem: _problemController.text.trim(),
       solution: _solutionController.text.trim(),
       stage: widget.course.stage,
-      authorEmail: context.read<TeacherCubit>().email,
-      authorName: context.read<TeacherCubit>().userName,
+      authorEmail: context.read<AddNewProblemCubit>().email,
+      authorName: context.read<AddNewProblemCubit>().userName,
       scoreNum: int.parse(_scoreNumController.text.trim()),
       time: int.parse(_timeController.text.trim()),
       needReview: reviewManuallyCheckBox,
       topics: topicsList,
       videos: videosList,
     );
-    BlocProvider.of<TeacherCubit>(context).saveNewProblem(problem: problem);
+    BlocProvider.of<AddNewProblemCubit>(context)
+        .saveNewProblem(problem: problem);
   }
 
   Widget addNewProblemWidget() {
@@ -162,7 +163,7 @@ class _TeacherPageState extends State<TeacherPage> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              BlocProvider.of<TeacherCubit>(context)
+              BlocProvider.of<AddNewProblemCubit>(context)
                   .getCourseProblems(widget.course);
             },
             style: ElevatedButton.styleFrom(

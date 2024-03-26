@@ -18,7 +18,7 @@ class CoursesList extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.teacherRoute, arguments: course);
+              .pushNamed(AppRoutes.addNewProblemRoute, arguments: course);
         },
         child: Container(
           decoration: BoxDecoration(

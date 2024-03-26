@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
-import 'package:education_app/features/teacher/ui/widgets/school_subjects_list.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
+import 'package:education_app/features/teacher/select_stage_and_subject/ui/widgets/school_subjects_list.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,26 +31,18 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TeacherCubit>(context).retrieveTeacherData();
+    BlocProvider.of<SelectStageAndSubjectCubit>(context).retrieveTeacherData();
   }
 
   Widget buildBlocWidget() {
-    return BlocBuilder<TeacherCubit, TeacherState>(
+    return BlocBuilder<SelectStageAndSubjectCubit, SelectStageAndSubjectState>(
       builder: (context, state) {
         if (state is Loading) {
-          return showLoadingIndicator();
+          return const ShowLoadingIndicator();
         } else {
           return buildStackWidget();
         }
       },
-    );
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
     );
   }
 
@@ -73,7 +66,8 @@ class _SelectSubjectsPageState extends State<SelectSubjectsPage> {
       child: ElevatedButton(
         onPressed: () async {
           try {
-            await BlocProvider.of<TeacherCubit>(context).saveSubjects();
+            await BlocProvider.of<SelectStageAndSubjectCubit>(context)
+                .saveSubjects();
             if (!mounted) return;
             Navigator.of(context)
                 .pushReplacementNamed(AppRoutes.selectEducationalStagesRoute);
