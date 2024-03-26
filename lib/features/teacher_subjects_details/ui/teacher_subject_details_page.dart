@@ -33,7 +33,7 @@ class TeacherSubjectDetailsPage extends StatelessWidget {
             child: Icon(
               Icons.add,
               color: AppColors.whiteColor,
-              size: 40.w,
+              size: 40,
             )),
         const SizedBox(
           width: 10,

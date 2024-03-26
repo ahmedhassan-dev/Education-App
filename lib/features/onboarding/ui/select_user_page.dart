@@ -7,14 +7,16 @@ class SelectUserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AnimatedLogoImage(
-          height: 170,
-        ),
-        CustomListViewUserType(),
-      ],
+    return const Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedLogoImage(
+            height: 170,
+          ),
+          CustomListViewUserType(),
+        ],
+      ),
     );
   }
 }

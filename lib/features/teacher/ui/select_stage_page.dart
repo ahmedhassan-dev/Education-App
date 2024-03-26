@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/constants/stages.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/teacher/logic/teacher_cubit.dart';
 import 'package:education_app/features/teacher/ui/widgets/educational_stages_list.dart';
 import 'package:education_app/core/routing/routes.dart';
@@ -21,19 +22,11 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
     return BlocBuilder<TeacherCubit, TeacherState>(
       builder: (context, state) {
         if (state is Loading) {
-          return showLoadingIndicator();
+          return const ShowLoadingIndicator();
         } else {
           return buildStageWidget();
         }
       },
-    );
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
     );
   }
 
@@ -89,42 +82,44 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
 
   buildStageWidget() {
     return SafeArea(
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(color: AppColors.secondaryColor),
-            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-            child: Center(
-              child: Text(
-                "What educational stages have you been involved in?",
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    overflow: TextOverflow.visible),
+      child: Scaffold(
+        body: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(color: AppColors.secondaryColor),
+              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+              child: Center(
+                child: Text(
+                  "What educational stages have you been involved in?",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      overflow: TextOverflow.visible),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: SizedBox(
-              height: double.infinity,
-              child: Stack(
-                children: [
-                  Positioned(
-                      child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: buildEducationalStagesList(),
-                  )),
-                  Positioned(
-                    right: 0,
-                    left: 0,
-                    bottom: 10,
-                    child: _submitButton(),
-                  )
-                ],
+            Expanded(
+              child: SizedBox(
+                height: double.infinity,
+                child: Stack(
+                  children: [
+                    Positioned(
+                        child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: buildEducationalStagesList(),
+                    )),
+                    Positioned(
+                      right: 0,
+                      left: 0,
+                      bottom: 10,
+                      child: _submitButton(),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

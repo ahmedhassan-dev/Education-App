@@ -62,6 +62,7 @@ class _TeacherPageState extends State<TeacherPage> {
         convertUrlToId(); //TODO: Have to stop submission if the URL is not valid
       }
       if (_formKey.currentState!.validate()) {
+        final double screenWidth = MediaQuery.of(context).size.width;
         AwesomeDialog(
           context: context,
           dialogType: DialogType.success,
@@ -69,6 +70,7 @@ class _TeacherPageState extends State<TeacherPage> {
           title: 'Problem Saved😊!',
           desc: 'Keep Going❤️',
           dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
+          width: screenWidth > 1000 ? screenWidth * 0.2 : null,
         ).show();
         storeNewProblem();
       }
@@ -164,7 +166,7 @@ class _TeacherPageState extends State<TeacherPage> {
                   .getCourseProblems(widget.course);
             },
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 13.w),
+              padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 13),
               backgroundColor: Theme.of(context).primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.0),

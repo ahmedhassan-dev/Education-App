@@ -24,19 +24,19 @@ class TextFormFieldWithAddButton extends StatelessWidget {
             labelText: labelText,
             fillColor: AppColors.textFormFieldFillColor,
             filled: true,
-            contentPadding: EdgeInsets.only(
-                right: 40.w, left: 15.w, bottom: 20.h, top: 20.h)),
+            contentPadding:
+                EdgeInsets.only(right: 40, left: 13, bottom: 20.h, top: 20.h)),
         validator: (value) => (value!.isNotEmpty || stringList.isNotEmpty)
             ? null
             : 'Please enter any ${labelText.toLowerCase()}',
       ),
       Positioned(
           top: 17.h,
-          right: 10.w,
+          right: 10,
           child: InkWell(
             onTap: onTap,
             child: Container(
-              width: 30.w,
+              width: 30,
               height: 30.h,
               decoration: BoxDecoration(
                 color: AppColors.primaryColor,

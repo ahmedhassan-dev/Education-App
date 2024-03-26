@@ -2,7 +2,6 @@ import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/ui/widgets/problems_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 showProblemsModel(BuildContext context,
     {required List<Problems> problemsList}) {
@@ -14,8 +13,8 @@ showProblemsModel(BuildContext context,
       return FractionallySizedBox(
         heightFactor: 0.9,
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 32.0.w,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 32.0,
           ),
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
