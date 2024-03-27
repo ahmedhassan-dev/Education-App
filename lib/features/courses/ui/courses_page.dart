@@ -1,5 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:education_app/core/widgets/courses_app_bar.dart';
+import 'package:education_app/core/widgets/subjects_app_bar.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
@@ -56,7 +56,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
   Widget buildCoursesPage() {
     return Scaffold(
-      appBar: coursesAppBar(context, () {
+      appBar: subjectsAppBar(context, () {
         BlocProvider.of<CoursesCubit>(context).logOut();
       }),
       body: HomeViewBody(allCourses: allCourses),

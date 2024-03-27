@@ -3,11 +3,11 @@ import 'package:education_app/features/authentication/data/repos/auth_repo.dart'
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'teacher_courses_state.dart';
+part 'teacher_subjects_state.dart';
 
-class TeacherCoursesCubit extends Cubit<TeacherCoursesState> {
+class TeacherSubjectsCubit extends Cubit<TeacherSubjectsState> {
   AuthRepository authRepository;
-  TeacherCoursesCubit(this.authRepository) : super(TeacherCoursesInitial());
+  TeacherSubjectsCubit(this.authRepository) : super(TeacherCoursesInitial());
 
   Future<void> logOut() async {
     try {

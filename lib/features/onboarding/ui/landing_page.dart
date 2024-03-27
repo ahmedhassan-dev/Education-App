@@ -11,8 +11,8 @@ import 'package:education_app/features/courses/ui/courses_page.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_subject_page.dart';
-import 'package:education_app/features/teacher_courses/logic/teacher_courses_cubit.dart';
-import 'package:education_app/features/teacher_courses/ui/teacher_courses_page.dart';
+import 'package:education_app/features/teacher_subjects/logic/teacher_subjects_cubit.dart';
+import 'package:education_app/features/teacher_subjects/ui/teacher_subjects_page.dart';
 import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
 import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/teacher_subject_details_page.dart';
@@ -76,8 +76,8 @@ class LandingPage extends StatelessWidget {
             }
             return BlocProvider(
               create: (context) =>
-                  TeacherCoursesCubit(AuthRepository(fireStoreServices)),
-              child: TeacherCoursesPage(subjects: subjects),
+                  TeacherSubjectsCubit(AuthRepository(fireStoreServices)),
+              child: TeacherSubjectsPage(subjects: subjects),
             );
           } else if (userType == "Student") {
             return MultiBlocProvider(

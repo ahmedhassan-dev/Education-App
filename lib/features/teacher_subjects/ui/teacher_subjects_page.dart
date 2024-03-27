@@ -1,19 +1,20 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/routing/routes.dart';
-import 'package:education_app/core/widgets/courses_app_bar.dart';
-import 'package:education_app/features/teacher_courses/logic/teacher_courses_cubit.dart';
-import 'package:education_app/features/teacher_courses/ui/widgets/subjects_list.dart';
+import 'package:education_app/core/widgets/subjects_app_bar.dart';
+import 'package:education_app/features/teacher_subjects/logic/teacher_subjects_cubit.dart';
+import 'package:education_app/features/teacher_subjects/ui/widgets/subjects_list.dart';
+import 'package:education_app/features/teacher_subjects/ui/widgets/teacher_subjects_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TeacherCoursesPage extends StatelessWidget {
+class TeacherSubjectsPage extends StatelessWidget {
   final List<String> subjects;
-  const TeacherCoursesPage({super.key, required this.subjects});
+  const TeacherSubjectsPage({super.key, required this.subjects});
 
   Widget buildBlocWidget(context) {
-    return BlocConsumer<TeacherCoursesCubit, TeacherCoursesState>(
-        listener: (BuildContext context, TeacherCoursesState state) {
+    return BlocConsumer<TeacherSubjectsCubit, TeacherSubjectsState>(
+        listener: (BuildContext context, TeacherSubjectsState state) {
       if (state is LogedOut) {
         Navigator.of(context)
             .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
@@ -28,7 +29,7 @@ class TeacherCoursesPage extends StatelessWidget {
         ).show();
       }
     }, builder: (context, state) {
-      return teacherCoursesPage(context);
+      return teacherSubjectsPage(context);
     });
   }
 
@@ -58,11 +59,12 @@ class TeacherCoursesPage extends StatelessWidget {
     );
   }
 
-  Widget teacherCoursesPage(context) {
+  Widget teacherSubjectsPage(context) {
     return Scaffold(
-      appBar: coursesAppBar(context, () {
-        BlocProvider.of<TeacherCoursesCubit>(context).logOut();
+      appBar: subjectsAppBar(context, () {
+        BlocProvider.of<TeacherSubjectsCubit>(context).logOut();
       }),
+      drawer: const TeacherSubjectDrawer(),
       body: buildSubjectsListWidgets(),
     );
   }

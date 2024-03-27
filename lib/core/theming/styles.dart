@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 abstract class Styles {
+  static const headlineMedium28 = TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      decoration: TextDecoration.none);
   static const titleLarge22 = TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.bold,

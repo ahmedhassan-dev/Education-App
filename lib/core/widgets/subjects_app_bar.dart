@@ -1,16 +1,13 @@
+import 'package:education_app/core/theming/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-AppBar coursesAppBar(BuildContext context, final VoidCallback onPressed) {
+AppBar subjectsAppBar(BuildContext context, final VoidCallback onPressed) {
   return AppBar(
-    title: Text(
-      'Courses',
-      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-    ),
-    automaticallyImplyLeading: false,
+    title: const Align(
+        alignment: Alignment(-1.8, 0),
+        child: Text('Subjects', style: Styles.headlineMedium28)),
+    automaticallyImplyLeading: true,
     actions: [
       ElevatedButton(
         onPressed: onPressed,
