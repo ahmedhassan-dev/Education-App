@@ -9,8 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoursesStudentFeedbackPage extends StatelessWidget {
-  final String subject;
-  const CoursesStudentFeedbackPage({super.key, required this.subject});
+  const CoursesStudentFeedbackPage({super.key});
 
   PreferredSizeWidget? appBar(BuildContext context) {
     return AppBar(
@@ -35,8 +34,8 @@ class CoursesStudentFeedbackPage extends StatelessWidget {
         ).show();
       }
     }, builder: (context, state) {
-      if (state is DataLoaded) {
-        final List<Courses> courses = [];
+      if (state is CoursesLoaded) {
+        final List<Courses> courses = state.courses;
         return buildLoadedListWidgets(courses);
       } else {
         return const ShowLoadingIndicator();

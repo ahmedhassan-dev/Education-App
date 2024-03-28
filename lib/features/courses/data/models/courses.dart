@@ -7,12 +7,14 @@ class Courses extends CourseData {
   final String imgUrl;
   final String subject;
   final String description;
+  final int needReviewCounter;
 
   Courses(
       {required super.id,
       required this.imgUrl,
       required this.subject,
       required this.description,
+      this.needReviewCounter = 0,
       required super.authorEmail,
       required super.authorName,
       required super.stage,

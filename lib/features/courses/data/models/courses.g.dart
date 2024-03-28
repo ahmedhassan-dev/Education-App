@@ -11,6 +11,7 @@ Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
       imgUrl: json['imgUrl'] as String,
       subject: json['subject'] as String,
       description: json['description'] as String,
+      needReviewCounter: json['needReviewCounter'] as int? ?? 0,
       authorEmail: json['authorEmail'] as String,
       authorName: json['authorName'] as String,
       stage: json['stage'] as String,
@@ -26,4 +27,5 @@ Map<String, dynamic> _$CoursesToJson(Courses instance) => <String, dynamic>{
       'imgUrl': instance.imgUrl,
       'subject': instance.subject,
       'description': instance.description,
+      'needReviewCounter': instance.needReviewCounter,
     };
