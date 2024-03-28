@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/add_new_problem/data/repos/add_new_problem_repo.dart';
@@ -56,9 +57,8 @@ class AddNewProblemCubit extends Cubit<AddNewProblemState> {
   }
 
   getTeacherDataFromSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userName = prefs.getString('userName')!;
-    email = prefs.getString('email')!;
+    userName = getIt<SharedPreferences>().getString('userName')!;
+    email = getIt<SharedPreferences>().getString('email')!;
     emit(UserDataRetrieved());
   }
 

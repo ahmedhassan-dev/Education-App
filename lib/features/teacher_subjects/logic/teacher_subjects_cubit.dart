@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,8 +23,7 @@ class TeacherSubjectsCubit extends Cubit<TeacherSubjectsState> {
   }
 
   Future<void> _removeSharedPreferencesData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool result = await prefs.clear();
+    final bool result = await getIt<SharedPreferences>().clear();
     debugPrint("Clearing SharedPreferences Data: ${result.toString()}");
   }
 }

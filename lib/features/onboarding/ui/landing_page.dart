@@ -1,3 +1,4 @@
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
@@ -46,11 +47,11 @@ class LandingPage extends StatelessWidget {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Widget selectInitPage(String? userType, List<String>? subjects) {
-    FirestoreServices fireStoreServices = FirestoreServices();
-    AuthCubit authCubit = AuthCubit(AuthRepository(fireStoreServices));
-    CoursesRepository coursesRepository = CoursesRepository(fireStoreServices);
-    CoursesCubit coursesCubit =
-        CoursesCubit(coursesRepository, AuthRepository(fireStoreServices));
+    AuthCubit authCubit = AuthCubit(AuthRepository(getIt<FirestoreServices>()));
+    CoursesRepository coursesRepository =
+        CoursesRepository(getIt<FirestoreServices>());
+    CoursesCubit coursesCubit = CoursesCubit(
+        coursesRepository, AuthRepository(getIt<FirestoreServices>()));
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {
@@ -63,20 +64,21 @@ class LandingPage extends StatelessWidget {
             if (subjects == null) {
               return BlocProvider(
                 create: (context) => SelectStageAndSubjectCubit(
-                    SelectStageAndSubjectRepository(fireStoreServices)),
+                    SelectStageAndSubjectRepository(
+                        getIt<FirestoreServices>())),
                 child: const SelectSubjectsPage(),
               );
             } else if (subjects.length == 1) {
               return BlocProvider(
                 create: (context) => TeacherSubjectDetailsCubit(
-                    SubjectCoursesRepository(fireStoreServices))
+                    SubjectCoursesRepository(getIt<FirestoreServices>()))
                   ..getSubjectCourses(subject: subjects[0]),
                 child: TeacherSubjectDetailsPage(subject: subjects[0]),
               );
             }
             return BlocProvider(
-              create: (context) =>
-                  TeacherSubjectsCubit(AuthRepository(fireStoreServices)),
+              create: (context) => TeacherSubjectsCubit(
+                  AuthRepository(getIt<FirestoreServices>())),
               child: TeacherSubjectsPage(subjects: subjects),
             );
           } else if (userType == "Student") {

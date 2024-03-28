@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_subjects_details/data/repos/subject_courses_repo.dart';
 import 'package:meta/meta.dart';
@@ -15,8 +16,7 @@ class TeacherSubjectDetailsCubit extends Cubit<TeacherSubjectDetailsState> {
       : super(TeacherSubjectDetailsInitial());
 
   getEmailFromSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    email = prefs.getString('email');
+    email = getIt<SharedPreferences>().getString('email');
   }
 
   getSubjectCourses({required String subject}) async {

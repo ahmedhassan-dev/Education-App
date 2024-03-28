@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 
 class FirestoreServices {
   FirestoreServices();
-  FirestoreServices._();
-  static final instance = FirestoreServices._();
   final _fireStore = FirebaseFirestore.instance;
 
   Future<void> setData({

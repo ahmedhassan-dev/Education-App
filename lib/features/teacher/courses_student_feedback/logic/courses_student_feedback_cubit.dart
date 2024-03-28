@@ -13,7 +13,7 @@ class CoursesStudentFeedbackCubit extends Cubit<CoursesStudentFeedbackState> {
     this.coursesStudentFeedbackRepository,
   ) : super(CoursesStudentFeedbackInitial());
 
-  getTeacherSortedCourses({required String subject}) async {
+  getTeacherSortedCourses() async {
     coursesStudentFeedbackRepository.getTeacherSortedCourses().then((courses) {
       emit(CoursesLoaded(courses: courses));
     });

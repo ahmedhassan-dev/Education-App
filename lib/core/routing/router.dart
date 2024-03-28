@@ -1,3 +1,4 @@
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
@@ -37,7 +38,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.selectUserTypeRoute:
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(AuthRepository(FirestoreServices())),
+          value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
           child: const SelectUserPage(),
         ),
         settings: settings,
@@ -46,7 +47,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<SelectStageAndSubjectCubit>.value(
           value: SelectStageAndSubjectCubit(
-              SelectStageAndSubjectRepository(FirestoreServices())),
+              SelectStageAndSubjectRepository(getIt<FirestoreServices>())),
           child: const SelectEducationalStagesPage(),
         ),
         settings: settings,
@@ -55,7 +56,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final userType = settings.arguments as String;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(AuthRepository(FirestoreServices())),
+          value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
           child: AuthPage(userType: userType),
         ),
         settings: settings,
@@ -67,11 +68,11 @@ Route<dynamic> onGenerate(RouteSettings settings) {
           providers: [
             BlocProvider<AddNewProblemCubit>(
               create: (context) => AddNewProblemCubit(
-                  AddNewProblemRepository(FirestoreServices())),
+                  AddNewProblemRepository(getIt<FirestoreServices>())),
             ),
             BlocProvider(
               create: (context) =>
-                  ProblemsCubit(ProblemsRepository(FirestoreServices())),
+                  ProblemsCubit(ProblemsRepository(getIt<FirestoreServices>())),
             ),
           ],
           child: AddNewProblemPage(course: course),
@@ -83,7 +84,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) => TeacherSubjectDetailsCubit(
-              SubjectCoursesRepository(FirestoreServices()))
+              SubjectCoursesRepository(getIt<FirestoreServices>()))
             ..getSubjectCourses(subject: subject),
           child: TeacherSubjectDetailsPage(
             subject: subject,
@@ -95,8 +96,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final subject = settings.arguments as String;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
-          create: (context) =>
-              AddNewCourseCubit(AddNewCourseRepository(FirestoreServices())),
+          create: (context) => AddNewCourseCubit(
+              AddNewCourseRepository(getIt<FirestoreServices>())),
           child: AddNewCoursePage(
             subject: subject,
           ),
@@ -108,12 +109,12 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         builder: (_) => MultiBlocProvider(
           providers: [
             BlocProvider<AuthCubit>.value(
-              value: AuthCubit(AuthRepository(FirestoreServices())),
+              value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
             ),
             BlocProvider(
               create: (context) => CoursesCubit(
-                  CoursesRepository(FirestoreServices()),
-                  AuthRepository(FirestoreServices())),
+                  CoursesRepository(getIt<FirestoreServices>()),
+                  AuthRepository(getIt<FirestoreServices>())),
             ),
           ],
           child: const CoursesPage(),
@@ -125,7 +126,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) =>
-              ProblemsCubit(ProblemsRepository(FirestoreServices())),
+              ProblemsCubit(ProblemsRepository(getIt<FirestoreServices>())),
           child: ProblemPage(course: course),
         ),
         settings: settings,
@@ -134,7 +135,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) => CoursesStudentFeedbackCubit(
-              CoursesStudentFeedbackRepository(FirestoreServices())),
+              CoursesStudentFeedbackRepository(getIt<FirestoreServices>()))
+            ..getTeacherSortedCourses(),
           child: const CoursesStudentFeedbackPage(),
         ),
         settings: settings,
@@ -144,7 +146,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
           create: (context) =>
-              OnboardingCubit(OnBoardingRepository(FirestoreServices()))
+              OnboardingCubit(OnBoardingRepository(getIt<FirestoreServices>()))
                 ..getInitDataFromSharedPreferences(),
           child: LandingPage(),
         ),

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_add_new_course/data/repos/add_new_course_repo.dart';
 import 'package:meta/meta.dart';
@@ -15,10 +16,9 @@ class AddNewCourseCubit extends Cubit<AddNewCourseState> {
   AddNewCourseCubit(this.addNewCourseRepository) : super(Loading());
 
   Future<void> getTeacherDataFromSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userName = prefs.getString('userName');
-    email = prefs.getString('email');
-    subjects = prefs.getStringList('subjects');
+    userName = getIt<SharedPreferences>().getString('userName');
+    email = getIt<SharedPreferences>().getString('email');
+    subjects = getIt<SharedPreferences>().getStringList('subjects');
 
     emit(TeacherDataLoaded());
   }

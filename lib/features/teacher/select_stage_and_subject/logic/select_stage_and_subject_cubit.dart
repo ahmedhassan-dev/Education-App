@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
@@ -15,6 +16,8 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
   SelectStageAndSubjectRepository selectStageAndSubjectRepository;
   SelectStageAndSubjectCubit(this.selectStageAndSubjectRepository)
       : super(SelectStageAndSubjectInitial());
+
+  final SharedPreferences _prefs = getIt<SharedPreferences>();
 
   retrieveTeacherData() async {
     emit(Loading());
@@ -72,8 +75,7 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
   }
 
   storeEducationalStagesInSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('educationalStages', educationalStages);
+    await _prefs.setStringList('educationalStages', educationalStages);
   }
 
   Future<void> saveSubjects() async {
@@ -90,7 +92,6 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
   }
 
   storeSubjectsInSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('subjects', subjects);
+    await _prefs.setStringList('subjects', subjects);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/core/constants/constants.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/onboarding/data/models/publicinfo.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
 import 'package:meta/meta.dart';
@@ -17,9 +18,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit(this.onBoardingRepository) : super(LoadingInitData());
 
   Future<void> getInitDataFromSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userType = prefs.getString('userType');
-    subjects = prefs.getStringList('subjects');
+    userType = getIt<SharedPreferences>().getString('userType');
+    subjects = getIt<SharedPreferences>().getStringList('subjects');
     if (userType != null) {
       await _checkForUpdatesIfNotWeb();
     } else {

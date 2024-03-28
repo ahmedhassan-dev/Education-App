@@ -1,3 +1,4 @@
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/firebase_options.dart';
 import 'package:education_app/core/widgets/simple_bloc_observer.dart';
 import 'package:education_app/my_app.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+  await configureDependencies();
   // To fix texts being hidden bug in flutter_screenutil in release mode.
   await ScreenUtil.ensureScreenSize();
   Bloc.observer = SimpleBlocObserver();

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
@@ -34,6 +35,8 @@ class AuthCubit extends Cubit<AuthState> {
   }) : super(AuthInitial());
 
   late bool userDataAvailability;
+  final SharedPreferences _prefs = getIt<SharedPreferences>();
+
   Future<bool> _checkUserDataAvailability(String uid) async {
     userDataAvailability =
         await _checkUserDataAvailabilityInSharedPreferences();
@@ -45,7 +48,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<bool> _checkUserDataAvailabilityInSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = getIt<SharedPreferences>();
     final String? userName = prefs.getString('userName');
     if (userName == null) {
       return false;
@@ -80,18 +83,16 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> _storeUserTypeInSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userType', userType);
+    await _prefs.setString('userType', userType);
   }
 
   Future<void> _storeUserDataInSharedPreferences(
       {required String userName,
       required String email,
       required String phoneNum}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userName', userName);
-    await prefs.setString('email', email);
-    await prefs.setString('phoneNum', phoneNum);
+    await _prefs.setString('userName', userName);
+    await _prefs.setString('email', email);
+    await _prefs.setString('phoneNum', phoneNum);
   }
 
   Future<void> _getAndSendToken(String? uid) async {

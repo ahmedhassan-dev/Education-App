@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
@@ -38,8 +39,7 @@ class CoursesCubit extends Cubit<CoursesState> {
   }
 
   Future<void> _removeSharedPreferencesData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool result = await prefs.clear();
+    final bool result = await getIt<SharedPreferences>().clear();
     debugPrint("Clearing SharedPreferences Data: ${result.toString()}");
   }
 }
