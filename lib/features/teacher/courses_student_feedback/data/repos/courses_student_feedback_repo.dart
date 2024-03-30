@@ -14,7 +14,7 @@ class CoursesStudentFeedbackRepository {
       queryBuilder: (query) => query
           .where("authorEmail",
               isEqualTo: _getTeacherEmailFromSharedPreferences())
-          .orderBy("needReviewCounter"),
+          .orderBy("needReviewCounter", descending: true),
     ) as List;
     return courses
         .map((docSnapshot) => Courses.fromJson(docSnapshot.data()!))

@@ -1,6 +1,6 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
@@ -47,14 +47,7 @@ class TeacherSubjectDetailsPage extends StatelessWidget {
     return BlocConsumer<TeacherSubjectDetailsCubit, TeacherSubjectDetailsState>(
         listener: (BuildContext context, TeacherSubjectDetailsState state) {
       if (state is ErrorOccurred) {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.warning,
-          animType: AnimType.scale,
-          title: 'Error',
-          desc: state.errorMsg.toString(),
-          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-        ).show();
+        errorAwesomeDialog(context, state.errorMsg).show();
       }
     }, builder: (context, state) {
       if (state is CoursesLoaded) {

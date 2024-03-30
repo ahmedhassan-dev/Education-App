@@ -1,6 +1,6 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/constants/stages.dart';
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/ui/widgets/educational_stages_list.dart';
@@ -56,14 +56,7 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
             Navigator.of(context)
                 .pushReplacementNamed(AppRoutes.landingPageRoute);
           } catch (e) {
-            AwesomeDialog(
-              context: context,
-              dialogType: DialogType.warning,
-              animType: AnimType.scale,
-              title: 'Error',
-              desc: e.toString(),
-              dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-            ).show();
+            errorAwesomeDialog(context, e).show();
           }
         },
         style: ElevatedButton.styleFrom(

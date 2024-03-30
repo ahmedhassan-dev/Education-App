@@ -1,5 +1,5 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/routing/routes.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/subjects_app_bar.dart';
 import 'package:education_app/features/teacher_subjects/logic/teacher_subjects_cubit.dart';
 import 'package:education_app/features/teacher_subjects/ui/widgets/subjects_list.dart';
@@ -19,14 +19,8 @@ class TeacherSubjectsPage extends StatelessWidget {
         Navigator.of(context)
             .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
       } else if (state is LogedOutError) {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.warning,
-          animType: AnimType.scale,
-          title: 'Logout Error',
-          desc: state.errorMsg.toString(),
-          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-        ).show();
+        errorAwesomeDialog(context, state.errorMsg, title: 'Logout Error')
+            .show();
       }
     }, builder: (context, state) {
       return teacherSubjectsPage(context);

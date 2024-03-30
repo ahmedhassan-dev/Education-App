@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/loading_overlay.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
@@ -62,31 +62,12 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
         convertUrlToId(); //TODO: Have to stop submission if the URL is not valid
       }
       if (_formKey.currentState!.validate()) {
-        final double screenWidth = MediaQuery.of(context).size.width;
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          animType: AnimType.scale,
-          title: 'Problem Saved😊!',
-          desc: 'Keep Going❤️',
-          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-          width: screenWidth > 1000 ? screenWidth * 0.2 : null,
-        ).show();
+        keepGoingAwesomeDialog(context, title: 'Problem Saved😊!').show();
         storeNewProblem();
       }
     } catch (e) {
-      showAwesomeErrorDialog(e.toString()).show();
+      errorAwesomeDialog(context, e).show();
     }
-  }
-
-  AwesomeDialog showAwesomeErrorDialog(String error) {
-    return AwesomeDialog(
-        context: context,
-        dialogType: DialogType.warning,
-        animType: AnimType.scale,
-        title: 'Error',
-        desc: error,
-        dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1));
   }
 
   Widget buildBlocWidget() {
@@ -103,7 +84,7 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
         _loadingOverlay.hide();
         showProblemsModel(context, problemsList: state.problemsList);
       } else if (state is ErrorOccurred) {
-        showAwesomeErrorDialog(state.errorMsg).show();
+        errorAwesomeDialog(context, state.errorMsg).show();
       }
     }, builder: (context, AddNewProblemState state) {
       if (state is Loading) {

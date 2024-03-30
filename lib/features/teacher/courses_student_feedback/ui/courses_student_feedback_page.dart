@@ -1,9 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/theming/styles.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
-import 'package:education_app/features/teacher_subjects_details/ui/widgets/courses_list.dart';
+import 'package:education_app/features/teacher/courses_student_feedback/ui/widgets/courses_feedback_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,14 +24,7 @@ class CoursesStudentFeedbackPage extends StatelessWidget {
             CoursesStudentFeedbackState>(
         listener: (BuildContext context, CoursesStudentFeedbackState state) {
       if (state is ErrorOccurred) {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.warning,
-          animType: AnimType.scale,
-          title: 'Error',
-          desc: state.errorMsg.toString(),
-          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-        ).show();
+        errorAwesomeDialog(context, state.errorMsg).show();
       }
     }, builder: (context, state) {
       if (state is CoursesLoaded) {
@@ -60,7 +53,7 @@ class CoursesStudentFeedbackPage extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int i) {
         final course = courses[i];
-        return CoursesList(
+        return CoursesFeedbackList(
           course: course,
         );
       },

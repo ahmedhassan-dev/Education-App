@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/subjects_app_bar.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
@@ -32,14 +32,8 @@ class _CoursesPageState extends State<CoursesPage> {
         Navigator.of(context)
             .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
       } else if (state is LogedOutError) {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.warning,
-          animType: AnimType.scale,
-          title: 'Logout Error',
-          desc: state.errorMsg.toString(),
-          dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-        ).show();
+        errorAwesomeDialog(context, state.errorMsg, title: 'Logout Error!')
+            .show();
       }
     }, builder: (context, state) {
       if (state is CoursesLoaded) {

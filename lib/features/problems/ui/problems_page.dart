@@ -1,11 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/core/constants/assets.dart';
-import 'package:education_app/features/problems/ui/widgets/awesome_dialog.dart';
 import 'package:education_app/features/problems/ui/widgets/camera_or_gallery_dialog.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
 import 'package:education_app/features/problems/ui/no_problems_available_page.dart';
@@ -75,7 +75,7 @@ class _ProblemPageState extends State<ProblemPage> {
         _solutionController.text = "";
       }
     } catch (e) {
-      errorAwesomeDialog(context, e).show();
+      errorAwesomeDialog(context, e, title: "Error Submiting Solution").show();
     }
   }
 

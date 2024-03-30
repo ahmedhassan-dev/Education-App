@@ -14,6 +14,7 @@ class GetListOfStringsText extends StatelessWidget {
               Text(
                 allItems,
                 style: Theme.of(context).textTheme.titleMedium,
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(
                 height: 7.h,

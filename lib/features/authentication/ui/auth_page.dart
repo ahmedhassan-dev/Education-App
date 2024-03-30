@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
 import 'package:education_app/core/constants/assets.dart';
@@ -53,14 +53,8 @@ class _AuthPageState extends State<AuthPage> {
               userNameController: userNameController,
               mobileController: mobileController);
         } else if (state is ErrorOccurred) {
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.warning,
-            animType: AnimType.scale,
-            title: 'Error Found!',
-            desc: state.errorMsg,
-            dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-          ).show();
+          errorAwesomeDialog(context, state.errorMsg, title: 'Error Found!')
+              .show();
         }
       },
       builder: (context, state) {

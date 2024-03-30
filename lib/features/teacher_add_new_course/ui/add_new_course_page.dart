@@ -1,6 +1,6 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/routing/routes.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/teacher_add_new_course/logic/add_new_course_cubit.dart';
@@ -50,20 +50,9 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
     if (stage == null) {
       showSnackBar(context, "Please choose the educational stage");
     } else if (_formKey.currentState!.validate()) {
-      keepGoingAwesomeDialog().show();
+      keepGoingAwesomeDialog(context, title: 'Data Saved😊!').show();
       storeNewCourse();
     }
-  }
-
-  AwesomeDialog keepGoingAwesomeDialog() {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.scale,
-      title: 'Data Saved😊!',
-      desc: 'Keep Going❤️',
-      dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1),
-    );
   }
 
   Widget buildBlocWidget() {
@@ -83,7 +72,9 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
               arguments: widget.subject);
         }
       } else if (state is ErrorOccurred) {
-        showWarningAwesomeDialog(context, state).show();
+        errorAwesomeDialog(context, state.errorMsg,
+                title: 'Error Storing Course Data')
+            .show();
       }
     }, builder: (context, AddNewCourseState state) {
       if (state is Loading) {
@@ -92,17 +83,6 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
         return addNewCourseWidget();
       }
     });
-  }
-
-  AwesomeDialog showWarningAwesomeDialog(
-      BuildContext context, ErrorOccurred state) {
-    return AwesomeDialog(
-        context: context,
-        dialogType: DialogType.warning,
-        animType: AnimType.scale,
-        title: 'Error Storing Course Data',
-        desc: state.errorMsg,
-        dialogBackgroundColor: const Color.fromRGBO(42, 42, 42, 1));
   }
 
   Future<void> storeNewCourse() async {
