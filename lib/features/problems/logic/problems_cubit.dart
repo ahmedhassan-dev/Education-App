@@ -73,7 +73,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  updatingStudentData() async {
+  Future<void> _updatingStudentData() async {
     if (!solvedBefore) {
       score += retrievedProblemList![problemIndex].scoreNum;
       userScores[subject] =
@@ -86,10 +86,21 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         "lastProblemIdx": lastProblemIdx,
         "lastProblemTime": lastProblemTime
       };
-      problemsRepository.updatingStudentData(
+      await problemsRepository.updatingStudentData(
           path: ApiPath.student(uid), data: data);
     }
   }
+
+  Future<void> _incrementNeedReviewCounter(String? solutionController) async {
+    if (_needTeacherReview(solutionController)) {
+      await problemsRepository.incrementNeedReviewCounter(
+          path: ApiPath.coursesID(courseId));
+    }
+  }
+
+  bool _needTeacherReview(String? solutionController) =>
+      needReview &&
+      retrievedProblemList![problemIndex].solution != solutionController;
 
   Future<void> retrieveCourseProblems(
       {bool forTeachers = false, required String courseId}) async {
@@ -183,7 +194,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  nextRepeatFun() {
+  void _nextRepeatFun() {
     if (needHelp) {
       nextRepeat = DateTime.now().add(const Duration(days: 1)).toString();
     } else if (DateTime.now().difference(startCounting).inSeconds >
@@ -219,9 +230,9 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   Future<void> submitSolution(String? solutionController) async {
-    updatingStudentData();
+    await _updatingStudentData();
     solvingDate.add(DateTime.now().toString());
-    nextRepeatFun();
+    _nextRepeatFun();
     try {
       final solutionData = SolvedProblems(
         id: solvedProblems != null
@@ -245,6 +256,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
           retrievedProblemList![problemIndex].id!,
         ),
       );
+      await _incrementNeedReviewCounter(solutionController);
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }

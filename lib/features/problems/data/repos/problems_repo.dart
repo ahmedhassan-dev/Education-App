@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/features/authentication/data/models/student.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
@@ -21,6 +22,14 @@ class ProblemsRepository {
       await firestoreServices.updateData(
         path: path,
         data: data,
+      );
+
+  Future<void> incrementNeedReviewCounter({
+    required String path,
+  }) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: {"needReviewCounter": FieldValue.increment(1)},
       );
 
   Future<List<Problems>> retrieveCourseProblems(
