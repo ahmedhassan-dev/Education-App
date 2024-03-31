@@ -9,9 +9,14 @@ part of 'solved_problems.dart';
 SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
     SolvedProblems(
       id: json['id'] as String,
+      uid: json['uid'] as String,
       courseId: json['courseId'] as String?,
-      answer: json['answer'] as String?,
-      solvingTime: json['solvingTime'] as int,
+      answer: (json['answer'] as List<dynamic>?)
+              ?.map((e) => e as String?)
+              .toList() ??
+          const [],
+      solvingTime:
+          (json['solvingTime'] as List<dynamic>).map((e) => e as int).toList(),
       nextRepeat: json['nextRepeat'] as String,
       topics: json['topics'] as List<dynamic>,
       failureTime: json['failureTime'] as List<dynamic>,
@@ -23,6 +28,7 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'courseId': instance.courseId,
       'answer': instance.answer,
       'solvingTime': instance.solvingTime,

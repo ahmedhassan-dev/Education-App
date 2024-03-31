@@ -6,6 +6,7 @@ import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/features/courses/ui/widgets/home_view_body.dart';
 import 'package:education_app/features/courses/ui/widgets/no_available_courses.dart';
+import 'package:education_app/features/problems/ui/widgets/problems_page_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,6 +54,7 @@ class _CoursesPageState extends State<CoursesPage> {
       appBar: subjectsAppBar(context, () {
         BlocProvider.of<CoursesCubit>(context).logOut();
       }),
+      drawer: const ProblemsPageDrawer(),
       body: HomeViewBody(allCourses: allCourses),
     );
   }

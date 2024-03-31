@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/features/authentication/data/models/student.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
@@ -47,14 +48,13 @@ class ProblemsRepository {
   }
 
   Future<List<SolvedProblems>> retrieveSolvedProblems(
-      {required String path,
-      required String courseId,
-      required String sortedBy}) async {
+      {required String uid, required String courseId}) async {
     final courseProblems = await firestoreServices.retrieveData(
-            path: path,
-            queryBuilder: (query) =>
-                query.where("courseId", isEqualTo: courseId).orderBy(sortedBy))
-        as List;
+        path: ApiPath.solvedProblemsCollection(),
+        queryBuilder: (query) => query
+            .where("courseId", isEqualTo: courseId)
+            .where("uid", isEqualTo: uid)
+            .orderBy('id')) as List;
     return courseProblems
         .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
         .toList();

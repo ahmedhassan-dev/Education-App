@@ -34,14 +34,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   String uid = FirebaseAuth.instance.currentUser!.uid;
   late String courseId;
   SolvedProblems? solvedProblems;
-  bool solvedBefore = false;
   Queue<int> prbolemIndexQueue = Queue<int>();
-  List<dynamic> failureTime = [];
-  List<dynamic> solvingDate = [];
-  List<dynamic> needHelpTime = [];
-  List<dynamic> solutionImgURL = [];
   bool needHelp = false;
-  String nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
   late Uint8List imgPath;
   late String imgName;
 
@@ -74,7 +68,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   Future<void> _updatingStudentData() async {
-    if (!solvedBefore) {
+    if (!solvedBefore()) {
       score += retrievedProblemList![problemIndex].scoreNum;
       userScores[subject] =
           userScores[subject] + retrievedProblemList![problemIndex].scoreNum;
@@ -125,10 +119,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   initRetrievalSolutions() async {
     await problemsRepository
-        .retrieveSolvedProblems(
-            path: ApiPath.solvedProblemsCollection(uid),
-            courseId: courseId,
-            sortedBy: 'id')
+        .retrieveSolvedProblems(uid: uid, courseId: courseId)
         .then((retrievedSolutionList) {
       this.retrievedSolutionList = retrievedSolutionList;
     });
@@ -137,8 +128,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       solvedProblemsList.add(element.id);
     }
     nextRepeatProblemsIndex();
-    solvedBeforeFun();
-    addOldSolution2New();
+    _createSolvedProblemInstance();
     emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
   }
 
@@ -155,12 +145,12 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         prbolemIndexQueue.add(retrievedSolutionList!.indexOf(element));
       }
     }
-    showRepeatedProblems();
+    _showRepeatedProblems();
   }
 
   bool waitForSolving = false;
   // After submission or after solving new problem today
-  showRepeatedProblems() {
+  _showRepeatedProblems() {
     if (waitForSolving) {
       prbolemIndexQueue.removeFirst();
       waitForSolving = false;
@@ -176,81 +166,74 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  solvedBeforeFun() {
-    problemIndex < retrievedProblemList!.length
-        ? solvedBefore =
-            solvedProblemsList.contains(retrievedProblemList![problemIndex].id)
-        : solvedBefore = false;
+  bool solvedBefore() {
+    if (problemIndex < retrievedProblemList!.length) {
+      return solvedProblemsList
+          .contains(retrievedProblemList![problemIndex].id);
+    }
+    return false;
   }
 
-  // TODO: Make copywith method in model
-  addOldSolution2New() {
-    if (solvedBefore) {
-      failureTime.addAll(retrievedSolutionList![problemIndex].failureTime);
-      solvingDate.addAll(retrievedSolutionList![problemIndex].solvingDate);
-      needHelpTime.addAll(retrievedSolutionList![problemIndex].needHelp);
-      solutionImgURL
-          .addAll(retrievedSolutionList![problemIndex].solutionImgURL);
+  late SolvedProblems solvedProblem;
+  void _createSolvedProblemInstance() {
+    if (solvedBefore()) {
+      solvedProblem = retrievedSolutionList![problemIndex];
+    } else if (retrievedProblemList!.isNotEmpty) {
+      solvedProblem = SolvedProblems(
+        id: retrievedProblemList![problemIndex].id!,
+        uid: uid,
+        courseId: courseId,
+        topics: retrievedProblemList![problemIndex].topics,
+        solvingTime: [],
+        nextRepeat: '',
+        failureTime: [],
+        needHelp: [],
+        solvingDate: [],
+        answer: [],
+        solutionImgURL: [],
+      );
     }
   }
 
-  void _nextRepeatFun() {
+  String _nextRepeat() {
     if (needHelp) {
-      nextRepeat = DateTime.now().add(const Duration(days: 1)).toString();
+      return DateTime.now().add(const Duration(days: 1)).toString();
     } else if (DateTime.now().difference(startCounting).inSeconds >
         retrievedProblemList![problemIndex].time * 60) {
-      nextRepeat = DateTime.now().add(const Duration(days: 2)).toString();
-    } else if (failureTime.isNotEmpty) {
-      if (DateTime.parse(failureTime.last).day == DateTime.now().day) {
-        nextRepeat = DateTime.now().add(const Duration(days: 3)).toString();
+      return DateTime.now().add(const Duration(days: 2)).toString();
+    } else if (solvedProblem.failureTime.isNotEmpty) {
+      if (DateTime.parse(solvedProblem.failureTime.last).day ==
+          DateTime.now().day) {
+        return DateTime.now().add(const Duration(days: 3)).toString();
       }
-    } else {
-      nextRepeat = DateTime.now().add(const Duration(days: 30)).toString();
     }
+    return DateTime.now().add(const Duration(days: 30)).toString();
   }
 
-  resetVariables() {
+  _resetVariables() {
     problemIndex += 1;
     needHelp = false;
     startCounting = DateTime.now();
-    failureTime = [];
-    solvingDate = [];
-    needHelpTime = [];
-    solutionImgURL = [];
+    _createSolvedProblemInstance();
   }
 
   showNeedHelpList() {
+    solvedProblem.needHelp.add(DateTime.now().toString());
     needHelp = true;
-    needHelpTime.add(DateTime.now().toString());
     emit(NeedHelpVideosLoaded());
   }
 
   recordFailureTime() {
-    failureTime.add(DateTime.now().toString());
+    solvedProblem.failureTime.add(DateTime.now().toString());
   }
 
   Future<void> submitSolution(String? solutionController) async {
     await _updatingStudentData();
-    solvingDate.add(DateTime.now().toString());
-    _nextRepeatFun();
+    _storeSubmissionDataInInstance(solutionController);
+    emit(Loading());
     try {
-      final solutionData = SolvedProblems(
-        id: solvedProblems != null
-            ? solvedProblems!.id
-            : retrievedProblemList![problemIndex].id!,
-        courseId: courseId,
-        answer: solutionController,
-        solvingTime: DateTime.now().difference(startCounting).inSeconds,
-        nextRepeat: nextRepeat,
-        topics: retrievedProblemList![problemIndex].topics,
-        failureTime: failureTime,
-        needHelp: needHelpTime,
-        solvingDate: solvingDate,
-        solutionImgURL: solutionImgURL,
-      );
-      emit(Loading());
       await problemsRepository.submitSolution(
-        solution: solutionData,
+        solution: solvedProblem,
         path: ApiPath.solvedProblems(
           uid,
           retrievedProblemList![problemIndex].id!,
@@ -260,11 +243,22 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
-    resetVariables();
-    showRepeatedProblems();
-    solvedBeforeFun();
-    addOldSolution2New();
+    _resetVariables();
+    _showRepeatedProblems();
     emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
+  }
+
+  void _storeSubmissionDataInInstance(String? solutionController) {
+    solvedProblem.solvingDate.add(DateTime.now().toString());
+    //Stop storing the same answer
+    (!needReview && solvedProblem.answer.isNotEmpty)
+        ? null
+        : solvedProblem.answer.add(solutionController);
+    solvedProblem.solvingTime
+        .add(DateTime.now().difference(startCounting).inSeconds);
+    solvedProblem = solvedProblem.copyWith(
+      nextRepeat: _nextRepeat(),
+    );
   }
 
   Future<void> pickImage(ImageSource source) async {
@@ -302,7 +296,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   Future<void> getImgURL(TaskSnapshot snap) async {
     final String imgURL = await snap.ref.getDownloadURL(); // Get img url
-    solutionImgURL.add(imgURL);
+    solvedProblem.solutionImgURL.add(imgURL);
   }
 
   validateSolution(String? value) {
