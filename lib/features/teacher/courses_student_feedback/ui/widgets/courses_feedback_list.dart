@@ -1,4 +1,5 @@
 import 'package:education_app/core/helpers/spacing.dart';
+import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
@@ -15,7 +16,9 @@ class CoursesFeedbackList extends StatelessWidget {
 
   Widget courseElement(context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRoutes.checkAnswersRoute);
+      },
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.secondaryColor,

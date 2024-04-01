@@ -6,4 +6,5 @@ class AppColors {
   static Color backGroundColor = const Color.fromRGBO(18, 18, 18, 1);
   static Color textFormFieldFillColor = const Color.fromRGBO(42, 42, 42, 1);
   static Color whiteColor = const Color.fromRGBO(255, 255, 255, 1);
+  static Color acceptedButtonColor = const Color.fromARGB(255, 76, 175, 80);
 }
