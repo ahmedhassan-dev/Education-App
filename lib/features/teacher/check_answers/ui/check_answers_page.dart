@@ -3,6 +3,7 @@ import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/features/teacher/check_answers/logic/fetch_solved_problems_cubit/fetch_solved_problems_cubit.dart';
 import 'package:education_app/features/teacher/check_answers/ui/no_answers_available.dart';
+import 'package:education_app/features/teacher/check_answers/ui/widgets/check_answer_buttons.dart';
 import 'package:education_app/features/teacher/check_answers/ui/widgets/check_answers_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,23 +45,25 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                 verticalSpace(80),
                 GestureDetector(
                   onTap: () {},
-                  child: const Text("Say some thing to your student",
-                      style: Styles.titleLarge22),
+                  child: Text("Say some thing to your student",
+                      style: Styles.titleLarge22
+                          .copyWith(decoration: TextDecoration.underline)),
                 ),
                 verticalSpace(50),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: AppColors.acceptedButtonColor,
-                            borderRadius: BorderRadius.circular(13)),
-                        child: Icon(
-                          Icons.check,
-                          color: AppColors.whiteColor,
-                          size: 40,
-                        ))
+                    CheckAnswerButtons(
+                      onTap: () {},
+                      color: AppColors.acceptedButtonColor,
+                      icon: Icons.check,
+                    ),
+                    horizontalSpace(100),
+                    CheckAnswerButtons(
+                      onTap: () {},
+                      color: AppColors.primaryColor,
+                      icon: Icons.close,
+                    ),
                   ],
                 )
               ],
