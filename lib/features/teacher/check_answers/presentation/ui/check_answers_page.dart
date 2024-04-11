@@ -1,10 +1,10 @@
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
-import 'package:education_app/features/teacher/check_answers/logic/fetch_solved_problems_cubit/fetch_solved_problems_cubit.dart';
-import 'package:education_app/features/teacher/check_answers/ui/no_answers_available.dart';
-import 'package:education_app/features/teacher/check_answers/ui/widgets/check_answer_buttons.dart';
-import 'package:education_app/features/teacher/check_answers/ui/widgets/check_answers_app_bar.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_solved_problems_cubit/fetch_solved_problems_cubit.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/ui/no_answers_available.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/ui/widgets/check_answer_buttons.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/ui/widgets/check_answers_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
