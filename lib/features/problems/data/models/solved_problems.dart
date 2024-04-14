@@ -1,8 +1,9 @@
+import 'package:education_app/features/teacher/check_answers/domain/entities/solved_problems_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'solved_problems.g.dart';
 
 @JsonSerializable()
-class SolvedProblems {
+class SolvedProblems extends SolvedProblemsEntity {
   final String id;
   final String uid;
   final String? courseId;
@@ -25,8 +26,14 @@ class SolvedProblems {
     required this.failureTime,
     required this.needHelp,
     required this.solvingDate,
-    this.solutionImgURL = const [],
-  });
+    this.solutionImgURL = const [],N
+  }) : super(
+            solvedProblemid: id,
+            studentID: uid,
+            studentAnswer: answer,
+            studentSolvingTime: solvingTime,
+            problemNextRepeat: nextRepeat,
+            answerImgURL: solutionImgURL);
 
   factory SolvedProblems.fromJson(Map<String, dynamic>? json) =>
       _$SolvedProblemsFromJson(json!);

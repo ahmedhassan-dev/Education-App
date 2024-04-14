@@ -1,11 +1,16 @@
 class SolvedProblemsEntity {
-  final String id;
-  final String uid;
-  final List<String?> answer;
-  final List<int> solvingTime;
-  final String nextRepeat;
-  final List<dynamic> solutionImgURL;
+  final String solvedProblemid;
+  final String studentID;
+  final List<String?> studentAnswer;
+  final List<int> studentSolvingTime;
+  final String problemNextRepeat;
+  final List<dynamic> answerImgURL;
 
-  SolvedProblemsEntity(this.id, this.uid, this.answer, this.solvingTime,
-      this.nextRepeat, this.solutionImgURL);
+  SolvedProblemsEntity(
+      {required this.solvedProblemid,
+      required this.studentID,
+      required this.studentAnswer,
+      required this.studentSolvingTime,
+      required this.problemNextRepeat,
+      required this.answerImgURL});
 }

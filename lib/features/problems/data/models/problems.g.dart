@@ -27,7 +27,6 @@ Map<String, dynamic> _$ProblemsToJson(Problems instance) => <String, dynamic>{
       'authorEmail': instance.authorEmail,
       'authorName': instance.authorName,
       'stage': instance.stage,
-      'topics': instance.topics,
       'courseId': instance.courseId,
       'title': instance.title,
       'problem': instance.problem,
@@ -35,5 +34,6 @@ Map<String, dynamic> _$ProblemsToJson(Problems instance) => <String, dynamic>{
       'scoreNum': instance.scoreNum,
       'time': instance.time,
       'needReview': instance.needReview,
+      'topics': instance.topics,
       'videos': instance.videos,
     };

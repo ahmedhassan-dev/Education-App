@@ -1,7 +1,10 @@
 class ProblemsEntity {
-  final String title;
-  final String solution;
-  final int scoreNum;
+  final String problemTitle;
+  final String problemSolutions;
+  final int problemScoreNum;
 
-  ProblemsEntity(this.title, this.solution, this.scoreNum);
+  ProblemsEntity(
+      {required this.problemTitle,
+      required this.problemSolutions,
+      required this.problemScoreNum});
 }
