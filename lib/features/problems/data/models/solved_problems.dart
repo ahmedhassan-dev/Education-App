@@ -10,6 +10,8 @@ class SolvedProblems extends SolvedProblemsEntity {
   final List<String?> answer;
   final List<int> solvingTime;
   final String nextRepeat;
+  final bool needReview;
+  final List<String> teacherNotes;
   final List<dynamic> topics;
   final List<dynamic> failureTime;
   final List<dynamic> needHelp;
@@ -22,11 +24,13 @@ class SolvedProblems extends SolvedProblemsEntity {
     this.answer = const [],
     required this.solvingTime,
     required this.nextRepeat,
+    this.needReview = false,
+    this.teacherNotes = const [],
     required this.topics,
     required this.failureTime,
     required this.needHelp,
     required this.solvingDate,
-    this.solutionImgURL = const [],N
+    this.solutionImgURL = const [],
   }) : super(
             solvedProblemid: id,
             studentID: uid,

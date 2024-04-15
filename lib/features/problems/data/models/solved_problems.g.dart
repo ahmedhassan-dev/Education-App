@@ -18,6 +18,11 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
       solvingTime:
           (json['solvingTime'] as List<dynamic>).map((e) => e as int).toList(),
       nextRepeat: json['nextRepeat'] as String,
+      needReview: json['needReview'] as bool? ?? false,
+      teacherNotes: (json['teacherNotes'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       topics: json['topics'] as List<dynamic>,
       failureTime: json['failureTime'] as List<dynamic>,
       needHelp: json['needHelp'] as List<dynamic>,
@@ -33,6 +38,8 @@ Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
       'answer': instance.answer,
       'solvingTime': instance.solvingTime,
       'nextRepeat': instance.nextRepeat,
+      'needReview': instance.needReview,
+      'teacherNotes': instance.teacherNotes,
       'topics': instance.topics,
       'failureTime': instance.failureTime,
       'needHelp': instance.needHelp,
