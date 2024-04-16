@@ -1,4 +1,4 @@
-class SolvedProblemsEntity {
+class NeedReviewSolutionsEntity {
   final String solvedProblemid;
   final String studentID;
   final List<String?> studentAnswer;
@@ -6,7 +6,7 @@ class SolvedProblemsEntity {
   final String problemNextRepeat;
   final List<dynamic> answerImgURL;
 
-  SolvedProblemsEntity(
+  NeedReviewSolutionsEntity(
       {required this.solvedProblemid,
       required this.studentID,
       required this.studentAnswer,

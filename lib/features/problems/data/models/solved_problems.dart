@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'solved_problems.g.dart';
 
 @JsonSerializable()
-class SolvedProblems extends SolvedProblemsEntity {
+class SolvedProblems extends NeedReviewSolutionsEntity {
   final String id;
   final String uid;
   final String? courseId;

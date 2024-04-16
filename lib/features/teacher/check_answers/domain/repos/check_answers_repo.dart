@@ -4,6 +4,7 @@ import 'package:education_app/features/teacher/check_answers/domain/entities/sol
 import 'package:dartz/dartz.dart';
 
 abstract class CheckAnswersRepo {
-  Future<Either<Failure, List<SolvedProblemsEntity>>> fetchSolvedProblems();
+  Future<Either<Failure, List<NeedReviewSolutionsEntity>>>
+      fetchSolvedProblems();
   Future<Either<Failure, List<ProblemsEntity>>> fetchProblems();
 }

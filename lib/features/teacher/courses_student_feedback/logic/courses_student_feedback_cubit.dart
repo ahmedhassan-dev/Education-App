@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:meta/meta.dart';

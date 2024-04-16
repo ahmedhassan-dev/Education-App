@@ -8,6 +8,7 @@ class Courses extends CourseData {
   final String subject;
   final String description;
   final int needReviewCounter;
+  final List<int> needReviewSolutionsList;
 
   Courses(
       {required super.id,
@@ -15,6 +16,7 @@ class Courses extends CourseData {
       required this.subject,
       required this.description,
       this.needReviewCounter = 0,
+      this.needReviewSolutionsList = const [],
       required super.authorEmail,
       required super.authorName,
       required super.stage,

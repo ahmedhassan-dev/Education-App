@@ -7,7 +7,7 @@ import 'package:education_app/features/teacher/check_answers/domain/entities/sol
 
 abstract class CheckAnswersRemoteDataSource {
   Future<List<ProblemsEntity>> fetchProblems({required String courseId});
-  Future<List<SolvedProblemsEntity>> fetchSolvedProblems(
+  Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
       {required String courseId});
 }
 
@@ -27,7 +27,7 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
   }
 
   @override
-  Future<List<SolvedProblemsEntity>> fetchSolvedProblems(
+  Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
       {required String courseId}) async {
     final solvedProblems = await firestoreServices.retrieveData(
         path: ApiPath.problems(),

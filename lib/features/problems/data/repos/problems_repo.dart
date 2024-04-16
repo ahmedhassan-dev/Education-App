@@ -33,6 +33,17 @@ class ProblemsRepository {
         data: {"needReviewCounter": FieldValue.increment(1)},
       );
 
+  Future<void> addProblemId2NeedReviewSolutionsList({
+    required String path,
+    required String problemId,
+  }) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: {
+          "needReviewSolutionsList": FieldValue.arrayUnion([problemId])
+        },
+      );
+
   Future<List<Problems>> retrieveCourseProblems(
       {required String path,
       required String courseId,
