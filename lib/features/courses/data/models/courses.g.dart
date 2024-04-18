@@ -14,7 +14,7 @@ Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
       needReviewCounter: json['needReviewCounter'] as int? ?? 0,
       needReviewSolutionsList:
           (json['needReviewSolutionsList'] as List<dynamic>?)
-                  ?.map((e) => e as int)
+                  ?.map((e) => e as String)
                   .toList() ??
               const [],
       authorEmail: json['authorEmail'] as String,

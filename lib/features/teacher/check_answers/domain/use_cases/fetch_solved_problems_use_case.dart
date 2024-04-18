@@ -5,14 +5,15 @@ import 'package:education_app/features/teacher/check_answers/domain/entities/sol
 import 'package:education_app/features/teacher/check_answers/domain/repos/check_answers_repo.dart';
 
 class FetchSolvedProblemsUseCase
-    extends UseCase<List<NeedReviewSolutionsEntity>, NoParam> {
+    extends UseCase<List<NeedReviewSolutionsEntity>, List<String>> {
   final CheckAnswersRepo checkAnswersRepo;
 
   FetchSolvedProblemsUseCase(this.checkAnswersRepo);
 
   @override
   Future<Either<Failure, List<NeedReviewSolutionsEntity>>> call(
-      [NoParam? param]) async {
-    return await checkAnswersRepo.fetchSolvedProblems();
+      [List<String> param = const []]) async {
+    return await checkAnswersRepo.fetchNeedReviewSolutions(
+        needReviewSolutionsList: param);
   }
 }

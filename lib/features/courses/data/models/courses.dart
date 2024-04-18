@@ -8,7 +8,7 @@ class Courses extends CourseData {
   final String subject;
   final String description;
   final int needReviewCounter;
-  final List<int> needReviewSolutionsList;
+  final List<String> needReviewSolutionsList;
 
   Courses(
       {required super.id,

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class CheckAnswersRepo {
   Future<Either<Failure, List<NeedReviewSolutionsEntity>>>
-      fetchSolvedProblems();
-  Future<Either<Failure, List<ProblemsEntity>>> fetchProblems();
+      fetchNeedReviewSolutions({List<String> needReviewSolutionsList});
+  Future<Either<Failure, List<ProblemsEntity>>> fetchProblems(
+      {List<String> needReviewSolutionsList});
 }

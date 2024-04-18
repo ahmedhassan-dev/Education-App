@@ -40,8 +40,7 @@ class ProblemsRepository {
       await firestoreServices.updateData(
         path: path,
         data: {
-          "needReviewSolutionsList":
-              FieldValue.arrayUnion([int.parse(problemId)])
+          "needReviewSolutionsList": FieldValue.arrayUnion([problemId])
         },
       );
 

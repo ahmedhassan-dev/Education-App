@@ -6,9 +6,10 @@ import 'package:education_app/features/teacher/check_answers/domain/entities/pro
 import 'package:education_app/features/teacher/check_answers/domain/entities/solved_problems_entity.dart';
 
 abstract class CheckAnswersRemoteDataSource {
-  Future<List<ProblemsEntity>> fetchProblems({required String courseId});
+  Future<List<ProblemsEntity>> fetchProblems(
+      {required List<String> needReviewSolutionsList});
   Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
-      {required String courseId});
+      {required List<String> needReviewSolutionsList});
 }
 
 class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
@@ -16,11 +17,13 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
   CheckAnswersRemoteDataSourceImpl(this.firestoreServices);
 
   @override
-  Future<List<ProblemsEntity>> fetchProblems({required String courseId}) async {
+  Future<List<ProblemsEntity>> fetchProblems(
+      {required List<String> needReviewSolutionsList}) async {
     final problems = await firestoreServices.retrieveData(
-        path: ApiPath.problems(),
-        queryBuilder: (query) =>
-            query.where("courseId", isEqualTo: courseId)) as List;
+            path: ApiPath.problems(),
+            queryBuilder: (query) =>
+                query.where("id", arrayContainsAny: needReviewSolutionsList))
+        as List;
     return problems
         .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();
@@ -28,12 +31,13 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
 
   @override
   Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
-      {required String courseId}) async {
+      {required List<String> needReviewSolutionsList}) async {
     final solvedProblems = await firestoreServices.retrieveData(
-        path: ApiPath.problems(),
-        queryBuilder: (query) => query
-            .where("courseId", isEqualTo: "courseId")
-            .where("needReview", isEqualTo: true)) as List;
+            path: ApiPath.problems(),
+            queryBuilder: (query) =>
+                query.where("id", arrayContainsAny: needReviewSolutionsList))
+        as List;
+    print("solvedProblems:              $solvedProblems");
     return solvedProblems
         .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
         .toList();
