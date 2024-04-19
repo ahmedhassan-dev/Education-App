@@ -17,7 +17,8 @@ class CoursesFeedbackList extends StatelessWidget {
   Widget courseElement(context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.checkAnswersRoute);
+        Navigator.of(context).pushNamed(AppRoutes.checkAnswersRoute,
+            arguments: course.needReviewSolutionsList);
       },
       child: Container(
         decoration: BoxDecoration(

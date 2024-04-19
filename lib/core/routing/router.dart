@@ -12,6 +12,9 @@ import 'package:education_app/features/problems/data/repos/problems_repo.dart';
 import 'package:education_app/features/teacher/add_new_problem/data/repos/add_new_problem_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/problems/ui/problems_page.dart';
+import 'package:education_app/features/teacher/check_answers/data/data_sources/check_answers_remote_data_source.dart';
+import 'package:education_app/features/teacher/check_answers/data/repos/check_answers_repo_impl.dart';
+import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_solved_problems_use_case.dart';
 import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_solved_problems_cubit/fetch_solved_problems_cubit.dart';
 import 'package:education_app/features/teacher/check_answers/presentation/ui/check_answers_page.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/data/repos/courses_student_feedback_repo.dart';
@@ -144,9 +147,16 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
     case AppRoutes.checkAnswersRoute:
+      final List<String> needReviewSolutionsList =
+          settings.arguments as List<String>;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider(
-          create: (context) => FetchSolvedProblemsCubit(),
+          create: (context) => FetchSolvedProblemsCubit(
+              FetchSolvedProblemsUseCase(CheckAnswersRepoImpl(
+                  checkAnswersRemoteDataSource:
+                      CheckAnswersRemoteDataSourceImpl(
+                          getIt<FirestoreServices>()))))
+            ..fetchSolvedProblems(needReviewSolutionsList),
           child: const CheckAnswersPage(),
         ),
         settings: settings,
