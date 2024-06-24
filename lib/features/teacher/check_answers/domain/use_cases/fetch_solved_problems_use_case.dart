@@ -13,6 +13,7 @@ class FetchSolvedProblemsUseCase
   @override
   Future<Either<Failure, List<NeedReviewSolutionsEntity>>> call(
       [List<String> param = const []]) async {
+    //TODO: here is the problem and I have to check that the list is not empty cos It gives me an error
     return await checkAnswersRepo.fetchNeedReviewSolutions(
         needReviewSolutionsList: param);
   }

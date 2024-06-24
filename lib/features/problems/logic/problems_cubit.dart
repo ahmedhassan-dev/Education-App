@@ -168,9 +168,10 @@ class ProblemsCubit extends Cubit<ProblemsState> {
             retrievedProblemList!.length == problemIndex)) {
       problemIndex = prbolemIndexQueue.first;
       waitForSolving = true;
-    } else if (prbolemIndexQueue.isEmpty) {
-      problemIndex = studentData.lastProblemIdx[subject]!;
     }
+    //  else if (prbolemIndexQueue.isEmpty) {
+    //   problemIndex = studentData.lastProblemIdx[subject]!;
+    // }
   }
 
   bool solvedBefore() {
