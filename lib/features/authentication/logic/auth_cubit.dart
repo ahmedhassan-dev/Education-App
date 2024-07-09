@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/functions/service_locator.dart';
+import 'package:education_app/core/helpers/shared_pref_helper.dart';
 import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
@@ -211,6 +212,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         AuthManager.isWeb ? null : await _getAndSendToken(user.uid);
         uid = user.uid;
+        await SharedPrefHelper.setSecuredString(SharedPrefKeys.uid, uid!);
         email = user.email!;
         if (userCredential.additionalUserInfo!.isNewUser) {
           emit(GetUserData());

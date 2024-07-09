@@ -7,3 +7,7 @@ String currentStudentVersion = "1.0.0";
 abstract class AuthManager {
   static bool isWeb = kIsWeb;
 }
+
+class SharedPrefKeys {
+  static String uid = "uid";
+}
