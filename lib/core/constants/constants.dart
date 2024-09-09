@@ -6,6 +6,7 @@ String currentStudentVersion = "1.0.0";
 
 abstract class AuthManager {
   static bool isWeb = kIsWeb;
+  static String? idToken;
 }
 
 class SharedPrefKeys {

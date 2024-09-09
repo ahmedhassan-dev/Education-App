@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/features/onboarding/data/models/publicinfo.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,15 +20,27 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   List<String>? subjects;
   OnBoardingRepository onBoardingRepository;
   OnboardingCubit(this.onBoardingRepository) : super(LoadingInitData());
+  StreamController firebaseAuthStreamer = StreamController();
 
   Future<void> getInitDataFromSharedPreferences() async {
     userType = getIt<SharedPreferences>().getString('userType');
     subjects = getIt<SharedPreferences>().getStringList('subjects');
     if (userType != null) {
+      getIdToken();
       await _checkForUpdatesIfNotWeb();
     } else {
       emit(LoadSelectUserPage());
     }
+  }
+
+  void getIdToken() {
+    firebaseAuthStreamer.addStream(
+      FirebaseAuth.instance.authStateChanges(),
+    );
+    firebaseAuthStreamer.stream.listen((data) async {
+      User? userData = data as User;
+      AuthManager.idToken = await userData.getIdToken();
+    });
   }
 
   Future<void> _checkForUpdatesIfNotWeb() async {
