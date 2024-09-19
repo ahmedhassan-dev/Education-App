@@ -1,5 +1,8 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -23,8 +26,8 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.education_app"
-    // compileSdkVersion flutter.compileSdkVersion
+    namespace "com.education.app"
+    // com.education.apppileSdkVersion flutter.com.education.apppileSdkVersion
     compileSdkVersion 34
     // ndkVersion flutter.ndkVersion
     ndkVersion "25.1.8937393"
@@ -43,8 +46,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.education_app"
+        // TODO: Specify your own unique Application ID (https://developer.android.com.education.app/studio/build/application-id.html).
+        applicationId "com"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
@@ -58,11 +61,12 @@ android {
     productFlavors {
       production {
           dimension "default"
-          resValue "string", "app_name", "IronMan Production"
+          applicationIdSuffix ".ironman.app"
+          resValue "string", "app_name", "IronMan"
       }
       development {
           dimension "default"
-        //   applicationIdSuffix ".dev"
+          applicationIdSuffix ".education.app"
           resValue "string", "app_name", "IronMan Development"
       }
   }

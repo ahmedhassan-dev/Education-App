@@ -1,6 +1,6 @@
 import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/core/services/firebase_messaging_system.dart';
-import 'package:education_app/firebase_options.dart';
+import 'package:education_app/firebase_options/firebase_options_prod.dart';
 import 'package:education_app/core/widgets/simple_bloc_observer.dart';
 import 'package:education_app/my_app.dart';
 import 'package:firebase_core/firebase_core.dart';
