@@ -59,12 +59,16 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     if (student.userScores[subject] == null) {
       userScores[subject] = 0;
     }
-    if (student.lastProblemIdx[subject] == null ||
-        student.lastProblemIdx[subject]?[courseId] == null) {
+
+    if (student.lastProblemIdx[subject] == null) {
       lastProblemIdx[subject] =
           {courseId: 0}.cast<String, int>(); // Adding new subject to the map
       lastProblemTime[subject] = {courseId: "0"}
           .cast<String, String>(); // Adding new subject to the map
+    } else if (student.lastProblemIdx[subject]![courseId] == null) {
+      lastProblemIdx[subject]!.addEntries(<String, int>{courseId: 0}.entries);
+      lastProblemTime[subject]!
+          .addEntries(<String, String>{courseId: "0"}.entries);
     }
     problemIndex = student.lastProblemIdx[subject]?[courseId] ?? 0;
   }
