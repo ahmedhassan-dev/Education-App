@@ -6,8 +6,8 @@ part 'student.g.dart';
 class Student extends User {
   final int totalScore;
   final Map<String, int> userScores;
-  final Map<String, int> lastProblemIdx;
-  final Map<String, String> lastProblemTime;
+  final Map<String, Map<String, int>> lastProblemIdx;
+  final Map<String, Map<String, String>> lastProblemTime;
 
   Student(
       {required super.uid,

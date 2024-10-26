@@ -32,6 +32,7 @@ class Problems extends ProblemsEntity {
     required this.topics,
     required this.videos,
   }) : super(
+            problemId: id,
             problemTitle: title,
             problemSolutions: solution,
             problemScoreNum: scoreNum);

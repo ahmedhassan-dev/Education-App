@@ -9,10 +9,10 @@ class ProblemsRepository {
   FirestoreServices firestoreServices;
   ProblemsRepository(this.firestoreServices);
 
-  Future<Student> retrieveUserData(
-      {required String path, required String docName}) async {
+  Future<Student> retrieveStudentData({required String docName}) async {
     dynamic userData = await firestoreServices.retrieveDataFormDocument(
-        path: path, docName: docName);
+        path: ApiPath.studentCollection(), docName: docName);
+    print(userData.data()!);
     return Student.fromJson(userData.data()!);
   }
 

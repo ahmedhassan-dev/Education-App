@@ -93,6 +93,7 @@ class _AuthPageState extends State<AuthPage> {
                   TextFormField(
                     controller: _emailController,
                     focusNode: _emailFocusNode,
+                    keyboardType: TextInputType.emailAddress,
                     onEditingComplete: () =>
                         FocusScope.of(context).requestFocus(_passwordFocusNode),
                     textInputAction: TextInputAction.next,

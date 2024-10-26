@@ -17,11 +17,11 @@ Student _$StudentFromJson(Map<String, dynamic> json) => Student(
           ) ??
           const {},
       lastProblemIdx: (json['lastProblemIdx'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as int),
+            (k, e) => MapEntry(k, Map<String, int>.from(e as Map)),
           ) ??
           const {},
       lastProblemTime: (json['lastProblemTime'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as String),
+            (k, e) => MapEntry(k, Map<String, String>.from(e as Map)),
           ) ??
           const {},
     );

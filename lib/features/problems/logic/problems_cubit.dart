@@ -20,16 +20,16 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   String subject = "";
   int score = 0;
   Map<String, dynamic> userScores = {};
-  Map<String, dynamic> lastProblemIdx = {};
+  Map<String, Map<String, int>> lastProblemIdx = {};
   Map<String, dynamic> lastProblemTime = {};
   int problemIndex = 0;
-  List<Problems>? retrievedProblemList;
+  List<Problems>? problemList;
   DateTime startCounting = DateTime.now();
   List<String> solvedProblemsList = [];
-  late Student studentData;
+  late Student student;
   List<Problems> problems = [];
   ProblemsRepository problemsRepository;
-  List<SolvedProblems>? retrievedSolutionList;
+  List<SolvedProblems>? solutionList;
   ProblemsCubit(this.problemsRepository) : super(ProblemsInitial());
   String uid = FirebaseAuth.instance.currentUser!.uid;
   late String courseId;
@@ -39,41 +39,43 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   late Uint8List imgPath;
   late String imgName;
 
-  retrieveUserData({required String subject}) async {
+  retrieveStudentData(
+      {required String subject, required String courseId}) async {
     this.subject = subject;
-    await problemsRepository
-        .retrieveUserData(path: ApiPath.studentCollection(), docName: uid)
-        .then((studentData) {
-      this.studentData = studentData;
+    this.courseId = courseId;
+    await problemsRepository.retrieveStudentData(docName: uid).then((student) {
+      this.student = student;
     });
-    initUserData();
+    initStudentData();
   }
 
-  initUserData() {
-    score = studentData.totalScore;
-    userScores = studentData.userScores;
+  void initStudentData() {
+    score = student.totalScore;
+    userScores = student.userScores;
     lastProblemIdx =
-        studentData.lastProblemIdx; //Adding the firebase map to the local map
+        student.lastProblemIdx; //Adding the firebase map to the local map
     lastProblemTime =
-        studentData.lastProblemTime; //Adding the firebase map to the local map
-    if (studentData.userScores[subject] == null) {
+        student.lastProblemTime; //Adding the firebase map to the local map
+    if (student.userScores[subject] == null) {
       userScores[subject] = 0;
     }
-    if (studentData.lastProblemIdx[subject] == null) {
-      lastProblemIdx[subject] = 0; // Adding new subject to the map
-      lastProblemTime[subject] = "0"; // Adding new subject to the map
-    } else {
-      problemIndex = studentData.lastProblemIdx[subject]!;
+    if (student.lastProblemIdx[subject] == null ||
+        student.lastProblemIdx[subject]?[courseId] == null) {
+      lastProblemIdx[subject] =
+          {courseId: 0}.cast<String, int>(); // Adding new subject to the map
+      lastProblemTime[subject] = {courseId: "0"}
+          .cast<String, String>(); // Adding new subject to the map
     }
+    problemIndex = student.lastProblemIdx[subject]?[courseId] ?? 0;
   }
 
   Future<void> _updatingStudentData() async {
     if (!solvedBefore()) {
-      score += retrievedProblemList![problemIndex].scoreNum;
+      score += problemList![problemIndex].scoreNum;
       userScores[subject] =
-          userScores[subject] + retrievedProblemList![problemIndex].scoreNum;
-      lastProblemIdx[subject] = problemIndex + 1;
-      lastProblemTime[subject] = DateTime.now().toString();
+          userScores[subject] + problemList![problemIndex].scoreNum;
+      lastProblemIdx[subject]?[courseId] = problemIndex + 1;
+      lastProblemTime[subject]?[courseId] = DateTime.now().toString();
       Map<String, dynamic> data = {
         "totalScore": score,
         "userScores": userScores,
@@ -100,17 +102,14 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   bool _needTeacherReview(String? solutionController) =>
-      needReview &&
-      retrievedProblemList![problemIndex].solution != solutionController;
+      needReview && problemList![problemIndex].solution != solutionController;
 
-  Future<void> retrieveCourseProblems(
-      {bool forTeachers = false, required String courseId}) async {
-    this.courseId = courseId;
+  Future<void> retrieveCourseProblems({bool forTeachers = false}) async {
     await problemsRepository
         .retrieveCourseProblems(
             path: ApiPath.problems(), courseId: courseId, sortedBy: 'id')
-        .then((retrievedProblemList) {
-      this.retrievedProblemList = retrievedProblemList;
+        .then((problemList) {
+      this.problemList = problemList;
     });
 
     if (!forTeachers) {
@@ -121,77 +120,87 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  checkProblemsAvailability() =>
-      !(retrievedProblemList!.length == problemIndex);
+  bool checkProblemsAvailability() => problemList!.length > problemIndex;
 
   initRetrievalSolutions() async {
     await problemsRepository
         .retrieveSolvedProblems(uid: uid, courseId: courseId)
-        .then((retrievedSolutionList) {
-      this.retrievedSolutionList = retrievedSolutionList;
+        .then((solutionList) {
+      this.solutionList = solutionList;
     });
     //TODO: Need to refactor this
-    for (var element in retrievedSolutionList!) {
-      solvedProblemsList.add(element.id);
+    for (var solvedProblem in solutionList!) {
+      solvedProblemsList.add(solvedProblem.id);
     }
     nextRepeatProblemsIndex();
     _createSolvedProblemInstance();
-    emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
+    emit(DataLoaded(problemList, student, solutionList));
   }
 
-  nextRepeatProblemsIndex() {
+  void nextRepeatProblemsIndex() {
     DateTime timeNow = DateTime.now();
     // TODO: need to sort elements nextRepeat and use binary search
-    for (var element in retrievedSolutionList!) {
-      if ((DateTime.parse(element.nextRepeat).difference(timeNow).inDays < 0 ||
-              DateTime.parse(element.nextRepeat).day == timeNow.day) &&
-          timeNow
-                  .difference(DateTime.parse(element.solvingDate.last))
-                  .inHours >=
-              12) {
-        prbolemIndexQueue.add(retrievedSolutionList!.indexOf(element));
+    for (var element in solutionList!) {
+      if (_isTodayOrBeforeTodayProblem(element, timeNow) &&
+          _isProblemSolvedAfter12Hours(timeNow, element)) {
+        prbolemIndexQueue.add(solutionList!.indexOf(element));
       }
     }
     _showRepeatedProblems();
   }
 
+  bool _isProblemSolvedAfter12Hours(DateTime timeNow, SolvedProblems element) {
+    return timeNow
+            .difference(DateTime.parse(element.solvingDate.last))
+            .inHours >=
+        12;
+  }
+
+  bool _isTodayOrBeforeTodayProblem(SolvedProblems element, DateTime timeNow) {
+    return (DateTime.parse(element.nextRepeat).difference(timeNow).inDays < 0 ||
+        DateTime.parse(element.nextRepeat).day == timeNow.day);
+  }
+
   bool waitForSolving = false;
   // After submission or after solving new problem today
-  _showRepeatedProblems() {
+  void _showRepeatedProblems() {
     if (waitForSolving) {
       prbolemIndexQueue.removeFirst();
       waitForSolving = false;
     }
     if (prbolemIndexQueue.isNotEmpty &&
-        (formatter.format(DateTime.parse(lastProblemTime[subject])) ==
-                formatter.format(now) ||
-            retrievedProblemList!.length == problemIndex)) {
+        (isStudentSolvedAnyNewProblemToday() || !checkProblemsAvailability())) {
       problemIndex = prbolemIndexQueue.first;
       waitForSolving = true;
+    } else if (prbolemIndexQueue.isEmpty) {
+      problemIndex = lastProblemIdx[subject]![courseId]!;
+    } else {
+      problemIndex += 1;
     }
-    //  else if (prbolemIndexQueue.isEmpty) {
-    //   problemIndex = studentData.lastProblemIdx[subject]!;
-    // }
+  }
+
+  bool isStudentSolvedAnyNewProblemToday() {
+    return formatter
+            .format(DateTime.parse(lastProblemTime[subject]![courseId]!)) ==
+        formatter.format(now);
   }
 
   bool solvedBefore() {
-    if (problemIndex < retrievedProblemList!.length) {
-      return solvedProblemsList
-          .contains(retrievedProblemList![problemIndex].id);
-    }
-    return false;
+    return problemIndex < problemList!.length
+        ? solvedProblemsList.contains(problemList![problemIndex].id)
+        : false;
   }
 
   late SolvedProblems solvedProblem;
   void _createSolvedProblemInstance() {
     if (solvedBefore()) {
-      solvedProblem = retrievedSolutionList![problemIndex];
-    } else if (retrievedProblemList!.isNotEmpty) {
+      solvedProblem = solutionList![problemIndex];
+    } else if (problemList!.isNotEmpty && checkProblemsAvailability()) {
       solvedProblem = SolvedProblems(
-        id: retrievedProblemList![problemIndex].id!,
+        id: problemList![problemIndex].id!,
         uid: uid,
         courseId: courseId,
-        topics: retrievedProblemList![problemIndex].topics,
+        topics: problemList![problemIndex].topics,
         solvingTime: [],
         nextRepeat: '',
         failureTime: [],
@@ -207,7 +216,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     if (needHelp) {
       return DateTime.now().add(const Duration(days: 1)).toString();
     } else if (DateTime.now().difference(startCounting).inSeconds >
-        retrievedProblemList![problemIndex].time * 60) {
+        problemList![problemIndex].time * 60) {
       return DateTime.now().add(const Duration(days: 2)).toString();
     } else if (solvedProblem.failureTime.isNotEmpty) {
       if (DateTime.parse(solvedProblem.failureTime.last).day ==
@@ -219,7 +228,6 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   _resetVariables() {
-    problemIndex += 1;
     needHelp = false;
     startCounting = DateTime.now();
     _createSolvedProblemInstance();
@@ -244,7 +252,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         solution: solvedProblem,
         path: ApiPath.solvedProblems(
           uid,
-          retrievedProblemList![problemIndex].id!,
+          problemList![problemIndex].id!,
         ),
       );
       await _incrementNeedReviewCounter(solutionController);
@@ -252,9 +260,9 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
-    _resetVariables();
     _showRepeatedProblems();
-    emit(DataLoaded(retrievedProblemList, studentData, retrievedSolutionList));
+    _resetVariables();
+    emit(DataLoaded(problemList, student, solutionList));
   }
 
   void _storeSubmissionDataInInstance(String? solutionController) {
@@ -265,6 +273,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         : solvedProblem.answer.add(solutionController);
     solvedProblem.solvingTime
         .add(DateTime.now().difference(startCounting).inSeconds);
+    solvedProblem.solutionImgURL.add(imgURL);
     solvedProblem = solvedProblem.copyWith(
       nextRepeat: _nextRepeat(),
     );
@@ -296,16 +305,16 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     required Uint8List imgPath,
   }) async {
     final storageRef = FirebaseStorage.instance.ref(
-        "Solutions/${studentData.email}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
+        "Solutions/${student.email}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
     UploadTask uploadTask =
         storageRef.putData(imgPath); // use this code if u are using flutter web
     TaskSnapshot snap = await uploadTask;
     await getImgURL(snap);
   }
 
+  String? imgURL;
   Future<void> getImgURL(TaskSnapshot snap) async {
-    final String imgURL = await snap.ref.getDownloadURL(); // Get img url
-    solvedProblem.solutionImgURL.add(imgURL);
+    imgURL = await snap.ref.getDownloadURL(); // Get img url
   }
 
   validateSolution(String? value) {
@@ -322,13 +331,13 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     return value != solution && !needReview;
   }
 
-  String get problemId => retrievedProblemList![problemIndex].id!;
-  String get title => retrievedProblemList![problemIndex].title;
-  int get expectedTime => retrievedProblemList![problemIndex].time;
-  String get problem => retrievedProblemList![problemIndex].problem;
-  String get solution => retrievedProblemList![problemIndex].solution;
-  bool get needReview => retrievedProblemList![problemIndex].needReview;
-  List<String> get videos => (retrievedProblemList![problemIndex].videos)
+  String get problemId => problemList![problemIndex].id!;
+  String get title => problemList![problemIndex].title;
+  int get expectedTime => problemList![problemIndex].time;
+  String get problem => problemList![problemIndex].problem;
+  String get solution => problemList![problemIndex].solution;
+  bool get needReview => problemList![problemIndex].needReview;
+  List<String> get videos => (problemList![problemIndex].videos)
       .map((item) => item as String)
       .toList();
   String get userScore => score.toString();
