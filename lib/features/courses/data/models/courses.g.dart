@@ -12,11 +12,10 @@ Courses _$CoursesFromJson(Map<String, dynamic> json) => Courses(
       subject: json['subject'] as String,
       description: json['description'] as String,
       needReviewCounter: json['needReviewCounter'] as int? ?? 0,
-      needReviewSolutionsList:
-          (json['needReviewSolutionsList'] as List<dynamic>?)
-                  ?.map((e) => e as String)
-                  .toList() ??
-              const [],
+      solutionsNeedingReview: (json['solutionsNeedingReview'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       authorEmail: json['authorEmail'] as String,
       authorName: json['authorName'] as String,
       stage: json['stage'] as String,
@@ -33,5 +32,5 @@ Map<String, dynamic> _$CoursesToJson(Courses instance) => <String, dynamic>{
       'subject': instance.subject,
       'description': instance.description,
       'needReviewCounter': instance.needReviewCounter,
-      'needReviewSolutionsList': instance.needReviewSolutionsList,
+      'solutionsNeedingReview': instance.solutionsNeedingReview,
     };

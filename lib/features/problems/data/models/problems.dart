@@ -11,7 +11,7 @@ class Problems extends ProblemsEntity {
   final String? courseId;
   final String title;
   final String problem;
-  final String solution;
+  final List<String> solutions;
   final int scoreNum;
   final int time;
   final bool needReview;
@@ -23,7 +23,7 @@ class Problems extends ProblemsEntity {
     required this.title,
     required this.problem,
     required this.scoreNum,
-    required this.solution,
+    required this.solutions,
     required this.stage,
     required this.authorEmail,
     required this.authorName,
@@ -33,8 +33,9 @@ class Problems extends ProblemsEntity {
     required this.videos,
   }) : super(
             problemId: id,
+            courseID: courseId ?? "Not Found",
             problemTitle: title,
-            problemSolutions: solution,
+            problemSolutions: solutions,
             problemScoreNum: scoreNum);
 
   factory Problems.fromJson(Map<String, dynamic>? json) =>
@@ -47,7 +48,7 @@ class Problems extends ProblemsEntity {
     String? courseId,
     String? title,
     String? problem,
-    String? solution,
+    List<String>? solutions,
     String? stage,
     String? authorEmail,
     String? authorName,
@@ -62,7 +63,7 @@ class Problems extends ProblemsEntity {
       courseId: courseId ?? this.courseId,
       title: title ?? this.title,
       problem: problem ?? this.problem,
-      solution: solution ?? this.solution,
+      solutions: solutions ?? this.solutions,
       stage: stage ?? this.stage,
       authorEmail: authorEmail ?? this.authorEmail,
       authorName: authorName ?? this.authorName,

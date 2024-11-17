@@ -6,6 +6,9 @@ import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as b;
+
+import '../../logic/courses_student_feedback_cubit.dart';
 
 class CoursesFeedbackList extends StatelessWidget {
   final Courses course;
@@ -14,11 +17,15 @@ class CoursesFeedbackList extends StatelessWidget {
     required this.course,
   });
 
-  Widget courseElement(context) {
+  Widget courseElement(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(AppRoutes.checkAnswersRoute,
-            arguments: course.needReviewSolutionsList);
+        Navigator.of(context)
+            .pushNamed(AppRoutes.checkAnswersRoute,
+                arguments: course.solutionsNeedingReview)
+            .then((v) {
+          context.read<CoursesStudentFeedbackCubit>().getTeacherSortedCourses();
+        });
       },
       child: Container(
         decoration: BoxDecoration(

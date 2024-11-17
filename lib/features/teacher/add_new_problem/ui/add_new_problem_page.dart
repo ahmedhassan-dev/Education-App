@@ -117,7 +117,7 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
       courseId: widget.course.id,
       title: _titleController.text.trim(),
       problem: _problemController.text.trim(),
-      solution: _solutionController.text.trim(),
+      solutions: [_solutionController.text.trim()],
       stage: widget.course.stage,
       authorEmail: context.read<AddNewProblemCubit>().email,
       authorName: context.read<AddNewProblemCubit>().userName,

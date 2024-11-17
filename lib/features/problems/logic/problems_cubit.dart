@@ -106,7 +106,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   bool _needTeacherReview(String? solutionController) =>
-      needReview && problemList![problemIndex].solution != solutionController;
+      needReview &&
+      !problemList![problemIndex].solutions.contains(solutionController);
 
   Future<void> retrieveCourseProblems({bool forTeachers = false}) async {
     await problemsRepository
@@ -339,7 +340,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   String get title => problemList![problemIndex].title;
   int get expectedTime => problemList![problemIndex].time;
   String get problem => problemList![problemIndex].problem;
-  String get solution => problemList![problemIndex].solution;
+  List<String> get solution => problemList![problemIndex].solutions;
   bool get needReview => problemList![problemIndex].needReview;
   List<String> get videos => (problemList![problemIndex].videos)
       .map((item) => item as String)
