@@ -14,10 +14,13 @@ import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/problems/ui/problems_page.dart';
 import 'package:education_app/features/teacher/check_answers/data/data_sources/check_answers_remote_data_source.dart';
 import 'package:education_app/features/teacher/check_answers/data/repos/check_answers_repo_impl.dart';
+import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_problems_use_case.dart';
 import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_solved_problems_use_case.dart';
+import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_student_data_use_case.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_problems_cubit/fetch_problems_cubit.dart';
 import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_solved_problems_cubit/fetch_solved_problems_cubit.dart';
+import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_student_data_cubit/fetch_student_data_cubit.dart';
 import 'package:education_app/features/teacher/check_answers/presentation/ui/check_answers_page.dart';
-import 'package:education_app/features/teacher/courses_student_feedback/data/repos/courses_student_feedback_repo.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/ui/courses_student_feedback_page.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
@@ -37,6 +40,8 @@ import 'package:education_app/features/teacher_subjects_details/logic/teacher_su
 import 'package:education_app/features/teacher_subjects_details/ui/teacher_subject_details_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../features/teacher/check_answers/presentation/manger/check_answers_cubit/check_answer_cubit.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
   switch (settings.name) {
@@ -138,25 +143,52 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       );
     case AppRoutes.studentsFeedbackRoute:
       return CupertinoPageRoute(
-        builder: (_) => BlocProvider(
-          create: (context) => CoursesStudentFeedbackCubit(
-              CoursesStudentFeedbackRepository(getIt<FirestoreServices>()))
-            ..getTeacherSortedCourses(),
-          child: const CoursesStudentFeedbackPage(),
-        ),
+        builder: (_) {
+          return BlocProvider<CoursesStudentFeedbackCubit>.value(
+            value: getIt<CoursesStudentFeedbackCubit>()
+              ..getTeacherSortedCourses(),
+            child: const CoursesStudentFeedbackPage(),
+          );
+        },
         settings: settings,
       );
     case AppRoutes.checkAnswersRoute:
-      final List<String> needReviewSolutionsList =
+      final List<String> solutionsNeedingReview =
           settings.arguments as List<String>;
       return CupertinoPageRoute(
-        builder: (_) => BlocProvider(
-          create: (context) => FetchSolvedProblemsCubit(
-              FetchSolvedProblemsUseCase(CheckAnswersRepoImpl(
+        builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => FetchSolvedProblemsCubit(
+                  FetchSolvedProblemsUseCase(CheckAnswersRepoImpl(
+                      checkAnswersRemoteDataSource:
+                          CheckAnswersRemoteDataSourceImpl(
+                              getIt<FirestoreServices>()))))
+                ..fetchSolvedProblems(solutionsNeedingReview),
+            ),
+            BlocProvider(
+              create: (context) => FetchProblemsCubit(FetchProblemsUseCase(
+                  CheckAnswersRepoImpl(
+                      checkAnswersRemoteDataSource:
+                          CheckAnswersRemoteDataSourceImpl(
+                              getIt<FirestoreServices>()))))
+                ..fetchProblems(solutionsNeedingReview),
+            ),
+            BlocProvider(
+              create: (context) => FetchStudentDataCubit(
+                  FetchStudentDataUseCase(
+                      ProblemsRepository(getIt<FirestoreServices>()))),
+            ),
+            BlocProvider(
+              create: (context) => CheckAnswerCubit(CheckAnswersRepoImpl(
                   checkAnswersRemoteDataSource:
                       CheckAnswersRemoteDataSourceImpl(
-                          getIt<FirestoreServices>()))))
-            ..fetchSolvedProblems(needReviewSolutionsList),
+                          getIt<FirestoreServices>()))),
+            ),
+            BlocProvider<CoursesStudentFeedbackCubit>.value(
+              value: getIt<CoursesStudentFeedbackCubit>(),
+            ),
+          ],
           child: const CheckAnswersPage(),
         ),
         settings: settings,
