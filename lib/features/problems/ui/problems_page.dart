@@ -40,10 +40,9 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProblemsCubit>(context)
-        .retrieveUserData(subject: widget.course.subject);
-    BlocProvider.of<ProblemsCubit>(context)
-        .retrieveCourseProblems(courseId: widget.course.id!);
+    BlocProvider.of<ProblemsCubit>(context).retrieveStudentData(
+        subject: widget.course.subject, courseId: widget.course.id!);
+    BlocProvider.of<ProblemsCubit>(context).retrieveCourseProblems();
   }
 
   @override

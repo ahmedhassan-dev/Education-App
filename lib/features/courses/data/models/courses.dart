@@ -7,8 +7,8 @@ class Courses extends CourseData {
   final String imgUrl;
   final String subject;
   final String description;
-  final int needReviewCounter;
-  final List<String> solutionsNeedingReview;
+  int needReviewCounter;
+  List<String> solutionsNeedingReview;
 
   Courses(
       {required super.id,
@@ -21,6 +21,14 @@ class Courses extends CourseData {
       required super.authorName,
       required super.stage,
       required super.topics});
+
+  void decrementNeedReviewCounter() {
+    needReviewCounter > 0 ? needReviewCounter-- : null;
+  }
+
+  void removeSolutionFromSolutionsNeedingReview(String id) {
+    solutionsNeedingReview.remove(id);
+  }
 
   factory Courses.fromJson(Map<String, dynamic>? json) =>
       _$CoursesFromJson(json!);

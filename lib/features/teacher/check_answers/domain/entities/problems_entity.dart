@@ -1,10 +1,14 @@
 class ProblemsEntity {
+  final String? problemId;
+  final String courseID;
   final String problemTitle;
-  final String problemSolutions;
+  final List<String> problemSolutions;
   final int problemScoreNum;
 
   ProblemsEntity(
-      {required this.problemTitle,
+      {required this.problemId,
+      required this.courseID,
+      required this.problemTitle,
       required this.problemSolutions,
       required this.problemScoreNum});
 }

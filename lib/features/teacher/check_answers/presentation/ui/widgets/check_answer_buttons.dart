@@ -1,11 +1,11 @@
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class CheckAnswerButtons extends StatelessWidget {
+class CheckAnswerButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
   final IconData icon;
-  const CheckAnswerButtons(
+  const CheckAnswerButton(
       {super.key,
       required this.onTap,
       required this.color,

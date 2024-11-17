@@ -20,6 +20,7 @@ class CoursesFeedbackList extends StatelessWidget {
   Widget courseElement(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        context.read<CoursesStudentFeedbackCubit>().currentCourse = course;
         Navigator.of(context)
             .pushNamed(AppRoutes.checkAnswersRoute,
                 arguments: course.solutionsNeedingReview)
