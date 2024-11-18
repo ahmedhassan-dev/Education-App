@@ -52,12 +52,14 @@ class _ProblemPageState extends State<ProblemPage> {
     super.dispose();
   }
 
-  Future<void> submitSolution(context) async {
+  Future<void> submitSolution(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
-        if (_solutionController.text.trim() !=
-                BlocProvider.of<ProblemsCubit>(context).solution &&
-            BlocProvider.of<ProblemsCubit>(context).needReview) {
+        if (!context
+                .read<ProblemsCubit>()
+                .solution
+                .contains(_solutionController.text.trim()) &&
+            context.read<ProblemsCubit>().needReview) {
           reviewAnswerAwesomeDialog(context).show();
         } else {
           keepGoingAwesomeDialog(context).show();

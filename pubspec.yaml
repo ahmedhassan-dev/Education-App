@@ -24,8 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   build_runner: ^2.4.8
-  json_serializable: ^6.7.1 #Don't forget _ while naming 'solved_problems.g.dart'
-  json_annotation: ^4.8.1
+  json_serializable: ^6.8.0 #Don't forget _ while naming 'solved_problems.g.dart'
+  json_annotation: ^4.9.0
   persistent_bottom_nav_bar_v2: ^4.2.8
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1

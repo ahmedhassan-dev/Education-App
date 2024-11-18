@@ -12,11 +12,14 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       courseId: json['courseId'] as String?,
       answer: (json['answer'] as List<dynamic>?)
-              ?.map((e) => e as String?)
+              ?.map((e) => e == null
+                  ? null
+                  : Answer.fromJson(e as Map<String, dynamic>?))
               .toList() ??
           const [],
-      solvingTime:
-          (json['solvingTime'] as List<dynamic>).map((e) => e as int).toList(),
+      solvingTime: (json['solvingTime'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
       nextRepeat: json['nextRepeat'] as String,
       needReview: json['needReview'] as bool? ?? false,
       teacherNotes: (json['teacherNotes'] as List<dynamic>?)
@@ -27,7 +30,6 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
       failureTime: json['failureTime'] as List<dynamic>,
       needHelp: json['needHelp'] as List<dynamic>,
       solvingDate: json['solvingDate'] as List<dynamic>,
-      solutionImgURL: json['solutionImgURL'] as List<dynamic>? ?? const [],
     );
 
 Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
@@ -44,5 +46,4 @@ Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
       'failureTime': instance.failureTime,
       'needHelp': instance.needHelp,
       'solvingDate': instance.solvingDate,
-      'solutionImgURL': instance.solutionImgURL,
     };

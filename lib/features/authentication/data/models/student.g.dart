@@ -11,9 +11,9 @@ Student _$StudentFromJson(Map<String, dynamic> json) => Student(
       userName: json['userName'] as String?,
       email: json['email'] as String?,
       phoneNum: json['phoneNum'] as String?,
-      totalScore: json['totalScore'] as int? ?? 0,
+      totalScore: (json['totalScore'] as num?)?.toInt() ?? 0,
       userScores: (json['userScores'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as int),
+            (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
       lastProblemIdx: (json['lastProblemIdx'] as Map<String, dynamic>?)?.map(
