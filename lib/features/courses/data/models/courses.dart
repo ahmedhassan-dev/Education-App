@@ -30,6 +30,18 @@ class Courses extends CourseData {
     solutionsNeedingReview.remove(id);
   }
 
+  List<String> getProblemIdsFromSolutionsNeedingReview() {
+    return solutionsNeedingReview.map(
+      (e) {
+        int dashIndex = e.indexOf('-');
+        if (dashIndex == -1) {
+          return e;
+        }
+        return e.substring(0, dashIndex);
+      },
+    ).toList();
+  }
+
   factory Courses.fromJson(Map<String, dynamic>? json) =>
       _$CoursesFromJson(json!);
 

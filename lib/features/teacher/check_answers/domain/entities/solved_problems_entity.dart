@@ -13,4 +13,12 @@ class NeedReviewSolutionsEntity {
       required this.studentAnswer,
       required this.studentSolvingTime,
       required this.problemNextRepeat});
+
+  String getProblemId() {
+    int dashIndex = solvedProblemid.indexOf('-');
+    if (dashIndex == -1) {
+      return solvedProblemid;
+    }
+    return solvedProblemid.substring(0, dashIndex);
+  }
 }

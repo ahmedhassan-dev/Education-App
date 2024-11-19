@@ -57,13 +57,6 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
   factory SolvedProblems.fromJson(Map<String, dynamic>? json) =>
       _$SolvedProblemsFromJson(json!);
 
-  // Map<String, dynamic> toJson() => _$SolvedProblemsToJson(this);
-  // (json['answer'] as List<dynamic>?)
-  //             ?.map((e) => e == null
-  //                 ? null
-  //                 : Answer.fromJson(e as Map<String, dynamic>?))
-  //             .toList() ??
-  //         const [],
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'uid': uid,
