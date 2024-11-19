@@ -153,8 +153,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         settings: settings,
       );
     case AppRoutes.checkAnswersRoute:
-      final List<String> solutionsNeedingReview =
-          settings.arguments as List<String>;
+      final Courses course = settings.arguments as Courses;
       return CupertinoPageRoute(
         builder: (_) => MultiBlocProvider(
           providers: [
@@ -163,16 +162,14 @@ Route<dynamic> onGenerate(RouteSettings settings) {
                   FetchSolvedProblemsUseCase(CheckAnswersRepoImpl(
                       checkAnswersRemoteDataSource:
                           CheckAnswersRemoteDataSourceImpl(
-                              getIt<FirestoreServices>()))))
-                ..fetchSolvedProblems(solutionsNeedingReview),
+                              getIt<FirestoreServices>())))),
             ),
             BlocProvider(
               create: (context) => FetchProblemsCubit(FetchProblemsUseCase(
                   CheckAnswersRepoImpl(
                       checkAnswersRemoteDataSource:
                           CheckAnswersRemoteDataSourceImpl(
-                              getIt<FirestoreServices>()))))
-                ..fetchProblems(solutionsNeedingReview),
+                              getIt<FirestoreServices>())))),
             ),
             BlocProvider(
               create: (context) => FetchStudentDataCubit(
@@ -189,7 +186,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
               value: getIt<CoursesStudentFeedbackCubit>(),
             ),
           ],
-          child: const CheckAnswersPage(),
+          child: CheckAnswersPage(course: course),
         ),
         settings: settings,
       );
