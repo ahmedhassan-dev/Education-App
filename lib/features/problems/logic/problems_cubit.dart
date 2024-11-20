@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/authentication/data/models/student.dart';
+import 'package:education_app/features/problems/data/models/answer.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/features/problems/data/repos/problems_repo.dart';
@@ -93,15 +94,14 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   Future<void> _incrementNeedReviewCounter(String? solutionController) async {
     if (_needTeacherReview(solutionController)) {
-      await problemsRepository.incrementNeedReviewCounter(
-          path: ApiPath.coursesID(courseId));
+      await problemsRepository.incrementNeedReviewCounter(courseId: courseId);
     }
   }
 
-  Future<void> _addProblemId2NeedReviewSolutionsList() async {
+  Future<void> _addProblemId2SolutionsNeedingReview() async {
     if (needReview) {
-      await problemsRepository.addProblemId2NeedReviewSolutionsList(
-          path: ApiPath.coursesID(courseId), problemId: problemId);
+      await problemsRepository.addProblemId2SolutionsNeedingReview(
+          courseId: courseId, solvedProblemId: solvedProblem.id);
     }
   }
 
@@ -192,7 +192,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   bool solvedBefore() {
     return problemIndex < problemList!.length
-        ? solvedProblemsList.contains(problemList![problemIndex].id)
+        ? solvedProblemsList
+            .contains("${problemList![problemIndex].id}-${student.email}")
         : false;
   }
 
@@ -202,7 +203,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       solvedProblem = solutionList![problemIndex];
     } else if (problemList!.isNotEmpty && checkProblemsAvailability()) {
       solvedProblem = SolvedProblems(
-        id: problemList![problemIndex].id!,
+        id: "${problemList![problemIndex].id!}-${student.email!}",
         uid: uid,
         courseId: courseId,
         topics: problemList![problemIndex].topics,
@@ -212,7 +213,6 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         needHelp: [],
         solvingDate: [],
         answer: [],
-        solutionImgURL: [],
       );
     }
   }
@@ -261,7 +261,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         ),
       );
       await _incrementNeedReviewCounter(solutionController);
-      await _addProblemId2NeedReviewSolutionsList();
+      await _addProblemId2SolutionsNeedingReview();
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
@@ -275,12 +275,12 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     //Stop storing the same answer
     (!needReview && solvedProblem.answer.isNotEmpty)
         ? null
-        : solvedProblem.answer.add(solutionController);
+        : solvedProblem.answer.add(Answer(answer: solutionController));
     solvedProblem.solvingTime
         .add(DateTime.now().difference(startCounting).inSeconds);
-    solvedProblem.solutionImgURL.add(imgURL);
     solvedProblem = solvedProblem.copyWith(
       nextRepeat: _nextRepeat(),
+      needReview: needReview,
     );
   }
 
@@ -333,7 +333,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   }
 
   bool checkSolutionIfNeedReview(String value) {
-    return value != solution && !needReview;
+    return !solution.contains(value) && !needReview;
   }
 
   String get problemId => problemList![problemIndex].id!;

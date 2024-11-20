@@ -8,7 +8,6 @@ import 'package:education_app/features/onboarding/data/models/publicinfo.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 

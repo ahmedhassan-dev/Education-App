@@ -38,14 +38,6 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
             studentSolvingTime: solvingTime,
             problemNextRepeat: nextRepeat);
 
-  String getProblemId() {
-    int dashIndex = id.indexOf('-');
-    if (dashIndex == -1) {
-      return id;
-    }
-    return id.substring(0, dashIndex);
-  }
-
   String getStudentEmail() {
     int dashIndex = id.indexOf('-');
     if (dashIndex == -1) {
