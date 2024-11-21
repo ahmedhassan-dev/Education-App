@@ -11,10 +11,8 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       uid: json['uid'] as String,
       courseId: json['courseId'] as String?,
-      answer: (json['answer'] as List<dynamic>?)
-              ?.map((e) => e == null
-                  ? null
-                  : Answer.fromJson(e as Map<String, dynamic>?))
+      answers: (json['answers'] as List<dynamic>?)
+              ?.map((e) => Answer.fromJson(e as Map<String, dynamic>?))
               .toList() ??
           const [],
       solvingTime: (json['solvingTime'] as List<dynamic>)
@@ -37,7 +35,7 @@ Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
       'id': instance.id,
       'uid': instance.uid,
       'courseId': instance.courseId,
-      'answer': instance.answer,
+      'answers': instance.answers,
       'solvingTime': instance.solvingTime,
       'nextRepeat': instance.nextRepeat,
       'needReview': instance.needReview,

@@ -8,7 +8,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
   final String id;
   final String uid;
   final String? courseId;
-  final List<Answer?> answer;
+  final List<Answer> answers;
   final List<int> solvingTime;
   final String nextRepeat;
   final bool needReview;
@@ -22,7 +22,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
     required this.id,
     required this.uid,
     required this.courseId,
-    this.answer = const [],
+    this.answers = const [],
     required this.solvingTime,
     required this.nextRepeat,
     this.needReview = false,
@@ -34,7 +34,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
   }) : super(
             solvedProblemid: id,
             studentID: uid,
-            studentAnswer: answer,
+            studentAnswer: answers,
             studentSolvingTime: solvingTime,
             problemNextRepeat: nextRepeat);
 
@@ -53,7 +53,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
         'id': id,
         'uid': uid,
         'courseId': courseId,
-        'answer': answer.map((e) => e?.toJson()).toList(),
+        'answers': answers.map((e) => e.toJson()).toList(),
         'solvingTime': solvingTime,
         'nextRepeat': nextRepeat,
         'needReview': needReview,
@@ -68,7 +68,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
       {String? id,
       String? uid,
       String? courseId,
-      List<Answer?>? answer,
+      List<Answer>? answers,
       List<int>? solvingTime,
       String? nextRepeat,
       bool? needReview,
@@ -80,7 +80,7 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
         id: id ?? this.id,
         uid: uid ?? this.uid,
         courseId: courseId ?? this.courseId,
-        answer: answer ?? this.answer,
+        answers: answers ?? this.answers,
         solvingTime: solvingTime ?? this.solvingTime,
         nextRepeat: nextRepeat ?? this.nextRepeat,
         needReview: needReview ?? this.needReview,

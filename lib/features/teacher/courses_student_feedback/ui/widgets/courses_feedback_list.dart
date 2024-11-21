@@ -22,8 +22,7 @@ class CoursesFeedbackList extends StatelessWidget {
       onTap: () {
         context.read<CoursesStudentFeedbackCubit>().currentCourse = course;
         Navigator.of(context)
-            .pushNamed(AppRoutes.checkAnswersRoute,
-                arguments: course.solutionsNeedingReview)
+            .pushNamed(AppRoutes.checkAnswersRoute, arguments: course)
             .then((v) {
           context.read<CoursesStudentFeedbackCubit>().getTeacherSortedCourses();
         });

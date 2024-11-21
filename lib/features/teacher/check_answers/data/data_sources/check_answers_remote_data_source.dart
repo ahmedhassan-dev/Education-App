@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/core/services/firestore_services.dart';
-import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/problems_entity.dart';
@@ -13,7 +12,8 @@ abstract class CheckAnswersRemoteDataSource {
   Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
       {required List<String> solutionsNeedingReview});
   void addSolutionToProblem(String solution, String problemId);
-  void updateCourse(Courses course);
+  void updateCourse(String path, String solvedProblemId);
+  Future updateAnswers(String path, List<Map<String, dynamic>> answers);
 }
 
 class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
@@ -53,8 +53,33 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
   }
 
   @override
-  void updateCourse(Courses course) {
-    firestoreServices.updateData(
-        path: ApiPath.coursesID(course.id!), data: course.toJson());
+  void updateCourse(String path, String solvedProblemId) {
+    decrementNeedReviewCounter(path: path);
+    removeSolvedProblemIdFromSolutionsNeedingReview(
+        path: path, solvedProblemId: solvedProblemId);
   }
+
+  Future<void> decrementNeedReviewCounter({
+    required String path,
+  }) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: {"needReviewCounter": FieldValue.increment(-1)},
+      );
+
+  Future<void> removeSolvedProblemIdFromSolutionsNeedingReview({
+    required String path,
+    required String solvedProblemId,
+  }) async =>
+      await firestoreServices.updateData(
+        path: path,
+        data: {
+          "solutionsNeedingReview": FieldValue.arrayRemove([solvedProblemId])
+        },
+      );
+
+  @override
+  Future updateAnswers(String path, List<Map<String, dynamic>> answers) async =>
+      await firestoreServices
+          .updateData(path: path, data: {"answers": answers});
 }

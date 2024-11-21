@@ -212,7 +212,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         failureTime: [],
         needHelp: [],
         solvingDate: [],
-        answer: [],
+        answers: [],
       );
     }
   }
@@ -255,10 +255,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     try {
       await problemsRepository.submitSolution(
         solution: solvedProblem,
-        path: ApiPath.solvedProblems(
-          uid,
-          problemList![problemIndex].id!,
-        ),
+        path: ApiPath.solvedProblems(solvedProblem.id),
       );
       await _incrementNeedReviewCounter(solutionController);
       await _addProblemId2SolutionsNeedingReview();
@@ -273,9 +270,9 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   void _storeSubmissionDataInInstance(String? solutionController) {
     solvedProblem.solvingDate.add(DateTime.now().toString());
     //Stop storing the same answer
-    (!needReview && solvedProblem.answer.isNotEmpty)
+    (!needReview && solvedProblem.answers.isNotEmpty)
         ? null
-        : solvedProblem.answer.add(Answer(answer: solutionController));
+        : solvedProblem.answers.add(Answer(answer: solutionController));
     solvedProblem.solvingTime
         .add(DateTime.now().difference(startCounting).inSeconds);
     solvedProblem = solvedProblem.copyWith(
