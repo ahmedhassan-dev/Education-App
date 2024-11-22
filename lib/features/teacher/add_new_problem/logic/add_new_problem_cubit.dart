@@ -12,7 +12,7 @@ part 'add_new_problem_state.dart';
 class AddNewProblemCubit extends Cubit<AddNewProblemState> {
   List<String> subjects = [];
   List<String> educationalStages = [];
-  String newProblemId = "0";
+  int newProblemId = 0;
   late String userName;
   late String email;
   Map<String, dynamic> teacherData = {};
@@ -40,12 +40,12 @@ class AddNewProblemCubit extends Cubit<AddNewProblemState> {
         .retrieveLastProblemId(
             path: ApiPath.publicInfo(), docName: 'problemsCount')
         .then((lastProblemId) {
-      newProblemId = (lastProblemId.data()!["problemsCount"] + 1).toString();
+      newProblemId = lastProblemId.data()!["problemsCount"] + 1;
     });
   }
 
   Future<void> updateProblemsCount() async {
-    final problemsCount = {"problemsCount": int.parse(newProblemId)};
+    final problemsCount = {"problemsCount": newProblemId};
     try {
       await teacherRepository.updateProblemsCount(
         data: problemsCount,

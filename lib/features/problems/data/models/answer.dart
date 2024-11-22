@@ -6,7 +6,12 @@ class Answer {
   String? answer;
   String? solutionImgURL;
   String status;
-  Answer({this.answer, this.solutionImgURL, this.status = "pending"});
+  bool seen;
+  Answer(
+      {this.answer,
+      this.solutionImgURL,
+      this.status = "pending",
+      this.seen = false});
 
   factory Answer.fromJson(Map<String, dynamic>? json) =>
       _$AnswerFromJson(json!);

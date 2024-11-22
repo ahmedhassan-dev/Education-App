@@ -4,7 +4,7 @@ part 'problems.g.dart';
 
 @JsonSerializable()
 class Problems extends ProblemsEntity {
-  final String? id;
+  final int id;
   final String authorEmail;
   final String authorName;
   final String stage;
@@ -44,7 +44,7 @@ class Problems extends ProblemsEntity {
   Map<String, dynamic> toJson() => _$ProblemsToJson(this);
 
   Problems copyWith({
-    String? id,
+    int? id,
     String? courseId,
     String? title,
     String? problem,

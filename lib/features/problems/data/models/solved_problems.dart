@@ -36,7 +36,8 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
             studentID: uid,
             studentAnswer: answers,
             studentSolvingTime: solvingTime,
-            problemNextRepeat: nextRepeat);
+            problemNextRepeat: nextRepeat,
+            isNeedingReview: needReview);
 
   String getStudentEmail() {
     int dashIndex = id.indexOf('-');

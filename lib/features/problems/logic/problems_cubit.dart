@@ -203,7 +203,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       solvedProblem = solutionList![problemIndex];
     } else if (problemList!.isNotEmpty && checkProblemsAvailability()) {
       solvedProblem = SolvedProblems(
-        id: "${problemList![problemIndex].id!}-${student.email!}",
+        id: "${problemList![problemIndex].id}-${student.email!}",
         uid: uid,
         courseId: courseId,
         topics: problemList![problemIndex].topics,
@@ -272,7 +272,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     //Stop storing the same answer
     (!needReview && solvedProblem.answers.isNotEmpty)
         ? null
-        : solvedProblem.answers.add(Answer(answer: solutionController));
+        : solvedProblem.answers.add(Answer(
+            answer: solutionController, solutionImgURL: imgURL, seen: false));
     solvedProblem.solvingTime
         .add(DateTime.now().difference(startCounting).inSeconds);
     solvedProblem = solvedProblem.copyWith(
@@ -333,7 +334,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     return !solution.contains(value) && !needReview;
   }
 
-  String get problemId => problemList![problemIndex].id!;
+  int get problemId => problemList![problemIndex].id;
   String get title => problemList![problemIndex].title;
   int get expectedTime => problemList![problemIndex].time;
   String get problem => problemList![problemIndex].problem;

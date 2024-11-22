@@ -16,7 +16,7 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
 
   @override
   Future<Either<Failure, List<ProblemsEntity>>> fetchProblems(
-      {List<String> solutionsNeedingReview = const []}) async {
+      {List<int> solutionsNeedingReview = const []}) async {
     List<ProblemsEntity> problemsList;
     try {
       problemsList = await checkAnswersRemoteDataSource.fetchProblems(
@@ -43,7 +43,7 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
   }
 
   @override
-  void addSolutionToProblem(String solution, String problemId) {
+  void addSolutionToProblem(String solution, int problemId) {
     try {
       checkAnswersRemoteDataSource.addSolutionToProblem(solution, problemId);
     } catch (e) {

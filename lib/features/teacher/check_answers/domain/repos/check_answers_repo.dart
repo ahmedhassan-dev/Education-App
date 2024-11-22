@@ -9,8 +9,8 @@ abstract class CheckAnswersRepo {
   Future<Either<Failure, List<NeedReviewSolutionsEntity>>>
       fetchNeedReviewSolutions({List<String> solutionsNeedingReview});
   Future<Either<Failure, List<ProblemsEntity>>> fetchProblems(
-      {List<String> solutionsNeedingReview});
-  void addSolutionToProblem(String solution, String problemId);
+      {List<int> solutionsNeedingReview});
+  void addSolutionToProblem(String solution, int problemId);
   void updateCourse(String courseId, String solvedProblemId);
   Future<Either<Failure, bool>> updateAnswers(
       String solvedProblemid, List<Answer> answers);

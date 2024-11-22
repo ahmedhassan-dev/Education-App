@@ -113,7 +113,7 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
     }
     topicsList.add(widget.course.subject);
     final problem = Problems(
-      id: null,
+      id: 0,
       courseId: widget.course.id,
       title: _titleController.text.trim(),
       problem: _problemController.text.trim(),

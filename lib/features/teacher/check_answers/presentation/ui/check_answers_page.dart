@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
+import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/problems_entity.dart';
@@ -13,6 +14,7 @@ import 'package:education_app/features/teacher/check_answers/presentation/ui/wid
 import 'package:education_app/features/teacher/check_answers/presentation/ui/widgets/check_answers_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../manger/check_answers_cubit/check_answer_cubit.dart';
 
@@ -94,7 +96,47 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                   showAnswerWidget(needReviewIdx),
                   verticalSpace(40),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      final TextEditingController controller =
+                          TextEditingController();
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: AppColors.backGroundColor,
+                        builder: (BuildContext context) {
+                          return FractionallySizedBox(
+                            heightFactor: 0.7,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32.0,
+                              ),
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    20.verticalSpace,
+                                    const Text(
+                                      "Add a note to your student",
+                                      style: Styles.bodyLarge16,
+                                    ),
+                                    30.verticalSpace,
+                                    TextField(
+                                      controller: controller,
+                                      maxLines: null,
+                                      maxLength: 200,
+                                      expands: false,
+                                    ),
+                                    50.verticalSpace,
+                                    MainButton(text: "Send", onTap: () {})
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                     child: Text("Say some thing to your student",
                         style: Styles.titleLarge22
                             .copyWith(decoration: TextDecoration.underline)),
@@ -142,12 +184,15 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
               .read<FetchStudentDataCubit>()
               .fetchStudentData(docName: solution.studentID);
           return solution.studentAnswer.last.answer == null
-              ? CachedNetworkImage(
-                  imageUrl: solution.studentAnswer.last.solutionImgURL!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+              ? InteractiveViewer(
+                  child: CachedNetworkImage(
+                    imageUrl: solution.studentAnswer.last.solutionImgURL!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 )
               : Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5),

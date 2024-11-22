@@ -7,7 +7,7 @@ part of 'problems.dart';
 // **************************************************************************
 
 Problems _$ProblemsFromJson(Map<String, dynamic> json) => Problems(
-      id: json['id'] as String?,
+      id: (json['id'] as num).toInt(),
       courseId: json['courseId'] as String?,
       title: json['title'] as String,
       problem: json['problem'] as String,

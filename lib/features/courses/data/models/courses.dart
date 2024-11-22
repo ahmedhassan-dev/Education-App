@@ -30,14 +30,14 @@ class Courses extends CourseData {
     solutionsNeedingReview.remove(id);
   }
 
-  List<String> getProblemIdsFromSolutionsNeedingReview() {
+  List<int> getProblemIdsFromSolutionsNeedingReview() {
     return solutionsNeedingReview.map(
       (e) {
         int dashIndex = e.indexOf('-');
         if (dashIndex == -1) {
-          return e;
+          return int.parse(e);
         }
-        return e.substring(0, dashIndex);
+        return int.parse(e.substring(0, dashIndex));
       },
     ).toList();
   }

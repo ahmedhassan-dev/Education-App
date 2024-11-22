@@ -1,3 +1,4 @@
+import 'package:education_app/core/helpers/extensions.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
@@ -20,6 +21,7 @@ class CoursesFeedbackList extends StatelessWidget {
   Widget courseElement(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (course.solutionsNeedingReview.isNullOrEmpty()) return;
         context.read<CoursesStudentFeedbackCubit>().currentCourse = course;
         Navigator.of(context)
             .pushNamed(AppRoutes.checkAnswersRoute, arguments: course)

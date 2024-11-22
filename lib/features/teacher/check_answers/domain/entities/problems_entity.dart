@@ -1,5 +1,5 @@
 class ProblemsEntity {
-  final String? problemId;
+  final int? problemId;
   final String courseID;
   final String problemTitle;
   final List<String> problemSolutions;

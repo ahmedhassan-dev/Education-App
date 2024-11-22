@@ -8,10 +8,10 @@ import 'package:education_app/features/teacher/check_answers/domain/entities/sol
 
 abstract class CheckAnswersRemoteDataSource {
   Future<List<ProblemsEntity>> fetchProblems(
-      {required List<String> solutionsNeedingReview});
+      {required List<int> solutionsNeedingReview});
   Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
       {required List<String> solutionsNeedingReview});
-  void addSolutionToProblem(String solution, String problemId);
+  void addSolutionToProblem(String solution, int problemId);
   void updateCourse(String path, String solvedProblemId);
   Future updateAnswers(String path, List<Map<String, dynamic>> answers);
 }
@@ -22,7 +22,7 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
 
   @override
   Future<List<ProblemsEntity>> fetchProblems(
-      {required List<String> solutionsNeedingReview}) async {
+      {required List<int> solutionsNeedingReview}) async {
     final problems = await firestoreServices.retrieveData(
         path: ApiPath.problems(),
         queryBuilder: (query) =>
@@ -45,7 +45,7 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
   }
 
   @override
-  void addSolutionToProblem(String solution, String problemId) {
+  void addSolutionToProblem(String solution, int problemId) {
     firestoreServices
         .updateData(path: ApiPath.storingProblem(problemId), data: {
       "solutions": FieldValue.arrayUnion([solution])
@@ -80,6 +80,6 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
 
   @override
   Future updateAnswers(String path, List<Map<String, dynamic>> answers) async =>
-      await firestoreServices
-          .updateData(path: path, data: {"answers": answers});
+      await firestoreServices.updateData(
+          path: path, data: {"answers": answers, "needReview": false});
 }
