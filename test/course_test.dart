@@ -13,7 +13,7 @@ void main() {
       topics: [],
       solutionsNeedingReview: ["9-ahmed@stu5.co", "9-ahmed@stu7.co"]);
   test("getProblemIdsFromSolutionsNeedingReview method test", () {
-    List<String> problemsNeedingReview =
+    List<int> problemsNeedingReview =
         course.getProblemIdsFromSolutionsNeedingReview();
     expect(problemsNeedingReview, ["9", "9"]);
   });
