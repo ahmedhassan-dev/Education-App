@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/core/helpers/shared_pref_helper.dart';
 import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:education_app/core/constants/enums.dart';
@@ -27,6 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   GoogleSignInAccount get user => _user!;
+
   AuthCubit(
     this.authRepository, {
     this.email = '',
@@ -165,6 +169,8 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       await _getAndSendToken(user.user?.uid);
+      await SharedPrefHelper.setSecuredString(
+          SharedPrefKeys.uid, user.user!.uid);
       await authRepository.setUserData(
           userData: userObject(user.user?.uid, userName, email, phoneNum),
           path: userPath(user.user!.uid));
