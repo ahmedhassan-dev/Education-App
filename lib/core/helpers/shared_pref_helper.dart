@@ -21,28 +21,6 @@ class SharedPrefHelper {
     await sharedPreferences.clear();
   }
 
-  /// Saves a [value] with a [key] in the SharedPreferences.
-  static setData(String key, value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    debugPrint("SharedPrefHelper : setData with key : $key and value : $value");
-    switch (value.runtimeType) {
-      case String:
-        await sharedPreferences.setString(key, value);
-        break;
-      case int:
-        await sharedPreferences.setInt(key, value);
-        break;
-      case bool:
-        await sharedPreferences.setBool(key, value);
-        break;
-      case double:
-        await sharedPreferences.setDouble(key, value);
-        break;
-      default:
-        return null;
-    }
-  }
-
   /// Gets a bool value from SharedPreferences with given [key].
   static getBool(String key) async {
     debugPrint('SharedPrefHelper : getBool with key : $key');
@@ -88,7 +66,8 @@ class SharedPrefHelper {
 
   static getUid() async {
     const flutterSecureStorage = FlutterSecureStorage();
-    debugPrint('FlutterSecureStorage : getUid');
+    // debugPrint(
+    //     'FlutterSecureStorage : getUid${await flutterSecureStorage.read(key: SharedPrefKeys.uid) ?? 'aaaaaaaa'}');
     return await flutterSecureStorage.read(key: SharedPrefKeys.uid) ?? '';
   }
 
