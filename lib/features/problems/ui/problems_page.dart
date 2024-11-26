@@ -1,26 +1,27 @@
+import "dart:ui" as ui;
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:education_app/core/widgets/awesome_dialog.dart';
-import 'package:education_app/core/widgets/show_loading_indicator.dart';
-import 'package:education_app/features/problems/logic/problems_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/core/helpers/spacing.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
+import 'package:education_app/core/widgets/main_button.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
-import 'package:education_app/core/constants/assets.dart';
+import 'package:education_app/features/problems/logic/problems_cubit.dart';
+import 'package:education_app/features/problems/ui/no_problems_available_page.dart';
 import 'package:education_app/features/problems/ui/widgets/camera_or_gallery_dialog.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
-import 'package:education_app/features/problems/ui/no_problems_available_page.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_text_button.dart';
 import 'package:education_app/features/problems/ui/widgets/problem_details_section.dart';
 import 'package:education_app/features/problems/ui/widgets/problems_app_bar.dart';
 import 'package:education_app/features/problems/ui/widgets/problems_page_drawer.dart';
 import 'package:education_app/features/problems/ui/widgets/text_form_field_with_camera_button.dart';
-import 'package:flutter/material.dart';
-import 'package:education_app/core/widgets/main_button.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import "dart:ui" as ui;
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProblemPage extends StatefulWidget {
   final Courses course;
@@ -40,10 +41,9 @@ class _ProblemPageState extends State<ProblemPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProblemsCubit>(context)
-        .retrieveUserData(subject: widget.course.subject);
-    BlocProvider.of<ProblemsCubit>(context)
-        .retrieveCourseProblems(courseId: widget.course.id!);
+    BlocProvider.of<ProblemsCubit>(context).retrieveStudentData(
+        subject: widget.course.subject, courseId: widget.course.id!);
+    BlocProvider.of<ProblemsCubit>(context).retrieveCourseProblems();
   }
 
   @override
@@ -53,12 +53,14 @@ class _ProblemPageState extends State<ProblemPage> {
     super.dispose();
   }
 
-  Future<void> submitSolution(context) async {
+  Future<void> submitSolution(BuildContext context) async {
     try {
       if (_formKey.currentState!.validate()) {
-        if (_solutionController.text.trim() !=
-                BlocProvider.of<ProblemsCubit>(context).solution &&
-            BlocProvider.of<ProblemsCubit>(context).needReview) {
+        if (!context
+                .read<ProblemsCubit>()
+                .solution
+                .contains(_solutionController.text.trim()) &&
+            context.read<ProblemsCubit>().needReview) {
           reviewAnswerAwesomeDialog(context).show();
         } else {
           keepGoingAwesomeDialog(context).show();

@@ -25,11 +25,8 @@ class DropDownMenuComponent extends StatelessWidget {
       dropdownColor: AppColors.secondaryColor,
       hint: FittedBox(
         fit: BoxFit.contain,
-        child: Container(
-          // color: AppColors.secondaryColor,
-          child: Text(hint,
-              style: TextStyle(color: AppColors.whiteColor, fontSize: 50)),
-        ),
+        child: Text(hint,
+            style: TextStyle(color: AppColors.whiteColor, fontSize: 50)),
       ),
       onChanged: onChanged,
       items: items.map<DropdownMenuItem<String>>((String value) {

@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:meta/meta.dart';
@@ -13,8 +12,12 @@ class CoursesStudentFeedbackCubit extends Cubit<CoursesStudentFeedbackState> {
     this.coursesStudentFeedbackRepository,
   ) : super(CoursesStudentFeedbackInitial());
 
+  late List<Courses> courses;
+  late Courses currentCourse;
+
   getTeacherSortedCourses() async {
     coursesStudentFeedbackRepository.getTeacherSortedCourses().then((courses) {
+      this.courses = courses;
       emit(CoursesLoaded(courses: courses));
     });
   }

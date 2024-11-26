@@ -9,10 +9,9 @@ class ProblemsRepository {
   FirestoreServices firestoreServices;
   ProblemsRepository(this.firestoreServices);
 
-  Future<Student> retrieveUserData(
-      {required String path, required String docName}) async {
+  Future<Student> retrieveStudentData({required String docName}) async {
     dynamic userData = await firestoreServices.retrieveDataFormDocument(
-        path: path, docName: docName);
+        path: ApiPath.studentCollection(), docName: docName);
     return Student.fromJson(userData.data()!);
   }
 
@@ -26,11 +25,22 @@ class ProblemsRepository {
       );
 
   Future<void> incrementNeedReviewCounter({
-    required String path,
+    required String courseId,
   }) async =>
       await firestoreServices.updateData(
-        path: path,
+        path: ApiPath.coursesID(courseId),
         data: {"needReviewCounter": FieldValue.increment(1)},
+      );
+
+  Future<void> addProblemId2SolutionsNeedingReview({
+    required String courseId,
+    required String solvedProblemId,
+  }) async =>
+      await firestoreServices.updateData(
+        path: ApiPath.coursesID(courseId),
+        data: {
+          "solutionsNeedingReview": FieldValue.arrayUnion([solvedProblemId])
+        },
       );
 
   Future<List<Problems>> retrieveCourseProblems(

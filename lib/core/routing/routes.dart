@@ -9,6 +9,7 @@ class AppRoutes {
   static const String addNewProblemRoute = '/add-new-problem';
   static const String teacherCoursesRoute = '/teacher-courses';
   static const String studentsFeedbackRoute = '/student-feedback';
+  static const String checkAnswersRoute = '/check-answers';
   static const String teacherSubjectsDetailsRoute =
       '/teacher-courses/teacher-courses-details';
   static const String addNewCoursePage =

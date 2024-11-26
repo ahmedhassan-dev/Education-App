@@ -1,1 +1,2 @@
 #include "Generated.xcconfig"
+FLUTTER_ENABLE_IMPELLER=YES

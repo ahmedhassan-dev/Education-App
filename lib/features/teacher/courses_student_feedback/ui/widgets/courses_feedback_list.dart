@@ -1,10 +1,15 @@
+import 'package:education_app/core/helpers/extensions.dart';
 import 'package:education_app/core/helpers/spacing.dart';
+import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/core/widgets/get_list_of_strings_text.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as b;
+
+import '../../logic/courses_student_feedback_cubit.dart';
 
 class CoursesFeedbackList extends StatelessWidget {
   final Courses course;
@@ -13,9 +18,17 @@ class CoursesFeedbackList extends StatelessWidget {
     required this.course,
   });
 
-  Widget courseElement(context) {
+  Widget courseElement(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (course.solutionsNeedingReview.isNullOrEmpty()) return;
+        context.read<CoursesStudentFeedbackCubit>().currentCourse = course;
+        Navigator.of(context)
+            .pushNamed(AppRoutes.checkAnswersRoute, arguments: course)
+            .then((v) {
+          context.read<CoursesStudentFeedbackCubit>().getTeacherSortedCourses();
+        });
+      },
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.secondaryColor,
