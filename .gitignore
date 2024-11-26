@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 /android/app/src/production
 /lib/firebase_options
+firebase.json

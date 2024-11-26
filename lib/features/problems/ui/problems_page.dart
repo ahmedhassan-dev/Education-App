@@ -1,26 +1,27 @@
+import "dart:ui" as ui;
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:education_app/core/widgets/awesome_dialog.dart';
-import 'package:education_app/core/widgets/show_loading_indicator.dart';
-import 'package:education_app/features/problems/logic/problems_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/core/helpers/spacing.dart';
+import 'package:education_app/core/widgets/awesome_dialog.dart';
+import 'package:education_app/core/widgets/main_button.dart';
+import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/problems/data/models/solved_problems.dart';
-import 'package:education_app/core/constants/assets.dart';
+import 'package:education_app/features/problems/logic/problems_cubit.dart';
+import 'package:education_app/features/problems/ui/no_problems_available_page.dart';
 import 'package:education_app/features/problems/ui/widgets/camera_or_gallery_dialog.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_list.dart';
-import 'package:education_app/features/problems/ui/no_problems_available_page.dart';
 import 'package:education_app/features/problems/ui/widgets/need_help_text_button.dart';
 import 'package:education_app/features/problems/ui/widgets/problem_details_section.dart';
 import 'package:education_app/features/problems/ui/widgets/problems_app_bar.dart';
 import 'package:education_app/features/problems/ui/widgets/problems_page_drawer.dart';
 import 'package:education_app/features/problems/ui/widgets/text_form_field_with_camera_button.dart';
-import 'package:flutter/material.dart';
-import 'package:education_app/core/widgets/main_button.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import "dart:ui" as ui;
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProblemPage extends StatefulWidget {
   final Courses course;
