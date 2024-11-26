@@ -46,3 +46,4 @@ app.*.map.json
 /android/app/src/production
 /lib/firebase_options
 firebase.json
+firestore.rules
