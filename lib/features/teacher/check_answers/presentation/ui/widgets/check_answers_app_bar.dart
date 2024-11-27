@@ -17,7 +17,7 @@ class CheckAnswersAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FetchStudentDataCubit, FetchStudentDataState>(
+    return BlocConsumer<FetchStudentDataCubit, FetchStudentDataState>(
       builder: (context, state) {
         if (state is StudentDataLoaded) {
           Student student = (state).student;
@@ -34,10 +34,13 @@ class CheckAnswersAppBar extends StatelessWidget {
               horizontalSpace(5),
             ],
           );
-        } else if (state is StudentDataFailure) {
-          showSnackBar(context, state.errorMsg);
         }
         return const ShowLoadingIndicator();
+      },
+      listener: (BuildContext context, FetchStudentDataState state) {
+        if (state is StudentDataFailure) {
+          showSnackBar(context, state.errorMsg);
+        }
       },
     );
   }

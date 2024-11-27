@@ -40,7 +40,8 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
         queryBuilder: (query) =>
             query.where("id", whereIn: solutionsNeedingReview)) as List;
     return solvedProblems
-        .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
+        .map((docSnapshot) =>
+            SolvedProblems.fromJson(docSnapshot.data()!).toEntity())
         .toList();
   }
 

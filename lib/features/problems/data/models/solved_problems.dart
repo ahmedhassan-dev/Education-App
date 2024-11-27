@@ -1,10 +1,8 @@
 import 'package:education_app/features/problems/data/models/answer.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/solved_problems_entity.dart';
-import 'package:json_annotation/json_annotation.dart';
 part 'solved_problems.g.dart';
 
-@JsonSerializable()
-class SolvedProblems extends NeedReviewSolutionsEntity {
+class SolvedProblems {
   final String id;
   final String uid;
   final String? courseId;
@@ -31,13 +29,18 @@ class SolvedProblems extends NeedReviewSolutionsEntity {
     required this.failureTime,
     required this.needHelp,
     required this.solvingDate,
-  }) : super(
-            solvedProblemid: id,
-            studentID: uid,
-            studentAnswer: answers,
-            studentSolvingTime: solvingTime,
-            problemNextRepeat: nextRepeat,
-            isNeedingReview: needReview);
+  });
+
+  NeedReviewSolutionsEntity toEntity() {
+    return NeedReviewSolutionsEntity(
+        solvedProblemid: id,
+        studentID: uid,
+        studentAnswer: answers,
+        studentSolvingTime: solvingTime,
+        problemNextRepeat: nextRepeat,
+        isNeedingReview: needReview,
+        teacherNotes: teacherNotes);
+  }
 
   String getStudentEmail() {
     int dashIndex = id.indexOf('-');

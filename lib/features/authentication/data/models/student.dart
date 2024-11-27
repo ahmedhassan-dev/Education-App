@@ -5,7 +5,7 @@ part 'student.g.dart';
 @JsonSerializable()
 class Student extends User {
   final int totalScore;
-  final Map<String, int> userScores;
+  final Map<String, Map<String, int>> userScores;
   final Map<String, Map<String, int>> lastProblemIdx;
   final Map<String, Map<String, String>> lastProblemTime;
 

@@ -29,19 +29,3 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
       needHelp: json['needHelp'] as List<dynamic>,
       solvingDate: json['solvingDate'] as List<dynamic>,
     );
-
-Map<String, dynamic> _$SolvedProblemsToJson(SolvedProblems instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'uid': instance.uid,
-      'courseId': instance.courseId,
-      'answers': instance.answers,
-      'solvingTime': instance.solvingTime,
-      'nextRepeat': instance.nextRepeat,
-      'needReview': instance.needReview,
-      'teacherNotes': instance.teacherNotes,
-      'topics': instance.topics,
-      'failureTime': instance.failureTime,
-      'needHelp': instance.needHelp,
-      'solvingDate': instance.solvingDate,
-    };

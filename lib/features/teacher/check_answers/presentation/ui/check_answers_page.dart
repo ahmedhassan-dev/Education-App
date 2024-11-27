@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:education_app/core/helpers/context_extension.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
@@ -128,7 +129,11 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                                       expands: false,
                                     ),
                                     50.verticalSpace,
-                                    MainButton(text: "Send", onTap: () {})
+                                    MainButton(
+                                        text: "Send",
+                                        onTap: () {
+                                          context.pop();
+                                        })
                                   ],
                                 ),
                               ),

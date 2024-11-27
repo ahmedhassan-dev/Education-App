@@ -20,7 +20,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   DateTime now = DateTime.now();
   String subject = "";
   int score = 0;
-  Map<String, dynamic> userScores = {};
+  Map<String, Map<String, int>> userScores = {};
   Map<String, Map<String, int>> lastProblemIdx = {};
   Map<String, dynamic> lastProblemTime = {};
   int problemIndex = 0;
@@ -58,7 +58,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     lastProblemTime =
         student.lastProblemTime; //Adding the firebase map to the local map
     if (student.userScores[subject] == null) {
-      userScores[subject] = 0;
+      userScores[subject] = {courseId: 0}.cast<String, int>();
     }
 
     if (student.lastProblemIdx[subject] == null) {
@@ -77,8 +77,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
   Future<void> _updatingStudentData() async {
     if (!solvedBefore()) {
       score += problemList![problemIndex].scoreNum;
-      userScores[subject] =
-          userScores[subject] + problemList![problemIndex].scoreNum;
+      userScores[subject]![courseId] = (userScores[subject]![courseId]! +
+          problemList![problemIndex].scoreNum);
       lastProblemIdx[subject]?[courseId] = problemIndex + 1;
       lastProblemTime[subject]?[courseId] = DateTime.now().toString();
       Map<String, dynamic> data = {

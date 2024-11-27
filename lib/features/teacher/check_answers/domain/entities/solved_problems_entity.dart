@@ -7,6 +7,7 @@ class NeedReviewSolutionsEntity {
   final List<int> studentSolvingTime;
   final String problemNextRepeat;
   bool isNeedingReview;
+  List<String> teacherNotes;
 
   NeedReviewSolutionsEntity(
       {required this.solvedProblemid,
@@ -14,7 +15,8 @@ class NeedReviewSolutionsEntity {
       required this.studentAnswer,
       required this.studentSolvingTime,
       required this.problemNextRepeat,
-      required this.isNeedingReview});
+      required this.isNeedingReview,
+      required this.teacherNotes});
 
   int getProblemId() {
     int dashIndex = solvedProblemid.indexOf('-');
