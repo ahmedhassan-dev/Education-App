@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:education_app/core/helpers/context_extension.dart';
+import 'package:education_app/core/helpers/extensions.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
-import 'package:education_app/core/widgets/main_button.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/problems_entity.dart';
@@ -15,9 +14,8 @@ import 'package:education_app/features/teacher/check_answers/presentation/ui/wid
 import 'package:education_app/features/teacher/check_answers/presentation/ui/widgets/check_answers_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../manger/check_answers_cubit/check_answer_cubit.dart';
+import 'widgets/adding_note_modal_bottom_sheet.dart';
 
 class CheckAnswersPage extends StatefulWidget {
   final Courses course;
@@ -29,6 +27,7 @@ class CheckAnswersPage extends StatefulWidget {
 
 class _CheckAnswersPageState extends State<CheckAnswersPage> {
   late NeedReviewSolutionsEntity solution;
+  final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -46,6 +45,7 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
   }
 
   Widget buildBlocWidget(BuildContext context) {
+    var checkAnswerCubit = context.read<CheckAnswerCubit>();
     int needReviewIdx = context.watch<CheckAnswerCubit>().needReviewIdx;
     return BlocConsumer<CheckAnswerCubit, CheckAnswerState>(
       listener: (BuildContext context, CheckAnswerState state) {},
@@ -97,54 +97,17 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                   showAnswerWidget(needReviewIdx),
                   verticalSpace(40),
                   GestureDetector(
-                    onTap: () {
-                      final TextEditingController controller =
-                          TextEditingController();
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: AppColors.backGroundColor,
-                        builder: (BuildContext context) {
-                          return FractionallySizedBox(
-                            heightFactor: 0.7,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32.0,
-                              ),
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    20.verticalSpace,
-                                    const Text(
-                                      "Add a note to your student",
-                                      style: Styles.bodyLarge16,
-                                    ),
-                                    30.verticalSpace,
-                                    TextField(
-                                      controller: controller,
-                                      maxLines: null,
-                                      maxLength: 200,
-                                      expands: false,
-                                    ),
-                                    50.verticalSpace,
-                                    MainButton(
-                                        text: "Send",
-                                        onTap: () {
-                                          context.pop();
-                                        })
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
+                    onTap: () async {
+                      await addingNoteModalBottomSheet(
+                          context, checkAnswerCubit, controller);
+                      setState(() {});
                     },
                     child: Text("Say some thing to your student",
-                        style: Styles.titleLarge22
-                            .copyWith(decoration: TextDecoration.underline)),
+                        style: Styles.titleLarge22.copyWith(
+                            decoration: TextDecoration.underline,
+                            color: checkAnswerCubit.hasNote
+                                ? Colors.green
+                                : null)),
                   ),
                   verticalSpace(30),
                   Row(
@@ -152,9 +115,13 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                     children: [
                       CheckAnswerButton(
                         onTap: () {
-                          context
-                              .read<CheckAnswerCubit>()
-                              .validAnswer(context, solution.solvedProblemid);
+                          if (!controller.text.isNullOrEmpty()) {
+                            checkAnswerCubit.addNoteIfAvailable(
+                                context, controller.text);
+                            controller.text = "";
+                          }
+                          checkAnswerCubit.validAnswer(
+                              context, solution.solvedProblemid);
                         },
                         color: AppColors.acceptedButtonColor,
                         icon: Icons.check,

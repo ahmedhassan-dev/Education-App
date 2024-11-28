@@ -5,11 +5,13 @@ part 'answer.g.dart';
 class Answer {
   String? answer;
   String? solutionImgURL;
+  String? teacherNotes;
   String status;
   bool seen;
   Answer(
       {this.answer,
       this.solutionImgURL,
+      this.teacherNotes,
       this.status = "pending",
       this.seen = false});
 

@@ -9,6 +9,7 @@ part of 'answer.dart';
 Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
       answer: json['answer'] as String?,
       solutionImgURL: json['solutionImgURL'] as String?,
+      teacherNotes: json['teacherNotes'] as String?,
       status: json['status'] as String? ?? "pending",
       seen: json['seen'] as bool? ?? false,
     );
@@ -16,6 +17,7 @@ Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
 Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'answer': instance.answer,
       'solutionImgURL': instance.solutionImgURL,
+      'teacherNotes': instance.teacherNotes,
       'status': instance.status,
       'seen': instance.seen,
     };

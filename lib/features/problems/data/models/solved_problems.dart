@@ -1,6 +1,6 @@
 import 'package:education_app/features/problems/data/models/answer.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/solved_problems_entity.dart';
-part 'solved_problems.g.dart';
+part 'solved_problems.m.dart';
 
 class SolvedProblems {
   final String id;
@@ -10,7 +10,6 @@ class SolvedProblems {
   final List<int> solvingTime;
   final String nextRepeat;
   final bool needReview;
-  final List<String> teacherNotes;
   final List<dynamic> topics;
   final List<dynamic> failureTime;
   final List<dynamic> needHelp;
@@ -24,7 +23,6 @@ class SolvedProblems {
     required this.solvingTime,
     required this.nextRepeat,
     this.needReview = false,
-    this.teacherNotes = const [],
     required this.topics,
     required this.failureTime,
     required this.needHelp,
@@ -38,8 +36,7 @@ class SolvedProblems {
         studentAnswer: answers,
         studentSolvingTime: solvingTime,
         problemNextRepeat: nextRepeat,
-        isNeedingReview: needReview,
-        teacherNotes: teacherNotes);
+        isNeedingReview: needReview);
   }
 
   String getStudentEmail() {
@@ -61,7 +58,6 @@ class SolvedProblems {
         'solvingTime': solvingTime,
         'nextRepeat': nextRepeat,
         'needReview': needReview,
-        'teacherNotes': teacherNotes,
         'topics': topics,
         'failureTime': failureTime,
         'needHelp': needHelp,

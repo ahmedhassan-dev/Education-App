@@ -20,10 +20,6 @@ SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
           .toList(),
       nextRepeat: json['nextRepeat'] as String,
       needReview: json['needReview'] as bool? ?? false,
-      teacherNotes: (json['teacherNotes'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
       topics: json['topics'] as List<dynamic>,
       failureTime: json['failureTime'] as List<dynamic>,
       needHelp: json['needHelp'] as List<dynamic>,

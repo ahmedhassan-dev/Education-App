@@ -19,6 +19,15 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
   // addNewAnswerToProblems
 
   late BuildContext context;
+  bool hasNote = false;
+
+  void addNoteIfAvailable(BuildContext context, String note) {
+    this.context = context;
+    if (hasNote) {
+      solutions()[needReviewIdx].studentAnswer.last.teacherNotes = note;
+      hasNote = false;
+    }
+  }
 
   Future<void> validAnswer(BuildContext context, String solutionId) async {
     this.context = context;
