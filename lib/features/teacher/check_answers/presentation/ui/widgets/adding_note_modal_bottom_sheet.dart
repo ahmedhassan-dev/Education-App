@@ -8,8 +8,10 @@ import '../../../../../../core/theming/styles.dart';
 import '../../../../../../core/widgets/main_button.dart';
 import '../../manger/check_answers_cubit/check_answer_cubit.dart';
 
-Future<void> addingNoteModalBottomSheet(BuildContext context,
-    CheckAnswerCubit checkAnswerCubit, TextEditingController controller) async {
+Future<void> addingNoteModalBottomSheet(
+    BuildContext context,
+    CheckAnswerCubit checkAnswerCubit,
+    TextEditingController noteController) async {
   final formKey = GlobalKey<FormState>();
   await showModalBottomSheet(
     context: context,
@@ -36,7 +38,7 @@ Future<void> addingNoteModalBottomSheet(BuildContext context,
                 Form(
                   key: formKey,
                   child: TextFormField(
-                    controller: controller,
+                    controller: noteController,
                     maxLines: null,
                     maxLength: 200,
                     expands: false,
@@ -64,7 +66,7 @@ Future<void> addingNoteModalBottomSheet(BuildContext context,
       );
     },
   );
-  if (controller.text.isNullOrEmpty()) {
+  if (noteController.text.isNullOrEmpty()) {
     checkAnswerCubit.hasNote = false;
   }
 }

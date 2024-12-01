@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:education_app/core/helpers/extensions.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
@@ -27,7 +26,7 @@ class CheckAnswersPage extends StatefulWidget {
 
 class _CheckAnswersPageState extends State<CheckAnswersPage> {
   late NeedReviewSolutionsEntity solution;
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -99,7 +98,7 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                   GestureDetector(
                     onTap: () async {
                       await addingNoteModalBottomSheet(
-                          context, checkAnswerCubit, controller);
+                          context, checkAnswerCubit, noteController);
                       setState(() {});
                     },
                     child: Text("Say some thing to your student",
@@ -115,20 +114,27 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                     children: [
                       CheckAnswerButton(
                         onTap: () {
-                          if (!controller.text.isNullOrEmpty()) {
-                            checkAnswerCubit.addNoteIfAvailable(
-                                context, controller.text);
-                            controller.text = "";
-                          }
-                          checkAnswerCubit.validAnswer(
-                              context, solution.solvedProblemid);
+                          checkAnswerCubit.checkAnswer(
+                              context,
+                              solution.solvedProblemid,
+                              noteController,
+                              "valid");
                         },
                         color: AppColors.acceptedButtonColor,
                         icon: Icons.check,
                       ),
                       horizontalSpace(100),
                       CheckAnswerButton(
-                        onTap: () {},
+                        onTap: () {
+                          checkAnswerCubit.hasNote
+                              ? checkAnswerCubit.checkAnswer(
+                                  context,
+                                  solution.solvedProblemid,
+                                  noteController,
+                                  "wrong")
+                              : addingNoteModalBottomSheet(
+                                  context, checkAnswerCubit, noteController);
+                        },
                         color: AppColors.primaryColor,
                         icon: Icons.close,
                       ),

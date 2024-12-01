@@ -21,17 +21,12 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
   late BuildContext context;
   bool hasNote = false;
 
-  void addNoteIfAvailable(BuildContext context, String note) {
+  Future<void> checkAnswer(BuildContext context, String solutionId,
+      TextEditingController noteController, String status) async {
     this.context = context;
-    if (hasNote) {
-      solutions()[needReviewIdx].studentAnswer.last.teacherNotes = note;
-      hasNote = false;
-    }
-  }
-
-  Future<void> validAnswer(BuildContext context, String solutionId) async {
-    this.context = context;
-    solutions()[needReviewIdx].studentAnswer.last.status = "valid";
+    addNoteIfAvailable(noteController.text);
+    noteController.text = "";
+    solutions()[needReviewIdx].studentAnswer.last.status = status;
     var result = await checkAnswersRepo.updateAnswers(
         solutions()[needReviewIdx].solvedProblemid,
         solutions()[needReviewIdx].studentAnswer);
@@ -39,13 +34,20 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
       debugPrint(e.toString());
       emit(CheckAnswerFailure(errorMsg: e.toString()));
     }, (s) {
-      addSolutionToProblem();
+      status == "valid" ? addSolutionToProblem() : null;
       _updateCourse(solutionId);
       emit(AnswerUpdated());
       needReviewIdx < solutions().length - 1
           ? showNewData()
           : emit(AllSolutionsChecked());
     });
+  }
+
+  void addNoteIfAvailable(String note) {
+    if (hasNote) {
+      solutions()[needReviewIdx].studentAnswer.last.teacherNotes = note;
+      hasNote = false;
+    }
   }
 
   void showNewData() {
