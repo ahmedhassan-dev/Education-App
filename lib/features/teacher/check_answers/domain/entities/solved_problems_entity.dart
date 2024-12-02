@@ -8,6 +8,8 @@ class NeedReviewSolutionsEntity {
   final List<int> studentSolvingTime;
   final String problemNextRepeat;
   bool isNeedingReview;
+  String nextRepeat;
+  final List<dynamic> solvingDate;
 
   NeedReviewSolutionsEntity(
       {required this.solvedProblemid,
@@ -16,5 +18,15 @@ class NeedReviewSolutionsEntity {
       required this.studentAnswer,
       required this.studentSolvingTime,
       required this.problemNextRepeat,
-      required this.isNeedingReview});
+      required this.isNeedingReview,
+      required this.nextRepeat,
+      required this.solvingDate});
+
+  void updateNextRepeatTimeIfWrongAnswer(String status) {
+    nextRepeat = status == "wrong"
+        ? DateTime.parse(solvingDate.last)
+            .add(const Duration(days: 1))
+            .toString()
+        : nextRepeat;
+  }
 }

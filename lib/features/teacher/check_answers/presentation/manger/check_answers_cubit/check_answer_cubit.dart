@@ -27,9 +27,11 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
     addNoteIfAvailable(noteController.text);
     noteController.text = "";
     solutions()[needReviewIdx].studentAnswer.last.status = status;
+    solutions()[needReviewIdx].updateNextRepeatTimeIfWrongAnswer(status);
     var result = await checkAnswersRepo.updateAnswers(
         solutions()[needReviewIdx].solvedProblemid,
-        solutions()[needReviewIdx].studentAnswer);
+        solutions()[needReviewIdx].studentAnswer,
+        solutions()[needReviewIdx].nextRepeat);
     result.fold((e) {
       debugPrint(e.toString());
       emit(CheckAnswerFailure(errorMsg: e.toString()));

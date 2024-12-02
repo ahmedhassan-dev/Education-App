@@ -13,7 +13,8 @@ abstract class CheckAnswersRemoteDataSource {
       {required List<String> solutionsNeedingReview});
   void addSolutionToProblem(String solution, int problemId);
   void updateCourse(String path, String solvedProblemId);
-  Future updateAnswers(String path, List<Map<String, dynamic>> answers);
+  Future updateAnswers(
+      String path, List<Map<String, dynamic>> answers, String nextRepeat);
 }
 
 class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
@@ -80,7 +81,11 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
       );
 
   @override
-  Future updateAnswers(String path, List<Map<String, dynamic>> answers) async =>
-      await firestoreServices.updateData(
-          path: path, data: {"answers": answers, "needReview": false});
+  Future updateAnswers(String path, List<Map<String, dynamic>> answers,
+          String nextRepeat) async =>
+      await firestoreServices.updateData(path: path, data: {
+        "answers": answers,
+        "needReview": false,
+        "nextRepeat": nextRepeat
+      });
 }

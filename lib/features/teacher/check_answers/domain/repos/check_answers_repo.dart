@@ -13,5 +13,5 @@ abstract class CheckAnswersRepo {
   void addSolutionToProblem(String solution, int problemId);
   void updateCourse(String courseId, String solvedProblemId);
   Future<Either<Failure, bool>> updateAnswers(
-      String solvedProblemid, List<Answer> answers);
+      String solvedProblemid, List<Answer> answers, String nextRepeat);
 }

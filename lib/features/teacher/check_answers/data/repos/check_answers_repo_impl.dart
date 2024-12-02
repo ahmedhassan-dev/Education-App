@@ -63,11 +63,12 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
 
   @override
   Future<Either<Failure, bool>> updateAnswers(
-      String solvedProblemid, List<Answer> answers) async {
+      String solvedProblemid, List<Answer> answers, String nextRepeat) async {
     try {
       checkAnswersRemoteDataSource.updateAnswers(
           ApiPath.solvedProblems(solvedProblemid),
-          answers.map((answer) => answer.toJson()).toList());
+          answers.map((answer) => answer.toJson()).toList(),
+          nextRepeat);
       return right(true);
     } catch (e) {
       return left(ServerFailure(e.toString()));

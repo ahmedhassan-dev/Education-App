@@ -39,7 +39,9 @@ class SolvedProblems {
         studentAnswer: answers,
         studentSolvingTime: solvingTime,
         problemNextRepeat: nextRepeat,
-        isNeedingReview: needReview);
+        isNeedingReview: needReview,
+        nextRepeat: nextRepeat,
+        solvingDate: solvingDate);
   }
 
   String getStudentEmail() {
