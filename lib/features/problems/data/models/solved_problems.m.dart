@@ -9,6 +9,7 @@ part of 'solved_problems.dart';
 SolvedProblems _$SolvedProblemsFromJson(Map<String, dynamic> json) =>
     SolvedProblems(
       id: json['id'] as String,
+      problemId: json['problemId'] as int,
       uid: json['uid'] as String,
       courseId: json['courseId'] as String?,
       answers: (json['answers'] as List<dynamic>?)

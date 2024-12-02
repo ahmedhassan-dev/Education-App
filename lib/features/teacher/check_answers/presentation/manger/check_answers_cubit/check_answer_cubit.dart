@@ -52,7 +52,7 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
 
   void showNewData() {
     needReviewIdx += 1;
-    int problemId = solutions()[needReviewIdx].getProblemId();
+    int problemId = solutions()[needReviewIdx].problemId;
     context.read<FetchProblemsCubit>().showCurrentProblem(problemId);
   }
 

@@ -147,7 +147,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     // TODO: need to sort elements nextRepeat and use binary search
     for (var element in solutionList!) {
       if (_isTodayOrBeforeTodayProblem(element, timeNow) &&
-          _isProblemSolvedAfter12Hours(timeNow, element)) {
+          _isProblemSolvedAfter12Hours(timeNow, element) &&
+          !element.needReview) {
         prbolemIndexQueue.add(solutionList!.indexOf(element));
       }
     }
@@ -204,6 +205,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     } else if (problemList!.isNotEmpty && checkProblemsAvailability()) {
       solvedProblem = SolvedProblems(
         id: "${problemList![problemIndex].id}-${student.email!}",
+        problemId: problemList![problemIndex].id,
         uid: uid,
         courseId: courseId,
         topics: problemList![problemIndex].topics,

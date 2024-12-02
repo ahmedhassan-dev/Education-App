@@ -64,7 +64,7 @@ class ProblemsRepository {
         queryBuilder: (query) => query
             .where("courseId", isEqualTo: courseId)
             .where("uid", isEqualTo: uid)
-            .orderBy('id')) as List;
+            .orderBy('problemId')) as List;
     return courseProblems
         .map((docSnapshot) => SolvedProblems.fromJson(docSnapshot.data()!))
         .toList();
