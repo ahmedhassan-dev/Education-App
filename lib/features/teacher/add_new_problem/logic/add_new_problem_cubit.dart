@@ -31,26 +31,17 @@ class AddNewProblemCubit extends Cubit<AddNewProblemState> {
     await generateProblemId();
     problem = problem.copyWith(id: newProblemId);
     await storeNewProblem(problem);
-    await updateProblemsCount();
     emit(ProblemStored());
   }
 
   Future<void> generateProblemId() async {
-    await teacherRepository
-        .retrieveLastProblemId(
-            path: ApiPath.publicInfo(), docName: 'problemsCount')
-        .then((lastProblemId) {
-      newProblemId = lastProblemId.data()!["problemsCount"] + 1;
-    });
-  }
-
-  Future<void> updateProblemsCount() async {
-    final problemsCount = {"problemsCount": newProblemId};
     try {
-      await teacherRepository.updateProblemsCount(
-        data: problemsCount,
-        path: ApiPath.problemsCount(),
-      );
+      await teacherRepository.incrementProblemsCount();
+      await teacherRepository
+          .retrieveLastProblemId(docName: 'problemsCount')
+          .then((lastProblemId) {
+        newProblemId = lastProblemId.data()!["problemsCount"];
+      });
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/core/services/firestore_services.dart';
+
+import '../../../../../core/constants/api_path.dart';
 
 class AddNewProblemRepository {
   FirestoreServices firestoreServices;
@@ -12,10 +15,9 @@ class AddNewProblemRepository {
     return teacher;
   }
 
-  Future<dynamic> retrieveLastProblemId(
-      {required String path, required String docName}) async {
+  Future<dynamic> retrieveLastProblemId({required String docName}) async {
     final lastProblemId = await firestoreServices.retrieveDataFormDocument(
-        path: path, docName: docName) as dynamic;
+        path: ApiPath.problemsCount(), docName: docName) as dynamic;
     return lastProblemId;
   }
 
@@ -33,12 +35,12 @@ class AddNewProblemRepository {
         data: data,
       );
 
-  Future<void> updateProblemsCount(
-          {required String path, required Map<String, dynamic> data}) async =>
-      await firestoreServices.updateData(
-        path: path,
-        data: data,
-      );
+  Future<void> incrementProblemsCount() async {
+    await firestoreServices.updateData(
+      path: ApiPath.problemsCount(),
+      data: {"problemsCount": FieldValue.increment(1)},
+    );
+  }
 
   Future<void> storeNewProblem(
           {required String path, required Problems data}) async =>
