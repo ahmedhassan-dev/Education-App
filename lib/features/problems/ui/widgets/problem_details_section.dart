@@ -1,3 +1,4 @@
+import 'package:education_app/core/helpers/context_extension.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/features/problems/logic/problems_cubit.dart';
@@ -25,9 +26,15 @@ class ProblemDetailsSection extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              SizedBox(
+                width: context.width * 0.5,
+                child: Text(
                   "${context.read<ProblemsCubit>().problemId}. ${context.read<ProblemsCubit>().title}",
-                  style: Styles.titleLarge22),
+                  style: Styles.titleLarge22,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               verticalSpace(10),
               Row(
                 children: [
