@@ -14,6 +14,7 @@ import 'package:education_app/features/teacher/check_answers/presentation/ui/wid
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../manger/check_answers_cubit/check_answer_cubit.dart';
+import '../manger/notifications_cubit/notifications_cubit.dart';
 import 'widgets/adding_note_modal_bottom_sheet.dart';
 
 class CheckAnswersPage extends StatefulWidget {
@@ -35,9 +36,14 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
       await context.read<FetchProblemsCubit>().fetchProblems(
           widget.course.getProblemIdsFromSolutionsNeedingReview());
       if (!mounted) return;
-      await context
-          .read<FetchSolvedProblemsCubit>()
-          .fetchSolvedProblems(widget.course.solutionsNeedingReview, context);
+      FetchSolvedProblemsCubit solvedProblemsCubit =
+          context.read<FetchSolvedProblemsCubit>();
+      await solvedProblemsCubit.fetchSolvedProblems(
+          widget.course.solutionsNeedingReview, context);
+      if (!mounted) return;
+      await context.read<NotificationsCubit>().handleCurrentNotification(
+          solvedProblemsCubit.needReviewSolutions.first.studentID,
+          widget.course);
     });
 
     super.initState();

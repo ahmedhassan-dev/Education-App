@@ -98,8 +98,9 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     }
   }
 
-  Future<void> _addProblemId2SolutionsNeedingReview() async {
-    if (needReview) {
+  Future<void> _addProblemId2SolutionsNeedingReview(
+      String? solutionController) async {
+    if (_needTeacherReview(solutionController)) {
       await problemsRepository.addProblemId2SolutionsNeedingReview(
           courseId: courseId, solvedProblemId: solvedProblem.id);
     }
@@ -260,7 +261,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         path: ApiPath.solvedProblems(solvedProblem.id),
       );
       await _incrementNeedReviewCounter(solutionController);
-      await _addProblemId2SolutionsNeedingReview();
+      await _addProblemId2SolutionsNeedingReview(solutionController);
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
     }
@@ -280,7 +281,10 @@ class ProblemsCubit extends Cubit<ProblemsState> {
         .add(DateTime.now().difference(startCounting).inSeconds);
     solvedProblem = solvedProblem.copyWith(
       nextRepeat: _nextRepeat(),
-      needReview: needReview,
+      needReview:
+          problemList![problemIndex].solutions.contains(solutionController)
+              ? false
+              : needReview,
     );
   }
 

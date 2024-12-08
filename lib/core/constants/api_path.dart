@@ -14,4 +14,6 @@ class ApiPath {
   static String publicInfo() => 'publicInfo/';
   static String problemsCount() => 'publicInfo/problemsCount/';
   static String solvedProblems(String id) => 'solvedProblems/$id';
+  static String studentNotifications([String id = ""]) =>
+      'studentNotifications/$id';
 }

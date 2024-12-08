@@ -6,9 +6,17 @@ import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/problems_entity.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/solved_problems_entity.dart';
 
+import '../../../../authentication/data/models/student_notification.dart';
+
 abstract class CheckAnswersRemoteDataSource {
   Future<List<ProblemsEntity>> fetchProblems(
       {required List<int> solutionsNeedingReview});
+  Future<List<NotificationModel>> fetchStudentNotifications(
+      String studentId, String courseId);
+  Future<void> updateNotificationTimeStamp(DateTime notificationId);
+  Future<void> addStudentNotification(NotificationModel notification);
+  Future<void> updateStudentNotification(
+      String path, Map<String, dynamic> data);
   Future<List<NeedReviewSolutionsEntity>> fetchNeedReviewSolutions(
       {required List<String> solutionsNeedingReview});
   void addSolutionToProblem(String solution, int problemId);
@@ -31,6 +39,40 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
     return problems
         .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();
+  }
+
+  @override
+  Future<List<NotificationModel>> fetchStudentNotifications(
+      String studentId, String courseId) async {
+    final notifications = await firestoreServices.retrieveData(
+        path: ApiPath.studentNotifications(),
+        queryBuilder: (query) => query
+            .where("studentId", isEqualTo: studentId)
+            .where("sent", isEqualTo: false)
+            .where("courseId", isEqualTo: courseId)) as List;
+    return notifications
+        .map((docSnapshot) => NotificationModel.fromJson(docSnapshot.data()!))
+        .toList();
+  }
+
+  @override
+  Future<void> updateNotificationTimeStamp(DateTime notificationId) async {
+    await firestoreServices.updateData(
+        path: ApiPath.studentNotifications(notificationId.toIso8601String()),
+        data: {"lastUpdate": Timestamp.now()});
+  }
+
+  @override
+  Future<void> addStudentNotification(NotificationModel notification) async {
+    await firestoreServices.setData(
+        path: ApiPath.studentNotifications(notification.id.toIso8601String()),
+        data: notification.toJson());
+  }
+
+  @override
+  Future<void> updateStudentNotification(
+      String path, Map<String, dynamic> data) async {
+    await firestoreServices.updateData(path: path, data: data);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:education_app/core/errors/failure.dart';
 import 'package:education_app/features/problems/data/models/answer.dart';
@@ -8,6 +9,7 @@ import 'package:education_app/features/teacher/check_answers/domain/repos/check_
 import 'package:flutter/foundation.dart';
 
 import '../../../../../core/constants/api_path.dart';
+import '../../../../authentication/data/models/student_notification.dart';
 
 class CheckAnswersRepoImpl extends CheckAnswersRepo {
   final CheckAnswersRemoteDataSource checkAnswersRemoteDataSource;
@@ -22,6 +24,61 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
       problemsList = await checkAnswersRemoteDataSource.fetchProblems(
           solutionsNeedingReview: solutionsNeedingReview);
       return right(problemsList);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<NotificationModel>>> fetchStudentNotifications(
+      String studentId, String courseId) async {
+    List<NotificationModel> notifications;
+    try {
+      notifications = await checkAnswersRemoteDataSource
+          .fetchStudentNotifications(studentId, courseId);
+      return right(notifications);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateNotificationTimeStamp(
+      DateTime notificationId) async {
+    try {
+      await checkAnswersRemoteDataSource
+          .updateNotificationTimeStamp(notificationId);
+      return right(true);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> addStudentNotification(
+      NotificationModel notification) async {
+    try {
+      await checkAnswersRemoteDataSource.addStudentNotification(notification);
+      return right(true);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateStudentNotification(
+      NotificationModel notification) async {
+    Map<String, dynamic> data = {
+      'validSolvedProblemsId': notification.validSolvedProblemsId,
+      'wrongSolvedProblemsId': notification.wrongSolvedProblemsId,
+      'score': notification.score,
+      'lastUpdate': Timestamp.now()
+    };
+    try {
+      await checkAnswersRemoteDataSource.updateStudentNotification(
+          ApiPath.studentNotifications(notification.id.toIso8601String()),
+          data);
+      return right(true);
     } catch (e) {
       return left(ServerFailure(e.toString()));
     }

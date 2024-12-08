@@ -12,7 +12,6 @@ import 'package:education_app/features/problems/data/repos/problems_repo.dart';
 import 'package:education_app/features/teacher/add_new_problem/data/repos/add_new_problem_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/problems/ui/problems_page.dart';
-import 'package:education_app/features/teacher/check_answers/data/data_sources/check_answers_remote_data_source.dart';
 import 'package:education_app/features/teacher/check_answers/data/repos/check_answers_repo_impl.dart';
 import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_problems_use_case.dart';
 import 'package:education_app/features/teacher/check_answers/domain/use_cases/fetch_solved_problems_use_case.dart';
@@ -42,6 +41,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/teacher/check_answers/presentation/manger/check_answers_cubit/check_answer_cubit.dart';
+import '../../features/teacher/check_answers/presentation/manger/notifications_cubit/notifications_cubit.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
   switch (settings.name) {
@@ -159,17 +159,11 @@ Route<dynamic> onGenerate(RouteSettings settings) {
           providers: [
             BlocProvider(
               create: (context) => FetchSolvedProblemsCubit(
-                  FetchSolvedProblemsUseCase(CheckAnswersRepoImpl(
-                      checkAnswersRemoteDataSource:
-                          CheckAnswersRemoteDataSourceImpl(
-                              getIt<FirestoreServices>())))),
+                  FetchSolvedProblemsUseCase(getIt<CheckAnswersRepoImpl>())),
             ),
             BlocProvider(
-              create: (context) => FetchProblemsCubit(FetchProblemsUseCase(
-                  CheckAnswersRepoImpl(
-                      checkAnswersRemoteDataSource:
-                          CheckAnswersRemoteDataSourceImpl(
-                              getIt<FirestoreServices>())))),
+              create: (context) => FetchProblemsCubit(
+                  FetchProblemsUseCase(getIt<CheckAnswersRepoImpl>())),
             ),
             BlocProvider(
               create: (context) => FetchStudentDataCubit(
@@ -177,13 +171,15 @@ Route<dynamic> onGenerate(RouteSettings settings) {
                       ProblemsRepository(getIt<FirestoreServices>()))),
             ),
             BlocProvider(
-              create: (context) => CheckAnswerCubit(CheckAnswersRepoImpl(
-                  checkAnswersRemoteDataSource:
-                      CheckAnswersRemoteDataSourceImpl(
-                          getIt<FirestoreServices>()))),
+              create: (context) =>
+                  CheckAnswerCubit(getIt<CheckAnswersRepoImpl>()),
             ),
             BlocProvider<CoursesStudentFeedbackCubit>.value(
               value: getIt<CoursesStudentFeedbackCubit>(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  NotificationsCubit(getIt<CheckAnswersRepoImpl>()),
             ),
           ],
           child: CheckAnswersPage(course: course),

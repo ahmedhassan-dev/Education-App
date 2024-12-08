@@ -1,55 +1,91 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:education_app/core/helpers/extensions.dart';
+
 class NotificationModel {
-  final String id;
+  final DateTime id;
   final String studentId;
   final String courseId;
-  final String courseTitle;
-  final String notificationType; // e.g., "submission", "feedback", "reminder"
-  final List<String> validSolvedProblemsId;
-  final List<String> wrongSolvedProblemsId;
+  final String courseSubject;
+  final String? notificationType; // e.g., "submission", "feedback", "reminder"
+  final List<String>? validSolvedProblemsId;
+  final List<String>? wrongSolvedProblemsId;
   final int score;
-  final DateTime timestamp;
+  final DateTime? lastUpdate;
   final bool sent;
 
   NotificationModel({
     required this.id,
     required this.studentId,
     required this.courseId,
-    required this.courseTitle,
+    required this.courseSubject,
     required this.notificationType,
-    required this.validSolvedProblemsId,
-    required this.wrongSolvedProblemsId,
-    required this.score,
-    required this.timestamp,
-    required this.sent,
+    this.validSolvedProblemsId,
+    this.wrongSolvedProblemsId,
+    this.score = 0,
+    this.lastUpdate,
+    this.sent = false,
   });
+
+  bool isNewClass() {
+    return (validSolvedProblemsId.isNullOrEmpty() &&
+        wrongSolvedProblemsId.isNullOrEmpty());
+  }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id'],
+      id: (json['id'] as Timestamp).toDate(),
       studentId: json['studentId'],
       courseId: json['courseId'],
-      courseTitle: json['courseTitle'],
+      courseSubject: json['courseSubject'],
       notificationType: json['notificationType'],
       validSolvedProblemsId: List<String>.from(json['validSolvedProblemsId']),
       wrongSolvedProblemsId: List<String>.from(json['wrongSolvedProblemsId']),
       score: json['score'],
-      timestamp: DateTime.parse(json['timestamp']),
+      lastUpdate: (json['lastUpdate'] as Timestamp).toDate(),
       sent: json['sent'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': Timestamp.fromDate(id),
       'studentId': studentId,
       'courseId': courseId,
-      'courseTitle': courseTitle,
-      'notificationType': notificationType,
+      'courseSubject': courseSubject,
+      'notificationType': notificationType ?? "submission",
       'validSolvedProblemsId': validSolvedProblemsId,
       'wrongSolvedProblemsId': wrongSolvedProblemsId,
       'score': score,
-      'timestamp': timestamp.toIso8601String(),
+      'lastUpdate': Timestamp.fromDate(lastUpdate ?? DateTime.now()),
       'sent': sent,
     };
+  }
+
+  NotificationModel copyWith({
+    DateTime? id,
+    String? studentId,
+    String? courseId,
+    String? courseSubject,
+    String? notificationType,
+    List<String>? validSolvedProblemsId,
+    List<String>? wrongSolvedProblemsId,
+    int? score,
+    DateTime? lastUpdate,
+    bool? sent,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
+      courseId: courseId ?? this.courseId,
+      courseSubject: courseSubject ?? this.courseSubject,
+      notificationType: notificationType ?? this.notificationType,
+      validSolvedProblemsId:
+          validSolvedProblemsId ?? this.validSolvedProblemsId,
+      wrongSolvedProblemsId:
+          wrongSolvedProblemsId ?? this.wrongSolvedProblemsId,
+      score: score ?? this.score,
+      lastUpdate: lastUpdate ?? this.lastUpdate,
+      sent: sent ?? this.sent,
+    );
   }
 }
