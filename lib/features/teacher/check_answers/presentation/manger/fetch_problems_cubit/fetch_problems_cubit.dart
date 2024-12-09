@@ -22,10 +22,11 @@ class FetchProblemsCubit extends Cubit<FetchProblemsState> {
     });
   }
 
+  late ProblemsEntity currentProblem;
   void showCurrentProblem(int problemId) {
     emit(FetchProblemsLoading());
-    ProblemsEntity problem =
+    currentProblem =
         needReviewProblems.firstWhere((e) => e.problemId == problemId);
-    emit(ShowCurrentProblem(problem: problem));
+    emit(ShowCurrentProblem(problem: currentProblem));
   }
 }

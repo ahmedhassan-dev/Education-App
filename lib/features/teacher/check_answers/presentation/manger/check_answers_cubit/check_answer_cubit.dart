@@ -67,12 +67,12 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
   Future<void> updateNotificationObject(
       NotificationsCubit notificationsCubit, String status) async {
     if (status == "valid") {
-      int currentScore = notificationsCubit.notification!.score;
       notificationsCubit.notification!.validSolvedProblemsId!
           .add(solutions()[needReviewIdx].solvedProblemid);
-      notificationsCubit.notification!.copyWith(
-          studentId: solutions()[needReviewIdx].studentID,
-          score: currentProblem().problemScoreNum + currentScore);
+      notificationsCubit.notification!.score +=
+          currentProblem().problemScoreNum;
+      notificationsCubit.notification!
+          .copyWith(studentId: solutions()[needReviewIdx].studentID);
     } else {
       notificationsCubit.notification!.wrongSolvedProblemsId!
           .add(solutions()[needReviewIdx].solvedProblemid);
@@ -125,6 +125,6 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
       currentProblem().problemSolutions.contains(answer);
 
   ProblemsEntity currentProblem() {
-    return context.read<FetchProblemsCubit>().needReviewProblems[needReviewIdx];
+    return context.read<FetchProblemsCubit>().currentProblem;
   }
 }

@@ -21,8 +21,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       notification = NotificationModel(
         id: DateTime.now(),
         studentId: studentId,
-        courseId: course!.id!,
-        courseSubject: course.subject,
+        courseId: this.course.id!,
+        courseSubject: this.course.subject,
         notificationType: "submission",
         validSolvedProblemsId: [],
         wrongSolvedProblemsId: [],
