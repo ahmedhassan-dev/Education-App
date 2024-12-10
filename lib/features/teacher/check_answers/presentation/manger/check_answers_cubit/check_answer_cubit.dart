@@ -17,7 +17,6 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
   CheckAnswerCubit(this.checkAnswersRepo) : super(CheckAnswerInitial());
   CheckAnswersRepo checkAnswersRepo;
   int needReviewIdx = 0;
-  // addNewAnswerToProblems
 
   late BuildContext context;
   bool hasNote = false;
