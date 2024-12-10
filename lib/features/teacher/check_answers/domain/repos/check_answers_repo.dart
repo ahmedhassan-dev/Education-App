@@ -14,7 +14,7 @@ abstract class CheckAnswersRepo {
   Future<Either<Failure, List<NotificationModel>>> fetchStudentNotifications(
       String studentId, String courseId);
   Future<Either<Failure, bool>> updateNotificationTimeStamp(
-      DateTime notificationId);
+      String notificationId);
   Future<Either<Failure, bool>> addStudentNotification(
       NotificationModel notification);
   Future<Either<Failure, bool>> updateStudentNotification(

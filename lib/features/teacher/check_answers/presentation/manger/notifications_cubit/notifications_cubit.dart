@@ -19,7 +19,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     await _fetchStudentNotifications(studentId);
     if (notification == null) {
       notification = NotificationModel(
-        id: DateTime.now(),
+        id: DateTime.now().toIso8601String(),
         studentId: studentId,
         courseId: this.course.id!,
         courseSubject: this.course.subject,
@@ -30,7 +30,6 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     } else {
       updateNotificationTimeStamp(notification!.id);
     }
-    print(notification);
   }
 
   Future<void> _fetchStudentNotifications(String studentId) async {
@@ -67,23 +66,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     });
   }
 
-  updateNotificationTimeStamp(DateTime notificationId) async {
+  updateNotificationTimeStamp(String notificationId) async {
     await checkAnswersRepo.updateNotificationTimeStamp(notificationId);
   }
-
-  // firestoreServices.setData(
-  //     path: ApiPath.studentNotifications(
-  //         DateTime.now().toIso8601String()),
-  //     data: studentNotification.toJson());
-  // final not = await firestoreServices.retrieveData(
-  //   path: ApiPath.studentNotifications(),
-  // queryBuilder: (query) => query.where("id",
-  //     isEqualTo: Timestamp.fromDate(DateTime.parse(
-  //         "December 5, 2024 at 4:03:08 PM UTC+2")))
-  // ) as List;
-  // List<NotificationModel> n = not
-  //     .map((docSnapshot) => NotificationModel.fromJson(
-  //         docSnapshot.data!))
-  //     .toList();
-  // print("|||||||||||||||||||${n.first.id}");
 }

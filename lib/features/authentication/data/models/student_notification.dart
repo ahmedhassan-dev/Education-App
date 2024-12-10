@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:education_app/core/helpers/extensions.dart';
 
 class NotificationModel {
-  final DateTime id;
+  final String id;
   final String studentId;
   final String courseId;
   final String courseSubject;
   final String? notificationType; // e.g., "submission", "feedback", "reminder"
   final List<String>? validSolvedProblemsId;
   final List<String>? wrongSolvedProblemsId;
-  final int score;
+  int score;
   final DateTime? lastUpdate;
   final bool sent;
 
@@ -33,7 +33,7 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: (json['id'] as Timestamp).toDate(),
+      id: json['id'],
       studentId: json['studentId'],
       courseId: json['courseId'],
       courseSubject: json['courseSubject'],
@@ -41,14 +41,14 @@ class NotificationModel {
       validSolvedProblemsId: List<String>.from(json['validSolvedProblemsId']),
       wrongSolvedProblemsId: List<String>.from(json['wrongSolvedProblemsId']),
       score: json['score'],
-      lastUpdate: (json['lastUpdate'] as Timestamp).toDate(),
+      lastUpdate: (json['lastUpdate'] as Timestamp).toDate().toLocal(),
       sent: json['sent'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': Timestamp.fromDate(id),
+      'id': id,
       'studentId': studentId,
       'courseId': courseId,
       'courseSubject': courseSubject,
@@ -56,13 +56,13 @@ class NotificationModel {
       'validSolvedProblemsId': validSolvedProblemsId,
       'wrongSolvedProblemsId': wrongSolvedProblemsId,
       'score': score,
-      'lastUpdate': Timestamp.fromDate(lastUpdate ?? DateTime.now()),
+      'lastUpdate': Timestamp.fromDate(lastUpdate ?? DateTime.now().toUtc()),
       'sent': sent,
     };
   }
 
   NotificationModel copyWith({
-    DateTime? id,
+    String? id,
     String? studentId,
     String? courseId,
     String? courseSubject,

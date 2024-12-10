@@ -13,7 +13,7 @@ abstract class CheckAnswersRemoteDataSource {
       {required List<int> solutionsNeedingReview});
   Future<List<NotificationModel>> fetchStudentNotifications(
       String studentId, String courseId);
-  Future<void> updateNotificationTimeStamp(DateTime notificationId);
+  Future<void> updateNotificationTimeStamp(String notificationId);
   Future<void> addStudentNotification(NotificationModel notification);
   Future<void> updateStudentNotification(
       String path, Map<String, dynamic> data);
@@ -50,22 +50,23 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
             .where("studentId", isEqualTo: studentId)
             .where("sent", isEqualTo: false)
             .where("courseId", isEqualTo: courseId)) as List;
-    return notifications
+    var x = notifications
         .map((docSnapshot) => NotificationModel.fromJson(docSnapshot.data()!))
         .toList();
+    return x;
   }
 
   @override
-  Future<void> updateNotificationTimeStamp(DateTime notificationId) async {
+  Future<void> updateNotificationTimeStamp(String notificationId) async {
     await firestoreServices.updateData(
-        path: ApiPath.studentNotifications(notificationId.toIso8601String()),
-        data: {"lastUpdate": Timestamp.now()});
+        path: ApiPath.studentNotifications(notificationId),
+        data: {"lastUpdate": Timestamp.fromDate(DateTime.now().toUtc())});
   }
 
   @override
   Future<void> addStudentNotification(NotificationModel notification) async {
     await firestoreServices.setData(
-        path: ApiPath.studentNotifications(notification.id.toIso8601String()),
+        path: ApiPath.studentNotifications(notification.id),
         data: notification.toJson());
   }
 

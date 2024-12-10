@@ -15,9 +15,9 @@ class AddNewProblemRepository {
     return teacher;
   }
 
-  Future<dynamic> retrieveLastProblemId({required String docName}) async {
+  Future<dynamic> retrieveLastProblemId() async {
     final lastProblemId = await firestoreServices.retrieveDataFormDocument(
-        path: ApiPath.problemsCount(), docName: docName) as dynamic;
+        path: ApiPath.publicInfo(), docName: "problemsCount") as dynamic;
     return lastProblemId;
   }
 

@@ -44,7 +44,7 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
 
   @override
   Future<Either<Failure, bool>> updateNotificationTimeStamp(
-      DateTime notificationId) async {
+      String notificationId) async {
     try {
       await checkAnswersRemoteDataSource
           .updateNotificationTimeStamp(notificationId);
@@ -72,12 +72,11 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
       'validSolvedProblemsId': notification.validSolvedProblemsId,
       'wrongSolvedProblemsId': notification.wrongSolvedProblemsId,
       'score': notification.score,
-      'lastUpdate': Timestamp.now()
+      'lastUpdate': Timestamp.fromDate(DateTime.now().toUtc())
     };
     try {
       await checkAnswersRemoteDataSource.updateStudentNotification(
-          ApiPath.studentNotifications(notification.id.toIso8601String()),
-          data);
+          ApiPath.studentNotifications(notification.id), data);
       return right(true);
     } catch (e) {
       return left(ServerFailure(e.toString()));

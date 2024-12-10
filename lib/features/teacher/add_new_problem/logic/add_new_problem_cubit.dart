@@ -37,9 +37,7 @@ class AddNewProblemCubit extends Cubit<AddNewProblemState> {
   Future<void> generateProblemId() async {
     try {
       await teacherRepository.incrementProblemsCount();
-      await teacherRepository
-          .retrieveLastProblemId(docName: 'problemsCount')
-          .then((lastProblemId) {
+      await teacherRepository.retrieveLastProblemId().then((lastProblemId) {
         newProblemId = lastProblemId.data()!["problemsCount"];
       });
     } catch (e) {
