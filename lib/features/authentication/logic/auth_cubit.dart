@@ -105,7 +105,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> _getAndSendToken(String? uid) async {
     if (!AuthManager.isWeb) {
-      mytoken = await FirebaseMessaging.instance.getToken();
+      mytoken = await getIt<FirebaseMessaging>().getToken();
       if (mytoken != null && uid != null) {
         Map<String, String> userToken = {"token": mytoken!};
         await authRepository.setToken(

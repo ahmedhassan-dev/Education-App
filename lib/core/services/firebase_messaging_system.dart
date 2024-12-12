@@ -2,10 +2,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../functions/service_locator.dart';
+
 class FireBaseMessagingSystem {
-  static final FirebaseMessaging messaging = FirebaseMessaging.instance;
+  static final FirebaseMessaging messaging = getIt<FirebaseMessaging>();
   static Future<AuthorizationStatus> getPermissionStatus() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    FirebaseMessaging messaging = getIt<FirebaseMessaging>();
     return (await messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -92,7 +94,7 @@ class FireBaseMessagingSystem {
     //   },
     // );
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'tamra', // id
+      'ironMan', // id
       'High Importance Notifications', // title// description
       importance: Importance.max,
     );
