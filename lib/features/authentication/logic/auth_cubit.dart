@@ -72,16 +72,18 @@ class AuthCubit extends Cubit<AuthState> {
       } else if (userType == "Teacher") {
         Teacher teacher = data as Teacher;
         await _storeUserDataInSharedPreferences(
-            userName: teacher.userName!,
-            email: teacher.email!,
-            phoneNum: teacher.phoneNum!);
+          userName: teacher.userName!,
+          email: teacher.email!,
+          // phoneNum: teacher.phoneNum!
+        );
         userDataAvailability = true;
       } else {
         Student student = data as Student;
         await _storeUserDataInSharedPreferences(
-            userName: student.userName!,
-            email: student.email!,
-            phoneNum: student.phoneNum!);
+          userName: student.userName!,
+          email: student.email!,
+          // phoneNum: student.phoneNum!
+        );
         userDataAvailability = true;
       }
     });
@@ -91,13 +93,14 @@ class AuthCubit extends Cubit<AuthState> {
     await _prefs.setString('userType', userType);
   }
 
-  Future<void> _storeUserDataInSharedPreferences(
-      {required String userName,
-      required String email,
-      required String phoneNum}) async {
+  Future<void> _storeUserDataInSharedPreferences({
+    required String userName,
+    required String email,
+    // required String phoneNum
+  }) async {
     await _prefs.setString('userName', userName);
     await _prefs.setString('email', email);
-    await _prefs.setString('phoneNum', phoneNum);
+    // await _prefs.setString('phoneNum', phoneNum);
   }
 
   Future<void> _getAndSendToken(String? uid) async {
@@ -111,8 +114,8 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signIn() async {
-    emit(Loading());
+  Future<void> signIn(String email, String password) async {
+    emit(AuthLoading());
     try {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
@@ -163,8 +166,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signUp(String userName, String phoneNum) async {
-    emit(Loading());
+  Future<void> signUp(String userName, String email, String password
+      // , String phoneNum
+      ) async {
+    emit(AuthLoading());
     try {
       final user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -176,7 +181,9 @@ class AuthCubit extends Cubit<AuthState> {
           path: userPath(user.user!.uid));
       await _storeUserTypeInSharedPreferences();
       await _storeUserDataInSharedPreferences(
-          userName: userName, email: email, phoneNum: phoneNum);
+        userName: userName, email: email,
+        // phoneNum: phoneNum
+      );
       emit(SubmitionVerified());
     } on FirebaseAuthException catch (ex) {
       if (ex.code == 'email-already-in-use') {
@@ -190,18 +197,23 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> storeUserData(String userName, String phoneNum) async {
+  Future<void> storeUserData(String userName
+      // , String phoneNum
+      ) async {
     await authRepository.setUserData(
         userData: userObject(uid, userName, email, phoneNum),
         path: userPath(uid));
     await _storeUserTypeInSharedPreferences();
     await _storeUserDataInSharedPreferences(
-        userName: userName, email: email, phoneNum: phoneNum);
+      userName: userName,
+      email: email,
+    );
+    //  phoneNum: phoneNum
     emit(SubmitionVerified());
   }
 
   Future<void> googleLogIn() async {
-    emit(Loading());
+    emit(AuthLoading());
     try {
       final googleUser = await googleSignIn.signIn();
       _user = googleUser;
@@ -263,5 +275,16 @@ class AuthCubit extends Cubit<AuthState> {
     this.password = password ?? this.password;
     this.authFormType = authFormType ?? this.authFormType;
     emit(UpdateEmailAndPassword());
+  }
+
+  Future forgetPassword(String email) async {
+    emit(AuthLoading());
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      emit(RestEmailSent());
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(ErrorOccurred(errorMsg: e.toString()));
+    }
   }
 }

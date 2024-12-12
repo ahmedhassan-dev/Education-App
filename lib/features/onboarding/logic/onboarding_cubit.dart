@@ -37,6 +37,10 @@ class OnboardingCubit extends Cubit<OnboardingState> {
       FirebaseAuth.instance.authStateChanges(),
     );
     firebaseAuthStreamer.stream.listen((data) async {
+      if (data == null) {
+        AuthManager.idToken = null;
+        return;
+      }
       User? userData = data as User;
       AuthManager.idToken = await userData.getIdToken();
     });

@@ -1,3 +1,4 @@
+import 'package:education_app/core/helpers/context_extension.dart';
 import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/authentication/logic/auth_cubit.dart';
@@ -5,7 +6,8 @@ import 'package:education_app/core/constants/assets.dart';
 import 'package:education_app/core/constants/enums.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/widgets/main_button.dart';
-import 'package:education_app/features/authentication/ui/user_data_model.dart';
+import 'package:education_app/features/authentication/ui/forget_password_modal.dart';
+import 'package:education_app/features/authentication/ui/user_data_modal.dart';
 import 'package:education_app/features/authentication/ui/widgets/social_media_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +26,7 @@ class _AuthPageState extends State<AuthPage> {
   final _passwordController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  final mobileController = TextEditingController();
+  // final mobileController = TextEditingController();
   final userNameController = TextEditingController();
 
   @override
@@ -37,7 +39,7 @@ class _AuthPageState extends State<AuthPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    mobileController.dispose();
+    // mobileController.dispose();
     userNameController.dispose();
     super.dispose();
   }
@@ -49,16 +51,28 @@ class _AuthPageState extends State<AuthPage> {
           Navigator.of(context)
               .pushReplacementNamed(AppRoutes.landingPageRoute);
         } else if (state is GetUserData) {
-          showUserDataModel(context,
-              userNameController: userNameController,
-              mobileController: mobileController);
+          showUserDataModel(context, userNameController: userNameController,
+              onTap: () {
+            BlocProvider.of<AuthCubit>(context).storeUserData(
+              userNameController.text.trim(),
+              // mobileController.text.trim()
+            );
+            Navigator.pop(context);
+          });
+          // mobileController: mobileController);
         } else if (state is ErrorOccurred) {
           errorAwesomeDialog(context, state.errorMsg, title: 'Error Found!')
               .show();
+        } else if (state is RestEmailSent) {
+          errorAwesomeDialog(context, 'Password reset email sent!.',
+                  title: 'Check your inbox')
+              .show();
+          // showSnackBar(
+          //     context, 'Password reset email sent! Please check your inbox.');
         }
       },
       builder: (context, state) {
-        if (state is Loading) {
+        if (state is AuthLoading) {
           return const ShowLoadingIndicator();
         }
         return authWidget();
@@ -97,7 +111,7 @@ class _AuthPageState extends State<AuthPage> {
                     onEditingComplete: () =>
                         FocusScope.of(context).requestFocus(_passwordFocusNode),
                     textInputAction: TextInputAction.next,
-                    onChanged: BlocProvider.of<AuthCubit>(context).updateEmail,
+                    // onChanged: BlocProvider.of<AuthCubit>(context).updateEmail,
                     validator: (val) =>
                         val!.isEmpty ? 'Please enter your email!' : null,
                     decoration: const InputDecoration(
@@ -111,8 +125,6 @@ class _AuthPageState extends State<AuthPage> {
                     focusNode: _passwordFocusNode,
                     validator: (val) =>
                         val!.isEmpty ? 'Please enter your password!' : null,
-                    onChanged:
-                        BlocProvider.of<AuthCubit>(context).updatePassword,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Password',
@@ -126,7 +138,16 @@ class _AuthPageState extends State<AuthPage> {
                       alignment: Alignment.topRight,
                       child: InkWell(
                         child: const Text('Forgot your password?'),
-                        onTap: () {},
+                        onTap: () async {
+                          await showForgetPasswordModal(context,
+                              emailController: _emailController, onTap: () {
+                            context
+                                .read<AuthCubit>()
+                                .forgetPassword(_emailController.text);
+                            if (!mounted) return;
+                            context.pop();
+                          });
+                        },
                       ),
                     ),
                   const SizedBox(height: 24.0),
@@ -139,12 +160,22 @@ class _AuthPageState extends State<AuthPage> {
                       if (_formKey.currentState!.validate()) {
                         if (BlocProvider.of<AuthCubit>(context).authFormType ==
                             AuthFormType.login) {
-                          BlocProvider.of<AuthCubit>(context).signIn();
+                          BlocProvider.of<AuthCubit>(context).signIn(
+                              _emailController.text, _passwordController.text);
                         } else {
                           showUserDataModel(context,
-                              createUserWithEmailAndPassword: true,
                               userNameController: userNameController,
-                              mobileController: mobileController);
+                              onTap: () {
+                            BlocProvider.of<AuthCubit>(context).signUp(
+                                userNameController.text.trim(),
+                                _emailController.text,
+                                _passwordController.text
+                                // mobileController.text.trim()
+                                );
+                            Navigator.pop(context);
+                          }
+                              // mobileController: mobileController
+                              );
                         }
                       }
                     },

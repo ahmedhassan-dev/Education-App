@@ -5,7 +5,7 @@ sealed class AuthState {}
 
 final class AuthInitial extends AuthState {}
 
-class Loading extends AuthState {}
+class AuthLoading extends AuthState {}
 
 class ErrorOccurred extends AuthState {
   final String errorMsg;
@@ -18,3 +18,5 @@ class GetUserData extends AuthState {}
 class SubmitionVerified extends AuthState {}
 
 class UpdateEmailAndPassword extends AuthState {}
+
+class RestEmailSent extends AuthState {}
