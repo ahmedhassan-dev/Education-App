@@ -42,6 +42,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/teacher/check_answers/presentation/manger/check_answers_cubit/check_answer_cubit.dart';
 import '../../features/teacher/check_answers/presentation/manger/notifications_cubit/notifications_cubit.dart';
+import '../pages/privacy_policy_page.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
   switch (settings.name) {
@@ -124,7 +125,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
             BlocProvider(
               create: (context) => CoursesCubit(
                   CoursesRepository(getIt<FirestoreServices>()),
-                  AuthRepository(getIt<FirestoreServices>())),
+                  getIt<AuthRepository>()),
             ),
           ],
           child: const CoursesPage(),
@@ -186,6 +187,9 @@ Route<dynamic> onGenerate(RouteSettings settings) {
         ),
         settings: settings,
       );
+    case AppRoutes.privacyPolicy:
+      return CupertinoPageRoute(
+          builder: (_) => const PrivacyPolicyPage(), settings: settings);
     case AppRoutes.landingPageRoute:
     default:
       return CupertinoPageRoute(

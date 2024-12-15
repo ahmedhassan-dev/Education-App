@@ -32,7 +32,7 @@ class LandingPage extends StatelessWidget {
           onTap: () =>
               BlocProvider.of<OnboardingCubit>(context).downLoadNewVersion(),
         );
-      } else if (state is LoadSelectUserPage) {
+      } else if (state is LoadSelectUserPage || state is AccountDeleted) {
         return const WelcomePage();
       } else if (state is InitDataLoaded) {
         final String? userType = state.userType;
@@ -47,7 +47,7 @@ class LandingPage extends StatelessWidget {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Widget selectInitPage(String? userType, List<String>? subjects) {
-    AuthCubit authCubit = AuthCubit(AuthRepository(getIt<FirestoreServices>()));
+    AuthCubit authCubit = AuthCubit(getIt<AuthRepository>());
     CoursesRepository coursesRepository =
         CoursesRepository(getIt<FirestoreServices>());
     CoursesCubit coursesCubit = CoursesCubit(

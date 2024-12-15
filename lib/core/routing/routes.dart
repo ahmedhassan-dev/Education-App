@@ -14,4 +14,5 @@ class AppRoutes {
       '/teacher-courses/teacher-courses-details';
   static const String addNewCoursePage =
       '/teacher-courses/teacher-courses-details/add-new-course';
+  static const String privacyPolicy = '/privacy-policy';
 }
