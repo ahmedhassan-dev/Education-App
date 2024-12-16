@@ -18,6 +18,8 @@ abstract class AuthBase {
 
   Future<void> logout();
 
+  Future<void> deleteAccount();
+
   Future<dynamic> getUserData(
       {required String path, required String uid, required String userType});
 }
@@ -88,4 +90,21 @@ class AuthRepository implements AuthBase {
 
   @override
   Future<void> logout() async => await _firebaseAuth.signOut();
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+
+      if (user != null) {
+        await user.delete();
+        print("User account deleted successfully.");
+      } else {
+        print("No user is currently signed in.");
+      }
+    } catch (e) {
+      print("Failed to delete user: $e");
+      rethrow;
+    }
+  }
 }

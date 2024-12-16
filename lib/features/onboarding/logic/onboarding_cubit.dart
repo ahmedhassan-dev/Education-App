@@ -4,12 +4,15 @@ import 'package:bloc/bloc.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/functions/service_locator.dart';
+import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/onboarding/data/models/publicinfo.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../authentication/data/repos/auth_repo.dart';
 
 part 'onboarding_state.dart';
 
@@ -85,5 +88,22 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
+  }
+
+  Future<void> deleteAccount(BuildContext context) async {
+    try {
+      await getIt<AuthRepository>().deleteAccount();
+      await _removeSharedPreferencesData();
+      AuthManager.idToken = null;
+      AuthManager.userType = null;
+      emit(AccountDeleted());
+    } catch (e) {
+      showSnackBar(context, "Please sign in first");
+    }
+  }
+
+  Future<void> _removeSharedPreferencesData() async {
+    final bool result = await getIt<SharedPreferences>().clear();
+    debugPrint("Clearing SharedPreferences Data: ${result.toString()}");
   }
 }

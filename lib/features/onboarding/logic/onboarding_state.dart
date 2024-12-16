@@ -17,3 +17,5 @@ class InitDataLoaded extends OnboardingState {
 class NeedUpdate extends OnboardingState {}
 
 class LoadSelectUserPage extends OnboardingState {}
+
+class AccountDeleted extends OnboardingState {}
