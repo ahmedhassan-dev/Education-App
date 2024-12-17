@@ -21,7 +21,7 @@ import 'package:education_app/features/teacher/check_answers/presentation/manger
 import 'package:education_app/features/teacher/check_answers/presentation/manger/fetch_student_data_cubit/fetch_student_data_cubit.dart';
 import 'package:education_app/features/teacher/check_answers/presentation/ui/check_answers_page.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
-import 'package:education_app/features/teacher/courses_student_feedback/ui/courses_student_feedback_page.dart';
+import 'package:education_app/features/teacher/courses_student_feedback/ui/courses_student_answers_page.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_stage_page.dart';
@@ -123,9 +123,8 @@ Route<dynamic> onGenerate(RouteSettings settings) {
               value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
             ),
             BlocProvider(
-              create: (context) => CoursesCubit(
-                  CoursesRepository(getIt<FirestoreServices>()),
-                  getIt<AuthRepository>()),
+              create: (context) =>
+                  CoursesCubit(CoursesRepository(getIt<FirestoreServices>())),
             ),
           ],
           child: const CoursesPage(),
@@ -148,7 +147,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
           return BlocProvider<CoursesStudentFeedbackCubit>.value(
             value: getIt<CoursesStudentFeedbackCubit>()
               ..getTeacherSortedCourses(),
-            child: const CoursesStudentFeedbackPage(),
+            child: const CoursesStudentAnswers(),
           );
         },
         settings: settings,

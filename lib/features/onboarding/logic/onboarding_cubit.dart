@@ -21,6 +21,7 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   String? userType;
   List<String>? subjects;
   OnBoardingRepository onBoardingRepository;
+  AuthRepository authRepository = getIt<AuthRepository>();
   OnboardingCubit(this.onBoardingRepository) : super(LoadingInitData());
   StreamController firebaseAuthStreamer = StreamController();
 
@@ -92,13 +93,25 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   Future<void> deleteAccount(BuildContext context) async {
     try {
-      await getIt<AuthRepository>().deleteAccount();
+      await authRepository.deleteAccount();
       await _removeSharedPreferencesData();
       AuthManager.idToken = null;
       AuthManager.userType = null;
       emit(AccountDeleted());
     } catch (e) {
       showSnackBar(context, "Please sign in first");
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      await authRepository.logout();
+      await _removeSharedPreferencesData();
+      emit(LogedOut());
+    } catch (e) {
+      if (!isClosed) {
+        emit(LogedOutError(errorMsg: e.toString()));
+      }
     }
   }
 

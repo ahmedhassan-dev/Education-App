@@ -32,7 +32,9 @@ class LandingPage extends StatelessWidget {
           onTap: () =>
               BlocProvider.of<OnboardingCubit>(context).downLoadNewVersion(),
         );
-      } else if (state is LoadSelectUserPage || state is AccountDeleted) {
+      } else if (state is LoadSelectUserPage ||
+          state is AccountDeleted ||
+          state is LogedOut) {
         return const WelcomePage();
       } else if (state is InitDataLoaded) {
         final String? userType = state.userType;
@@ -50,8 +52,7 @@ class LandingPage extends StatelessWidget {
     AuthCubit authCubit = AuthCubit(getIt<AuthRepository>());
     CoursesRepository coursesRepository =
         CoursesRepository(getIt<FirestoreServices>());
-    CoursesCubit coursesCubit = CoursesCubit(
-        coursesRepository, AuthRepository(getIt<FirestoreServices>()));
+    CoursesCubit coursesCubit = CoursesCubit(coursesRepository);
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {

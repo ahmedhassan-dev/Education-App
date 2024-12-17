@@ -1,5 +1,4 @@
 import 'package:education_app/core/helpers/context_extension.dart';
-import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/onboarding/logic/onboarding_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -110,7 +109,7 @@ class ProblemsPageDrawer extends StatelessWidget {
             title: const Text('Logout'),
             onTap: () {
               context.pop();
-              context.read<CoursesCubit>().logOut();
+              context.read<OnboardingCubit>().logOut();
             },
           ),
           // Divider

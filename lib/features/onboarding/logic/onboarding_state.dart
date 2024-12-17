@@ -19,3 +19,11 @@ class NeedUpdate extends OnboardingState {}
 class LoadSelectUserPage extends OnboardingState {}
 
 class AccountDeleted extends OnboardingState {}
+
+class LogedOut extends OnboardingState {}
+
+class LogedOutError extends OnboardingState {
+  final String errorMsg;
+
+  LogedOutError({required this.errorMsg});
+}

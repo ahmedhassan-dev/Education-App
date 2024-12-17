@@ -1,5 +1,3 @@
-import 'package:education_app/core/routing/routes.dart';
-import 'package:education_app/core/widgets/awesome_dialog.dart';
 import 'package:education_app/core/widgets/subjects_app_bar.dart';
 import 'package:education_app/features/teacher_subjects/logic/teacher_subjects_cubit.dart';
 import 'package:education_app/features/teacher_subjects/ui/widgets/subjects_list.dart';
@@ -13,16 +11,8 @@ class TeacherSubjectsPage extends StatelessWidget {
   const TeacherSubjectsPage({super.key, required this.subjects});
 
   Widget buildBlocWidget(context) {
-    return BlocConsumer<TeacherSubjectsCubit, TeacherSubjectsState>(
-        listener: (BuildContext context, TeacherSubjectsState state) {
-      if (state is LogedOut) {
-        Navigator.of(context)
-            .pushReplacementNamed(AppRoutes.selectUserTypeRoute);
-      } else if (state is LogedOutError) {
-        errorAwesomeDialog(context, state.errorMsg, title: 'Logout Error')
-            .show();
-      }
-    }, builder: (context, state) {
+    return BlocBuilder<TeacherSubjectsCubit, TeacherSubjectsState>(
+        builder: (context, state) {
       return teacherSubjectsPage(context);
     });
   }
@@ -55,9 +45,7 @@ class TeacherSubjectsPage extends StatelessWidget {
 
   Widget teacherSubjectsPage(context) {
     return Scaffold(
-      appBar: subjectsAppBar(context, () {
-        BlocProvider.of<TeacherSubjectsCubit>(context).logOut();
-      }),
+      appBar: subjectsAppBar(context),
       drawer: const TeacherSubjectDrawer(),
       body: buildSubjectsListWidgets(),
     );

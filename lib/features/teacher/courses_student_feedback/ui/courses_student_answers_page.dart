@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CoursesStudentFeedbackPage extends StatelessWidget {
-  const CoursesStudentFeedbackPage({super.key});
+class CoursesStudentAnswers extends StatelessWidget {
+  const CoursesStudentAnswers({super.key});
 
   PreferredSizeWidget? appBar(BuildContext context) {
     return AppBar(
-      title: const Text('Students Feedback', style: Styles.headlineMedium28),
+      title: const Text('Answers', style: Styles.headlineMedium28),
       automaticallyImplyLeading: false,
       toolbarHeight: 60.h,
     );
