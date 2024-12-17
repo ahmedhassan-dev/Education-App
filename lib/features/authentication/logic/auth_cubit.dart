@@ -7,7 +7,6 @@ import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:education_app/features/authentication/data/repos/auth_repo.dart';
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:education_app/core/constants/enums.dart';
 import 'package:firebase_auth/firebase_auth.dart';

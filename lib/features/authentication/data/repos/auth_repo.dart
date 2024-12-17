@@ -3,6 +3,8 @@ import 'package:education_app/features/authentication/data/models/student.dart';
 import 'package:education_app/features/authentication/data/models/teacher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../core/helpers/log_utils.dart';
+
 abstract class AuthBase {
   User? get currentUser;
 
@@ -98,12 +100,12 @@ class AuthRepository implements AuthBase {
 
       if (user != null) {
         await user.delete();
-        print("User account deleted successfully.");
+        Log.i("User account deleted successfully.");
       } else {
-        print("No user is currently signed in.");
+        Log.i("No user is currently signed in.");
       }
     } catch (e) {
-      print("Failed to delete user: $e");
+      Log.e("Failed to delete user: $e");
       rethrow;
     }
   }
