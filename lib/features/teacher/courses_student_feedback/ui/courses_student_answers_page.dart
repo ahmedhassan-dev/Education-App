@@ -1,5 +1,6 @@
 import 'package:education_app/core/theming/styles.dart';
 import 'package:education_app/core/widgets/awesome_dialog.dart';
+import 'package:education_app/core/widgets/no_data_widget.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
@@ -29,7 +30,9 @@ class CoursesStudentAnswers extends StatelessWidget {
     }, builder: (context, state) {
       if (state is CoursesLoaded) {
         final List<Courses> courses = state.courses;
-        return buildLoadedListWidgets(courses);
+        return courses.isEmpty
+            ? const NoDataWidget()
+            : buildLoadedListWidgets(courses);
       } else {
         return const ShowLoadingIndicator();
       }

@@ -10,6 +10,9 @@ extension Kcontext on BuildContext {
       }));
   pop() => Navigator.of(this).pop();
 
+  pushNamed(String routeName, {Object? arguments}) =>
+      Navigator.of(this).pushNamed(routeName, arguments: arguments);
+
   pushReplacement(Widget widget) =>
       Navigator.of(this).pushReplacement(MaterialPageRoute(builder: (context) {
         return widget;

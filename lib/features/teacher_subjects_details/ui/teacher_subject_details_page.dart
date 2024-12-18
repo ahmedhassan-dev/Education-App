@@ -1,11 +1,12 @@
+import 'package:education_app/core/helpers/context_extension.dart';
 import 'package:education_app/core/routing/routes.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/widgets/awesome_dialog.dart';
+import 'package:education_app/core/widgets/no_data_widget.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher_subjects_details/logic/teacher_subject_details_cubit.dart';
 import 'package:education_app/features/teacher_subjects_details/ui/widgets/courses_list.dart';
-import 'package:education_app/features/teacher_subjects_details/ui/widgets/no_available_courses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,10 +54,13 @@ class TeacherSubjectDetailsPage extends StatelessWidget {
       if (state is CoursesLoaded) {
         final List<Courses> subjectCourses = (state).courses;
         if (subjectCourses.isEmpty) {
-          return NoAvailableCourses(onTap: () {
-            Navigator.of(context)
-                .pushNamed(AppRoutes.addNewCoursePage, arguments: subject);
-          });
+          return NoDataWidget(
+            message: "Don't have courses?",
+            buttonText: "ADD ONE",
+            onRefresh: () {
+              context.pushNamed(AppRoutes.addNewCoursePage, arguments: subject);
+            },
+          );
         }
         return buildLoadedListWidgets(subjectCourses);
       } else {
