@@ -1,5 +1,6 @@
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DropDownMenuComponent extends StatelessWidget {
   final void Function(String? value) onChanged;
@@ -23,11 +24,11 @@ class DropDownMenuComponent extends StatelessWidget {
       iconEnabledColor: AppColors.whiteColor,
       focusColor: AppColors.primaryColor,
       dropdownColor: AppColors.secondaryColor,
-      hint: FittedBox(
-        fit: BoxFit.contain,
-        child: Text(hint,
-            style: TextStyle(color: AppColors.whiteColor, fontSize: 50)),
-      ),
+      hint: Text(hint,
+          style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w500)),
       onChanged: onChanged,
       items: items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(

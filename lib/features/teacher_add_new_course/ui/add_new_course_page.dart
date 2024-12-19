@@ -123,7 +123,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
                   decoration: BoxDecoration(
                       color: AppColors.secondaryColor,
                       borderRadius: BorderRadius.circular(20)),
-                  height: 60.h,
+                  height: 65.h,
                   child: DropDownMenuComponent(
                     items: EducationalStages.educationalStages,
                     hint: 'Stage',

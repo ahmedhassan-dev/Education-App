@@ -1,4 +1,5 @@
 import 'package:education_app/core/theming/app_colors.dart';
+import 'package:education_app/core/widgets/no_data_widget.dart';
 import 'package:education_app/features/problems/data/models/problems.dart';
 import 'package:education_app/features/teacher/add_new_problem/ui/widgets/problems_list.dart';
 import 'package:flutter/material.dart';
@@ -16,15 +17,17 @@ showProblemsModel(BuildContext context,
           padding: const EdgeInsets.symmetric(
             horizontal: 32.0,
           ),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildProblemsList(problemsList),
-              ],
-            ),
-          ),
+          child: problemsList.isEmpty
+              ? const NoDataWidget()
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildProblemsList(problemsList),
+                    ],
+                  ),
+                ),
         ),
       );
     },
