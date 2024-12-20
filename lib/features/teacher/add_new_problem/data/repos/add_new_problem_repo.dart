@@ -37,7 +37,7 @@ class AddNewProblemRepository {
 
   Future<void> incrementProblemsCount() async {
     await firestoreServices.updateData(
-      path: ApiPath.problemsCount(),
+      path: ApiPath.globalProblemsCount(),
       data: {"problemsCount": FieldValue.increment(1)},
     );
   }

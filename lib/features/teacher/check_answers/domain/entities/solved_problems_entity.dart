@@ -2,7 +2,7 @@ import '../../../../problems/data/models/answer.dart';
 
 class NeedReviewSolutionsEntity {
   final String solvedProblemid;
-  final int problemId;
+  final int globalProblemId;
   final String studentID;
   final List<Answer> studentAnswer;
   final List<int> studentSolvingTime;
@@ -13,7 +13,7 @@ class NeedReviewSolutionsEntity {
 
   NeedReviewSolutionsEntity(
       {required this.solvedProblemid,
-      required this.problemId,
+      required this.globalProblemId,
       required this.studentID,
       required this.studentAnswer,
       required this.studentSolvingTime,

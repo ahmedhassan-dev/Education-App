@@ -66,13 +66,13 @@ class _ProblemPageState extends State<ProblemPage> {
           keepGoingAwesomeDialog(context).show();
         }
 
+        final navigator = Navigator.of(context);
         await player.play(AssetSource(AppAssets.increasingScoreSound));
         BlocProvider.of<ProblemsCubit>(context)
             .submitSolution(_solutionController.text.trim());
-
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
-        Navigator.pop(context);
+        navigator.pop();
 
         _solutionController.text = "";
       }
@@ -86,10 +86,10 @@ class _ProblemPageState extends State<ProblemPage> {
         listener: (BuildContext context, ProblemsState state) async {
       if (state is ImageLoaded) {
         reviewAnswerAwesomeDialog(context).show();
+        final navigator = Navigator.of(context);
         await player.play(AssetSource(AppAssets.increasingScoreSound));
-        await Future.delayed(const Duration(seconds: 1), () {});
-        if (!mounted) return;
-        Navigator.pop(context);
+        await Future.delayed(const Duration(seconds: 1));
+        navigator.pop();
       }
     }, builder: (context, state) {
       if (state is DataLoaded ||
@@ -175,7 +175,8 @@ class _ProblemPageState extends State<ProblemPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size s = ui.window.physicalSize / ui.window.devicePixelRatio;
+    Size s = ui.PlatformDispatcher.instance.views.first.physicalSize /
+        ui.PlatformDispatcher.instance.views.first.devicePixelRatio;
     bool landscape = s.width > s.height;
     if (landscape) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);

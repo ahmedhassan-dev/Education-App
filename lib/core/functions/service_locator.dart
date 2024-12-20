@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/authentication/data/repos/auth_repo.dart';
+import '../../features/courses/data/repos/courses_repo.dart';
 import '../../features/teacher/check_answers/data/data_sources/check_answers_remote_data_source.dart';
 import '../../features/teacher/check_answers/data/repos/check_answers_repo_impl.dart';
 import '../../features/teacher/courses_student_feedback/data/repos/courses_student_feedback_repo.dart';
@@ -25,4 +26,6 @@ Future<void> configureDependencies() async {
       () => CheckAnswersRemoteDataSourceImpl(getIt<FirestoreServices>()));
   getIt.registerLazySingleton<AuthRepository>(
       () => AuthRepository(getIt<FirestoreServices>()));
+  getIt.registerLazySingleton<CoursesRepository>(
+      () => CoursesRepository(getIt<FirestoreServices>()));
 }

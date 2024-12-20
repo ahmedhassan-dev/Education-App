@@ -4,7 +4,7 @@ part 'solved_problems.m.dart';
 
 class SolvedProblems {
   final String id;
-  final int problemId;
+  final int globalProblemId;
   final String uid;
   final String? courseId;
   final List<Answer> answers;
@@ -18,7 +18,7 @@ class SolvedProblems {
 
   SolvedProblems({
     required this.id,
-    required this.problemId,
+    required this.globalProblemId,
     required this.uid,
     required this.courseId,
     this.answers = const [],
@@ -34,7 +34,7 @@ class SolvedProblems {
   NeedReviewSolutionsEntity toEntity() {
     return NeedReviewSolutionsEntity(
         solvedProblemid: id,
-        problemId: problemId,
+        globalProblemId: globalProblemId,
         studentID: uid,
         studentAnswer: answers,
         studentSolvingTime: solvingTime,
@@ -57,7 +57,7 @@ class SolvedProblems {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
-        'problemId': problemId,
+        'globalProblemId': globalProblemId,
         'uid': uid,
         'courseId': courseId,
         'answers': answers.map((e) => e.toJson()).toList(),
@@ -73,7 +73,7 @@ class SolvedProblems {
   SolvedProblems copyWith(
       {String? id,
       String? uid,
-      int? problemId,
+      int? globalProblemId,
       String? courseId,
       List<Answer>? answers,
       List<int>? solvingTime,
@@ -85,7 +85,7 @@ class SolvedProblems {
       List<dynamic>? solvingDate}) {
     return SolvedProblems(
         id: id ?? this.id,
-        problemId: problemId ?? this.problemId,
+        globalProblemId: globalProblemId ?? this.globalProblemId,
         uid: uid ?? this.uid,
         courseId: courseId ?? this.courseId,
         answers: answers ?? this.answers,

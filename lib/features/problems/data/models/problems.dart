@@ -3,8 +3,9 @@ import 'package:json_annotation/json_annotation.dart';
 part 'problems.g.dart';
 
 @JsonSerializable()
-class Problems extends ProblemsEntity {
-  final int id;
+class Problems {
+  final int globalProblemId;
+  final int problemId;
   final String authorEmail;
   final String authorName;
   final String stage;
@@ -18,7 +19,8 @@ class Problems extends ProblemsEntity {
   final List<dynamic> topics;
   final List<dynamic> videos;
   Problems({
-    required this.id,
+    required this.globalProblemId,
+    required this.problemId,
     required this.courseId,
     required this.title,
     required this.problem,
@@ -31,12 +33,15 @@ class Problems extends ProblemsEntity {
     required this.needReview,
     required this.topics,
     required this.videos,
-  }) : super(
-            problemId: id,
-            courseID: courseId ?? "Not Found",
-            problemTitle: title,
-            problemSolutions: solutions,
-            problemScoreNum: scoreNum);
+  });
+
+  ProblemsEntity toEntity() => ProblemsEntity(
+      globalProblemId: globalProblemId,
+      problemId: problemId,
+      courseID: courseId ?? "Not Found",
+      title: title,
+      solutions: solutions,
+      scoreNum: scoreNum);
 
   factory Problems.fromJson(Map<String, dynamic>? json) =>
       _$ProblemsFromJson(json!);
@@ -44,7 +49,8 @@ class Problems extends ProblemsEntity {
   Map<String, dynamic> toJson() => _$ProblemsToJson(this);
 
   Problems copyWith({
-    int? id,
+    int? globalProblemId,
+    int? problemId,
     String? courseId,
     String? title,
     String? problem,
@@ -59,7 +65,8 @@ class Problems extends ProblemsEntity {
     List<dynamic>? videos,
   }) {
     return Problems(
-      id: id ?? this.id,
+      globalProblemId: globalProblemId ?? this.globalProblemId,
+      problemId: problemId ?? this.problemId,
       courseId: courseId ?? this.courseId,
       title: title ?? this.title,
       problem: problem ?? this.problem,

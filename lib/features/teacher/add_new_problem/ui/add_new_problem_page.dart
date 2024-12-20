@@ -75,9 +75,9 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
         listener: (BuildContext context, AddNewProblemState state) async {
       if (state is ProblemStored) {
         resetAllControllers();
+        final navigator = Navigator.of(context);
         await Future.delayed(const Duration(seconds: 1), () {});
-        if (!mounted) return;
-        Navigator.pop(context);
+        navigator.pop();
       } else if (state is LoadingModalBottomSheetData) {
         _loadingOverlay.show(context);
       } else if (state is ModalBottomSheetProblemsLoaded) {
@@ -113,7 +113,8 @@ class _AddNewProblemPageState extends State<AddNewProblemPage> {
     }
     topicsList.add(widget.course.subject);
     final problem = Problems(
-      id: 0,
+      globalProblemId: 0,
+      problemId: 0,
       courseId: widget.course.id,
       title: _titleController.text.trim(),
       problem: _problemController.text.trim(),

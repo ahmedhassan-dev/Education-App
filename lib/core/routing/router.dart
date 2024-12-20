@@ -123,8 +123,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
               value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
             ),
             BlocProvider(
-              create: (context) =>
-                  CoursesCubit(CoursesRepository(getIt<FirestoreServices>())),
+              create: (context) => CoursesCubit(getIt<CoursesRepository>()),
             ),
           ],
           child: const CoursesPage(),

@@ -1,6 +1,5 @@
 class ApiPath {
-  static String courses() => 'courses/';
-  static String coursesID(String courseID) => 'courses/$courseID';
+  static String courses([String id = ""]) => 'courses/$id';
   static String student(String uid) => 'students/$uid';
   static String teacher(String uid) => 'teachers/$uid';
 
@@ -12,7 +11,7 @@ class ApiPath {
   static String problems() => 'problems/';
   static String storingProblem(int problemId) => 'problems/$problemId';
   static String publicInfo() => 'publicInfo/';
-  static String problemsCount() => 'publicInfo/problemsCount/';
+  static String globalProblemsCount() => 'publicInfo/problemsCount/';
   static String solvedProblems(String id) => 'solvedProblems/$id';
   static String studentNotifications([String id = ""]) =>
       'studentNotifications/$id';

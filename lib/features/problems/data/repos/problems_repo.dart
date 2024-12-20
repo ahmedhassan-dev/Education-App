@@ -28,7 +28,7 @@ class ProblemsRepository {
     required String courseId,
   }) async =>
       await firestoreServices.updateData(
-        path: ApiPath.coursesID(courseId),
+        path: ApiPath.courses(courseId),
         data: {"needReviewCounter": FieldValue.increment(1)},
       );
 
@@ -37,7 +37,7 @@ class ProblemsRepository {
     required String solvedProblemId,
   }) async =>
       await firestoreServices.updateData(
-        path: ApiPath.coursesID(courseId),
+        path: ApiPath.courses(courseId),
         data: {
           "solutionsNeedingReview": FieldValue.arrayUnion([solvedProblemId])
         },

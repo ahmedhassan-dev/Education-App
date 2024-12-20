@@ -50,8 +50,7 @@ class LandingPage extends StatelessWidget {
 
   Widget selectInitPage(String? userType, List<String>? subjects) {
     AuthCubit authCubit = AuthCubit(getIt<AuthRepository>());
-    CoursesRepository coursesRepository =
-        CoursesRepository(getIt<FirestoreServices>());
+    CoursesRepository coursesRepository = getIt<CoursesRepository>();
     CoursesCubit coursesCubit = CoursesCubit(coursesRepository);
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
