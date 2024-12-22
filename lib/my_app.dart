@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Education App',
+        title: 'IronMan-Edu',
         theme: appTheme(context),
         onGenerateRoute: onGenerate,
         initialRoute: AppRoutes.landingPageRoute,

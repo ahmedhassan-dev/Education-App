@@ -38,7 +38,10 @@ class NoDataWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             message!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
+              decoration: TextDecoration.none,
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.whiteColor,

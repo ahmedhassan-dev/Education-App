@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../core/functions/permission_handler.dart';
+
 cameraOrGalleryDialog(BuildContext blocContext) {
   return showDialog(
     context: blocContext,
@@ -13,7 +15,8 @@ cameraOrGalleryDialog(BuildContext blocContext) {
         backgroundColor: AppColors.secondaryColor,
         children: [
           SimpleDialogOption(
-            onPressed: () {
+            onPressed: () async {
+              await requestCameraPermission();
               BlocProvider.of<ProblemsCubit>(blocContext)
                   .pickImage(ImageSource.camera);
               Navigator.pop(context);
