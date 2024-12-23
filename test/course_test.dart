@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Courses course = Courses(
       id: "1",
+      problemsCount: 0,
       imgUrl: "imgUrl",
       subject: "subject",
       description: "description",

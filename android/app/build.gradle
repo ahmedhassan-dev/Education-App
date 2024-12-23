@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.ironman.app"
+    namespace "com.iron_man.app"
     // com.education.apppileSdkVersion flutter.com.education.apppileSdkVersion
     compileSdkVersion 34
     // ndkVersion flutter.ndkVersion
@@ -67,7 +67,7 @@ android {
     productFlavors {
       production {
           dimension "default"
-          applicationIdSuffix ".ironman.app"
+          applicationIdSuffix ".iron_man.app"
           resValue "string", "app_name", "IronMan-Edu"
       }
       development {

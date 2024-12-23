@@ -26,7 +26,7 @@ class FetchProblemsCubit extends Cubit<FetchProblemsState> {
   void showCurrentProblem(int problemId) {
     emit(FetchProblemsLoading());
     currentProblem =
-        needReviewProblems.firstWhere((e) => e.problemId == problemId);
+        needReviewProblems.firstWhere((e) => e.globalProblemId == problemId);
     emit(ShowCurrentProblem(problem: currentProblem));
   }
 }

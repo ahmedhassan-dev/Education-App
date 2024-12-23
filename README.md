@@ -20,3 +20,5 @@ This is an education app built with Flutter & Dart, built (and still working on 
 # For building APK:
 
 flutter build apk --flavor development -t lib/main_development.dart --target-platform=android-arm64
+flutter build apk --flavor production -t lib/main_production.dart --target-platform=android-arm64
+flutter clean && flutter build appbundle --flavor production -t lib/main_production.dart

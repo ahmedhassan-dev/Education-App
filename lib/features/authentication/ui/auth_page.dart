@@ -90,135 +90,141 @@ class _AuthPageState extends State<AuthPage> {
             vertical: 60.0,
             horizontal: 32.0,
           ),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    BlocProvider.of<AuthCubit>(context).authFormType ==
-                            AuthFormType.login
-                        ? 'Login'
-                        : 'Register',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 80.0),
-                  TextFormField(
-                    controller: _emailController,
-                    focusNode: _emailFocusNode,
-                    keyboardType: TextInputType.emailAddress,
-                    onEditingComplete: () =>
-                        FocusScope.of(context).requestFocus(_passwordFocusNode),
-                    textInputAction: TextInputAction.next,
-                    // onChanged: BlocProvider.of<AuthCubit>(context).updateEmail,
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter your email!' : null,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email!',
+          child: AutofillGroup(
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      BlocProvider.of<AuthCubit>(context).authFormType ==
+                              AuthFormType.login
+                          ? 'Login'
+                          : 'Register',
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  TextFormField(
-                    controller: _passwordController,
-                    focusNode: _passwordFocusNode,
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter your password!' : null,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Enter your pasword!',
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  if (BlocProvider.of<AuthCubit>(context).authFormType ==
-                      AuthFormType.login)
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        child: const Text('Forgot your password?'),
-                        onTap: () async {
-                          await showForgetPasswordModal(context,
-                              emailController: _emailController, onTap: () {
-                            context
-                                .read<AuthCubit>()
-                                .forgetPassword(_emailController.text);
-                            if (!mounted) return;
-                            context.pop();
-                          });
-                        },
+                    const SizedBox(height: 80.0),
+                    TextFormField(
+                      controller: _emailController,
+                      focusNode: _emailFocusNode,
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
+                      onEditingComplete: () => FocusScope.of(context)
+                          .requestFocus(_passwordFocusNode),
+                      textInputAction: TextInputAction.next,
+                      // onChanged: BlocProvider.of<AuthCubit>(context).updateEmail,
+                      validator: (val) =>
+                          val!.isEmpty ? 'Please enter your email!' : null,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email!',
                       ),
                     ),
-                  const SizedBox(height: 24.0),
-                  MainButton(
-                    text: BlocProvider.of<AuthCubit>(context).authFormType ==
-                            AuthFormType.login
-                        ? 'Login'
-                        : 'Register',
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (BlocProvider.of<AuthCubit>(context).authFormType ==
-                            AuthFormType.login) {
-                          BlocProvider.of<AuthCubit>(context).signIn(
-                              _emailController.text, _passwordController.text);
-                        } else {
-                          showUserDataModel(context,
-                              userNameController: userNameController,
-                              onTap: () {
-                            BlocProvider.of<AuthCubit>(context).signUp(
-                                userNameController.text.trim(),
-                                _emailController.text,
-                                _passwordController.text
-                                // mobileController.text.trim()
-                                );
-                            Navigator.pop(context);
-                          }
-                              // mobileController: mobileController
-                              );
-                        }
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  Align(
-                    alignment: Alignment.center,
-                    child: InkWell(
-                      child: Text(
-                        BlocProvider.of<AuthCubit>(context).authFormType ==
-                                AuthFormType.login
-                            ? 'Don\'t have an account? Register'
-                            : 'Have an account? Login',
+                    const SizedBox(height: 24.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      focusNode: _passwordFocusNode,
+                      autofillHints: const [AutofillHints.password],
+                      validator: (val) =>
+                          val!.isEmpty ? 'Please enter your password!' : null,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your pasword!',
                       ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    if (BlocProvider.of<AuthCubit>(context).authFormType ==
+                        AuthFormType.login)
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          child: const Text('Forgot your password?'),
+                          onTap: () async {
+                            await showForgetPasswordModal(context,
+                                emailController: _emailController, onTap: () {
+                              context
+                                  .read<AuthCubit>()
+                                  .forgetPassword(_emailController.text);
+                              if (!mounted) return;
+                              context.pop();
+                            });
+                          },
+                        ),
+                      ),
+                    const SizedBox(height: 24.0),
+                    MainButton(
+                      text: BlocProvider.of<AuthCubit>(context).authFormType ==
+                              AuthFormType.login
+                          ? 'Login'
+                          : 'Register',
                       onTap: () {
-                        _formKey.currentState!.reset();
-                        BlocProvider.of<AuthCubit>(context).toggleFormType();
+                        if (_formKey.currentState!.validate()) {
+                          if (BlocProvider.of<AuthCubit>(context)
+                                  .authFormType ==
+                              AuthFormType.login) {
+                            BlocProvider.of<AuthCubit>(context).signIn(
+                                _emailController.text,
+                                _passwordController.text);
+                          } else {
+                            showUserDataModel(context,
+                                userNameController: userNameController,
+                                onTap: () {
+                              BlocProvider.of<AuthCubit>(context).signUp(
+                                  userNameController.text.trim(),
+                                  _emailController.text,
+                                  _passwordController.text
+                                  // mobileController.text.trim()
+                                  );
+                              Navigator.pop(context);
+                            }
+                                // mobileController: mobileController
+                                );
+                          }
+                        }
                       },
                     ),
-                  ),
-                  SizedBox(height: size.height * 0.09),
-                  Align(
+                    const SizedBox(height: 16.0),
+                    Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        BlocProvider.of<AuthCubit>(context).authFormType ==
-                                AuthFormType.login
-                            ? 'Or Login with'
-                            : 'Or Register with',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      )),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SocialMediaButton(
-                        iconName: AppAssets.googleIcon,
-                        onPress: () {
-                          BlocProvider.of<AuthCubit>(context).googleLogIn();
+                      child: InkWell(
+                        child: Text(
+                          BlocProvider.of<AuthCubit>(context).authFormType ==
+                                  AuthFormType.login
+                              ? 'Don\'t have an account? Register'
+                              : 'Have an account? Login',
+                        ),
+                        onTap: () {
+                          _formKey.currentState!.reset();
+                          BlocProvider.of<AuthCubit>(context).toggleFormType();
                         },
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(height: size.height * 0.09),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          BlocProvider.of<AuthCubit>(context).authFormType ==
+                                  AuthFormType.login
+                              ? 'Or Login with'
+                              : 'Or Register with',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        )),
+                    const SizedBox(height: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SocialMediaButton(
+                          iconName: AppAssets.googleIcon,
+                          onPress: () {
+                            BlocProvider.of<AuthCubit>(context).googleLogIn();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

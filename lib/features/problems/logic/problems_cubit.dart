@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' show basename;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:education_app/core/constants/constants.dart';
+
 part 'problems_state.dart';
 
 class ProblemsCubit extends Cubit<ProblemsState> {
@@ -112,8 +113,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   Future<void> retrieveCourseProblems({bool forTeachers = false}) async {
     await problemsRepository
-        .retrieveCourseProblems(
-            path: ApiPath.problems(), courseId: courseId, sortedBy: 'id')
+        .retrieveCourseProblems(path: ApiPath.problems(), courseId: courseId)
         .then((problemList) {
       this.problemList = problemList;
     });
@@ -194,8 +194,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   bool solvedBefore() {
     return problemIndex < problemList!.length
-        ? solvedProblemsList
-            .contains("${problemList![problemIndex].id}-${student.email}")
+        ? solvedProblemsList.contains(
+            "${problemList![problemIndex].globalProblemId}-${student.email}")
         : false;
   }
 
@@ -205,8 +205,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       solvedProblem = solutionList![problemIndex];
     } else if (problemList!.isNotEmpty && checkProblemsAvailability()) {
       solvedProblem = SolvedProblems(
-        id: "${problemList![problemIndex].id}-${student.email!}",
-        problemId: problemList![problemIndex].id,
+        id: "${problemList![problemIndex].globalProblemId}-${student.email!}",
+        globalProblemId: problemList![problemIndex].globalProblemId,
         uid: uid,
         courseId: courseId,
         topics: problemList![problemIndex].topics,
@@ -290,8 +290,8 @@ class ProblemsCubit extends Cubit<ProblemsState> {
 
   Future<void> pickImage(ImageSource source) async {
     emit(Loading());
-    final XFile? pickedImg = await ImagePicker().pickImage(source: source);
     try {
+      final XFile? pickedImg = await ImagePicker().pickImage(source: source);
       if (pickedImg != null) {
         imgPath = await pickedImg.readAsBytes();
         imgName = basename(pickedImg.path);
@@ -306,6 +306,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
       }
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));
+      emit(NoImageSelected());
     }
   }
 
@@ -314,7 +315,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     required Uint8List imgPath,
   }) async {
     final storageRef = FirebaseStorage.instance.ref(
-        "Solutions/${student.email}/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
+        "Solutions/${student.email}/$courseId/$problemId/${documentIdFromLocalData()}/$imgName"); // Upload image to firebase storage
     UploadTask uploadTask =
         storageRef.putData(imgPath); // use this code if u are using flutter web
     TaskSnapshot snap = await uploadTask;
@@ -340,7 +341,7 @@ class ProblemsCubit extends Cubit<ProblemsState> {
     return !solution.contains(value) && !needReview;
   }
 
-  int get problemId => problemList![problemIndex].id;
+  int get problemId => problemList![problemIndex].problemId;
   String get title => problemList![problemIndex].title;
   int get expectedTime => problemList![problemIndex].time;
   String get problem => problemList![problemIndex].problem;

@@ -59,16 +59,16 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
     return BlocConsumer<AddNewCourseCubit, AddNewCourseState>(
         listener: (BuildContext context, AddNewCourseState state) async {
       if (state is CourseDataStored) {
+        final navigator = Navigator.of(context);
         await Future.delayed(const Duration(seconds: 1), () {});
         if (!mounted) return;
-        Navigator.popUntil(context,
+        navigator.popUntil(
             ModalRoute.withName(AppRoutes.teacherSubjectsDetailsRoute));
         if (context.read<AddNewCourseCubit>().subjects!.length == 1) {
-          Navigator.of(context).pushNamed(AppRoutes.teacherSubjectsDetailsRoute,
+          navigator.pushNamed(AppRoutes.teacherSubjectsDetailsRoute,
               arguments: widget.subject);
         } else {
-          Navigator.of(context).pushReplacementNamed(
-              AppRoutes.teacherSubjectsDetailsRoute,
+          navigator.pushReplacementNamed(AppRoutes.teacherSubjectsDetailsRoute,
               arguments: widget.subject);
         }
       } else if (state is ErrorOccurred) {

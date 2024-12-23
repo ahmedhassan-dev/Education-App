@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
-import 'package:education_app/core/constants/api_path.dart';
-
 part 'courses_state.dart';
 
 class CoursesCubit extends Cubit<CoursesState> {
@@ -11,9 +9,7 @@ class CoursesCubit extends Cubit<CoursesState> {
   CoursesCubit(this.coursesRepository) : super(CoursesInitial());
 
   Future<List<Courses>> getAllCourses() async {
-    await coursesRepository
-        .getAllCourses(path: ApiPath.courses())
-        .then((courses) {
+    await coursesRepository.getAllCourses().then((courses) {
       emit(CoursesLoaded(courses));
       this.courses = courses;
     });

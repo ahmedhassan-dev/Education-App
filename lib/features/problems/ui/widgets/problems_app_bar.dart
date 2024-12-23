@@ -22,6 +22,7 @@ class ProblemsAppBar extends StatelessWidget {
         subject,
         style: Styles.bodyLarge16,
       ),
+      automaticallyImplyLeading: false,
       actions: [
         Text(
           context.read<ProblemsCubit>().userScore,

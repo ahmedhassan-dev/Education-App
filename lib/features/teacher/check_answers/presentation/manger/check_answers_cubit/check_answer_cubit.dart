@@ -68,8 +68,7 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
     if (status == "valid") {
       notificationsCubit.notification!.validSolvedProblemsId!
           .add(solutions()[needReviewIdx].solvedProblemid);
-      notificationsCubit.notification!.score +=
-          currentProblem().problemScoreNum;
+      notificationsCubit.notification!.score += currentProblem().scoreNum;
       notificationsCubit.notification!
           .copyWith(studentId: solutions()[needReviewIdx].studentID);
     } else {
@@ -90,7 +89,7 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
 
   void showNewData() {
     needReviewIdx += 1;
-    int problemId = solutions()[needReviewIdx].problemId;
+    int problemId = solutions()[needReviewIdx].globalProblemId;
     context.read<FetchProblemsCubit>().showCurrentProblem(problemId);
   }
 
@@ -108,7 +107,7 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
     }
 
     checkAnswersRepo.addSolutionToProblem(
-        lastSolution.answer!, currentProblem().problemId!);
+        lastSolution.answer!, currentProblem().globalProblemId);
   }
 
   /// This will be not availabe if the solution is image answer
@@ -121,7 +120,7 @@ class CheckAnswerCubit extends Cubit<CheckAnswerState> {
   }
 
   bool solutionAlreadyExist(String answer) =>
-      currentProblem().problemSolutions.contains(answer);
+      currentProblem().solutions.contains(answer);
 
   ProblemsEntity currentProblem() {
     return context.read<FetchProblemsCubit>().currentProblem;

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:education_app/core/helpers/context_extension.dart';
 import 'package:education_app/core/helpers/spacing.dart';
 import 'package:education_app/core/theming/app_colors.dart';
 import 'package:education_app/core/theming/styles.dart';
+import 'package:education_app/core/widgets/no_data_widget.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/teacher/check_answers/domain/entities/problems_entity.dart';
@@ -56,10 +58,8 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
       listener: (BuildContext context, CheckAnswerState state) {},
       builder: (context, state) {
         if (state is AllSolutionsChecked) {
-          return const Scaffold(
-            body: Center(
-              child: Text("❤️You have checked all answers❤️"),
-            ),
+          return const NoDataWidget(
+            message: "❤️You have checked all answers❤️",
           );
         }
         return BlocBuilder<FetchSolvedProblemsCubit, FetchSolvedProblemsState>(
@@ -87,9 +87,14 @@ class _CheckAnswersPageState extends State<CheckAnswersPage> {
                       builder: (context, state) {
                         if (state is ShowCurrentProblem) {
                           ProblemsEntity problem = state.problem;
-                          return Text(
-                              "${problem.problemId}. ${problem.problemTitle}",
-                              style: Styles.titleLarge22);
+                          return SizedBox(
+                            width: context.width * 0.9,
+                            child: Text(
+                                "${problem.problemId}. ${problem.title}",
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                                style: Styles.titleLarge22),
+                          );
                         } else if (state is NeedReviewProblemsFailure) {
                           return Text(state.errorMsg,
                               style: Styles.titleLarge22);

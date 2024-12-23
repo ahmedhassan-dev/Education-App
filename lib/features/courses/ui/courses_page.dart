@@ -1,9 +1,9 @@
+import 'package:education_app/core/widgets/no_data_widget.dart';
 import 'package:education_app/core/widgets/subjects_app_bar.dart';
 import 'package:education_app/core/widgets/show_loading_indicator.dart';
 import 'package:education_app/features/courses/logic/courses_cubit.dart';
 import 'package:education_app/features/courses/data/models/courses.dart';
 import 'package:education_app/features/courses/ui/widgets/home_view_body.dart';
-import 'package:education_app/features/courses/ui/widgets/no_available_courses.dart';
 import 'package:education_app/features/problems/ui/widgets/problems_page_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +29,9 @@ class _CoursesPageState extends State<CoursesPage> {
       if (state is CoursesLoaded) {
         allCourses = (state).courses;
         if (allCourses.isEmpty) {
-          return const NoCoursesAvailable();
+          return const NoDataWidget(
+            message: "No Courses Available.",
+          );
         }
         return buildCoursesPage();
       } else {

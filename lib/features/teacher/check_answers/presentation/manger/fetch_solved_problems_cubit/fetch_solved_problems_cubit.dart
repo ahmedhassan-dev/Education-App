@@ -29,6 +29,6 @@ class FetchSolvedProblemsCubit extends Cubit<FetchSolvedProblemsState> {
   void showFirstProblem(BuildContext context) {
     context
         .read<FetchProblemsCubit>()
-        .showCurrentProblem(needReviewSolutions.first.problemId);
+        .showCurrentProblem(needReviewSolutions.first.globalProblemId);
   }
 }

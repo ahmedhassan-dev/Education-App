@@ -111,7 +111,7 @@ class CheckAnswersRepoImpl extends CheckAnswersRepo {
   void updateCourse(String courseId, String solvedProblemId) {
     try {
       checkAnswersRemoteDataSource.updateCourse(
-          ApiPath.coursesID(courseId), solvedProblemId);
+          ApiPath.courses(courseId), solvedProblemId);
     } catch (e) {
       debugPrint(e.toString());
     }

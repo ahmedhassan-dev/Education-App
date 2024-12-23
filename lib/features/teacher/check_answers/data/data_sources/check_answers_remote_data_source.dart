@@ -33,11 +33,12 @@ class CheckAnswersRemoteDataSourceImpl extends CheckAnswersRemoteDataSource {
   Future<List<ProblemsEntity>> fetchProblems(
       {required List<int> solutionsNeedingReview}) async {
     final problems = await firestoreServices.retrieveData(
-        path: ApiPath.problems(),
-        queryBuilder: (query) =>
-            query.where("id", whereIn: solutionsNeedingReview)) as List;
+            path: ApiPath.problems(),
+            queryBuilder: (query) =>
+                query.where("globalProblemId", whereIn: solutionsNeedingReview))
+        as List;
     return problems
-        .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
+        .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!).toEntity())
         .toList();
   }
 

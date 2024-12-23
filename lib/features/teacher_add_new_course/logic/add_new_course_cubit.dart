@@ -26,7 +26,7 @@ class AddNewCourseCubit extends Cubit<AddNewCourseState> {
   Future<void> saveNewCourse({required Courses course}) async {
     try {
       await addNewCourseRepository.storeNewCourse(
-          path: ApiPath.coursesID(course.id!), data: course);
+          path: ApiPath.courses(course.id!), data: course);
       emit(CourseDataStored());
     } catch (e) {
       emit(ErrorOccurred(errorMsg: e.toString()));

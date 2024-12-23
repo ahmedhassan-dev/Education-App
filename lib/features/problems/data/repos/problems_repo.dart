@@ -44,14 +44,12 @@ class ProblemsRepository {
       );
 
   Future<List<Problems>> retrieveCourseProblems(
-      {required String path,
-      required String courseId,
-      required String sortedBy}) async {
+      {required String path, required String courseId}) async {
     final courseProblems = await firestoreServices.retrieveData(
-            path: path,
-            queryBuilder: (query) =>
-                query.where("courseId", isEqualTo: courseId).orderBy(sortedBy))
-        as List;
+        path: path,
+        queryBuilder: (query) => query
+            .where("courseId", isEqualTo: courseId)
+            .orderBy("problemId")) as List;
     return courseProblems
         .map((docSnapshot) => Problems.fromJson(docSnapshot.data()!))
         .toList();

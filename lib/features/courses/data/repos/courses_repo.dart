@@ -7,8 +7,11 @@ import '../../../../core/constants/api_path.dart';
 class CoursesRepository {
   FirestoreServices firestoreServices;
   CoursesRepository(this.firestoreServices);
-  Future<List<Courses>> getAllCourses({required String path}) async {
-    final courses = await firestoreServices.retrieveData(path: path) as List;
+  Future<List<Courses>> getAllCourses() async {
+    final courses = await firestoreServices.retrieveData(
+      path: ApiPath.courses(),
+      queryBuilder: (query) => query.where("accessType", isEqualTo: "public"),
+    ) as List;
     return courses
         .map((docSnapshot) => Courses.fromJson(docSnapshot.data()!))
         .toList();
@@ -23,7 +26,7 @@ class CoursesRepository {
 
   Future<dynamic> retrieveLastProblemId(String courseId) async {
     final lastProblemId = await firestoreServices.retrieveDataFormDocument(
-        path: ApiPath.courses(courseId), docName: "problemsCount") as dynamic;
+        path: ApiPath.courses(), docName: courseId) as dynamic;
     return lastProblemId;
   }
 }

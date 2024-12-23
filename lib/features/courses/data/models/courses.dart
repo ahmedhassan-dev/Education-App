@@ -4,6 +4,8 @@ part 'courses.g.dart';
 
 @JsonSerializable()
 class Courses extends CourseData {
+  final int problemsCount;
+  final String accessType;
   final String imgUrl;
   final String subject;
   final String description;
@@ -11,7 +13,9 @@ class Courses extends CourseData {
   List<String> solutionsNeedingReview;
 
   Courses(
-      {required super.id,
+      {this.problemsCount = 0,
+      this.accessType = "public",
+      required super.id,
       required this.imgUrl,
       required this.subject,
       required this.description,
