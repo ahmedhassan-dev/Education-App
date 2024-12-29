@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/functions/service_locator.dart';
+import '../../../../core/widgets/snackbar.dart';
+
 class SelectEducationalStagesPage extends StatefulWidget {
   const SelectEducationalStagesPage({super.key});
 
@@ -31,16 +34,21 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
   }
 
   buildEducationalStagesList() {
-    return ListView.builder(
-      itemCount: EducationalStages.educationalStages.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (BuildContext context, int i) {
-        final stage = EducationalStages.educationalStages[i];
-        return EducationalStagesList(
-          stage: stage,
-        );
-      },
+    return Column(
+      children: [
+        ListView.builder(
+          itemCount: EducationalStages.educationalStages.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int i) {
+            final stage = EducationalStages.educationalStages[i];
+            return EducationalStagesList(
+              stage: stage,
+            );
+          },
+        ),
+        80.verticalSpace
+      ],
     );
   }
 
@@ -49,12 +57,23 @@ class _SelectSubjectsPageState extends State<SelectEducationalStagesPage> {
       height: 50,
       child: ElevatedButton(
         onPressed: () async {
+          if (context
+              .read<SelectStageAndSubjectCubit>()
+              .educationalStages
+              .isEmpty) {
+            showSnackBar(context, "Please select at least one stage.");
+            return;
+          }
           try {
             await BlocProvider.of<SelectStageAndSubjectCubit>(context)
                 .saveEducationalStages();
             if (!mounted) return;
-            Navigator.of(context)
-                .pushReplacementNamed(AppRoutes.landingPageRoute);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.landingPageRoute,
+              (Route<dynamic> route) => false,
+            );
+            getIt<SelectStageAndSubjectCubit>().close();
+            getIt.unregister<SelectStageAndSubjectCubit>();
           } catch (e) {
             errorAwesomeDialog(context, e).show();
           }

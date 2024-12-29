@@ -11,26 +11,6 @@ class EducationalStagesList extends StatelessWidget {
     required this.stage,
   });
 
-  Widget buildBlocWidget() {
-    return BlocBuilder<SelectStageAndSubjectCubit, SelectStageAndSubjectState>(
-      builder: (context, state) {
-        if (state is Loading) {
-          return showLoadingIndicator();
-        } else {
-          return stageElement(context);
-        }
-      },
-    );
-  }
-
-  Widget showLoadingIndicator() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
-    );
-  }
-
   Widget stageElement(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -69,6 +49,6 @@ class EducationalStagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildBlocWidget();
+    return stageElement(context);
   }
 }

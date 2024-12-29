@@ -24,12 +24,14 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
     await selectStageAndSubjectRepository
         .retrieveTeacherData(path: ApiPath.teachersCollection(), docName: uid)
         .then((teacherData) {
-      this.teacherData = teacherData.data()!;
+      teacherData.data() == null
+          ? emit(UserIsNotTeacher())
+          : initTeacherData(teacherData.data());
     });
-    initTeacherData();
   }
 
-  initTeacherData() {
+  initTeacherData(Map<String, dynamic> teacherData) {
+    this.teacherData = teacherData;
     var dynamicSubjects = teacherData["subjects"];
     var dynamicEducationalStages = teacherData["educationalStages"];
     subjects = List<String>.from(dynamicSubjects);
@@ -71,7 +73,7 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
       path: ApiPath.teacher(uid),
     );
     await storeEducationalStagesInSharedPreferences();
-    // emit(TeacherDataUpdated());
+    emit(EducationalStagesSaved());
   }
 
   storeEducationalStagesInSharedPreferences() async {
@@ -88,7 +90,7 @@ class SelectStageAndSubjectCubit extends Cubit<SelectStageAndSubjectState> {
       path: ApiPath.teacher(uid),
     );
     await storeSubjectsInSharedPreferences();
-    // emit(TeacherDataUpdated());
+    emit(SubjectsSaved());
   }
 
   storeSubjectsInSharedPreferences() async {

@@ -9,7 +9,6 @@ import 'package:education_app/features/authentication/data/repos/auth_repo.dart'
 import 'package:education_app/features/courses/data/repos/courses_repo.dart';
 import 'package:education_app/core/services/firestore_services.dart';
 import 'package:education_app/features/courses/ui/courses_page.dart';
-import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_subject_page.dart';
 import 'package:education_app/features/teacher_subjects/logic/teacher_subjects_cubit.dart';
@@ -62,10 +61,12 @@ class LandingPage extends StatelessWidget {
           }
           if (userType == "Teacher") {
             if (subjects == null) {
+              if (!getIt.isRegistered<SelectStageAndSubjectCubit>()) {
+                registerSelectStageAndSubjectCubit();
+              }
+
               return BlocProvider(
-                create: (context) => SelectStageAndSubjectCubit(
-                    SelectStageAndSubjectRepository(
-                        getIt<FirestoreServices>())),
+                create: (context) => getIt<SelectStageAndSubjectCubit>(),
                 child: const SelectSubjectsPage(),
               );
             } else if (subjects.length == 1) {

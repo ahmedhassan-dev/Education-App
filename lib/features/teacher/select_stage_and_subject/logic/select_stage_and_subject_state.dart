@@ -10,3 +10,9 @@ class Loading extends SelectStageAndSubjectState {}
 class SubjectEdited extends SelectStageAndSubjectState {}
 
 class TeacherDataLoaded extends SelectStageAndSubjectState {}
+
+class SubjectsSaved extends SelectStageAndSubjectState {}
+
+class EducationalStagesSaved extends SelectStageAndSubjectState {}
+
+class UserIsNotTeacher extends SelectStageAndSubjectState {}

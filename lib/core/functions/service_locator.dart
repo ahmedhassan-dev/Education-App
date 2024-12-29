@@ -9,6 +9,8 @@ import '../../features/teacher/check_answers/data/data_sources/check_answers_rem
 import '../../features/teacher/check_answers/data/repos/check_answers_repo_impl.dart';
 import '../../features/teacher/courses_student_feedback/data/repos/courses_student_feedback_repo.dart';
 import '../../features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
+import '../../features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
+import '../../features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -28,4 +30,10 @@ Future<void> configureDependencies() async {
       () => AuthRepository(getIt<FirestoreServices>()));
   getIt.registerLazySingleton<CoursesRepository>(
       () => CoursesRepository(getIt<FirestoreServices>()));
+  registerSelectStageAndSubjectCubit();
 }
+
+registerSelectStageAndSubjectCubit() =>
+    getIt.registerLazySingleton<SelectStageAndSubjectCubit>(() =>
+        SelectStageAndSubjectCubit(
+            SelectStageAndSubjectRepository(getIt<FirestoreServices>())));

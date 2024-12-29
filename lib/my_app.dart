@@ -1,5 +1,6 @@
 import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/functions/service_locator.dart';
+import 'package:education_app/core/helpers/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:education_app/core/routing/router.dart';
 import 'package:education_app/core/routing/routes.dart';
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!AuthManager.isWeb && AuthManager.userType != null) {
+    if (!AuthManager.isWeb && !AuthManager.userType.isNullOrEmpty()) {
       getIt<FirebaseMessaging>().subscribeToTopic('allUsers');
       getIt<FirebaseMessaging>()
           .subscribeToTopic(AuthManager.userType!.toLowerCase());

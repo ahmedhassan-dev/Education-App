@@ -22,7 +22,6 @@ import 'package:education_app/features/teacher/check_answers/presentation/manger
 import 'package:education_app/features/teacher/check_answers/presentation/ui/check_answers_page.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/logic/courses_student_feedback_cubit.dart';
 import 'package:education_app/features/teacher/courses_student_feedback/ui/courses_student_answers_page.dart';
-import 'package:education_app/features/teacher/select_stage_and_subject/data/repos/select_stage_and_subject_repo.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/logic/select_stage_and_subject_cubit.dart';
 import 'package:education_app/features/teacher/select_stage_and_subject/ui/select_stage_page.dart';
 import 'package:education_app/features/onboarding/ui/select_user_page.dart';
@@ -45,11 +44,12 @@ import '../../features/teacher/check_answers/presentation/manger/notifications_c
 import '../pages/privacy_policy_page.dart';
 
 Route<dynamic> onGenerate(RouteSettings settings) {
+  AuthCubit authCubit = AuthCubit(AuthRepository(getIt<FirestoreServices>()));
   switch (settings.name) {
     case AppRoutes.selectUserTypeRoute:
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
+          value: authCubit,
           child: const SelectUserPage(),
         ),
         settings: settings,
@@ -57,8 +57,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
     case AppRoutes.selectEducationalStagesRoute:
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<SelectStageAndSubjectCubit>.value(
-          value: SelectStageAndSubjectCubit(
-              SelectStageAndSubjectRepository(getIt<FirestoreServices>())),
+          value: getIt<SelectStageAndSubjectCubit>(),
           child: const SelectEducationalStagesPage(),
         ),
         settings: settings,
@@ -67,7 +66,7 @@ Route<dynamic> onGenerate(RouteSettings settings) {
       final userType = settings.arguments as String;
       return CupertinoPageRoute(
         builder: (_) => BlocProvider<AuthCubit>.value(
-          value: AuthCubit(AuthRepository(getIt<FirestoreServices>())),
+          value: authCubit,
           child: AuthPage(userType: userType),
         ),
         settings: settings,
