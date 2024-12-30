@@ -62,10 +62,7 @@ class AuthRepository implements AuthBase {
 
   @override
   Future<void> setToken(Map<String, String> userToken, String path) async =>
-      await firestoreServices.setData(
-        path: path,
-        data: userToken,
-      );
+      await firestoreServices.setData(path: path, data: userToken, merge: true);
 
   @override
   Future<dynamic> getUserData(

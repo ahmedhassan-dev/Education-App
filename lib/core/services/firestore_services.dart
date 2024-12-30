@@ -5,13 +5,13 @@ class FirestoreServices {
   FirestoreServices();
   final _fireStore = FirebaseFirestore.instance;
 
-  Future<void> setData({
-    required String path,
-    required Map<String, dynamic> data,
-  }) async {
+  Future<void> setData(
+      {required String path,
+      required Map<String, dynamic> data,
+      bool merge = false}) async {
     final reference = _fireStore.doc(path);
     debugPrint('Request Data: $data');
-    await reference.set(data);
+    await reference.set(data, merge == true ? SetOptions(merge: true) : null);
   }
 
   Future<void> updateData({

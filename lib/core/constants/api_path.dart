@@ -7,7 +7,7 @@ class ApiPath {
   static String studentCollection() => 'students';
   static String teachersCollection() => 'teachers';
   static String userToken(String uid, String userType) =>
-      '${"${userType.toLowerCase()}s"}/$uid/tokens/${DateTime.now()}';
+      '${"${userType.toLowerCase()}s"}/$uid/fcmToken/token';
   static String problems() => 'problems/';
   static String storingProblem(int problemId) => 'problems/$problemId';
   static String publicInfo() => 'publicInfo/';
