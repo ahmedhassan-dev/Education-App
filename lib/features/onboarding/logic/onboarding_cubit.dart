@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:education_app/core/constants/api_path.dart';
 import 'package:education_app/core/constants/constants.dart';
 import 'package:education_app/core/functions/service_locator.dart';
 import 'package:education_app/core/widgets/snackbar.dart';
 import 'package:education_app/features/onboarding/data/models/publicinfo.dart';
 import 'package:education_app/features/onboarding/data/repos/onboarding_repo.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/helpers/log_utils.dart';
 import '../../authentication/data/repos/auth_repo.dart';
 
 part 'onboarding_state.dart';
@@ -60,18 +63,19 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   Future<void> _checkForUpdates(String userType) async {
     await _getPublicInfo(userType);
-    if (_needUpdate(userType)) {
+    if (await _needUpdate(userType)) {
       emit(NeedUpdate());
     } else {
       emit(InitDataLoaded(userType: userType, subjects: subjects));
     }
   }
 
-  bool _needUpdate(String userType) {
-    return (publicInfo.appVersion != currentTeacherVersion &&
+  Future<bool> _needUpdate(String userType) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    Log.i(packageInfo.version);
+    return (publicInfo.appVersion != packageInfo.version &&
             userType == "Teacher") ||
-        (publicInfo.appVersion != currentStudentVersion &&
-            userType == "Student");
+        (publicInfo.appVersion != packageInfo.version && userType == "Student");
   }
 
   Future<void> _getPublicInfo(String userType) async {

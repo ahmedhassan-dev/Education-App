@@ -3,10 +3,6 @@ description: "The most effective way to connect teachers with their students, fo
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
@@ -62,6 +58,7 @@ dependencies:
   add_to_cart_animation: ^2.0.4
   sentry_flutter: ^8.11.0
   permission_handler: ^11.3.1
+  package_info_plus: ^8.1.2
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
